@@ -17,7 +17,7 @@ use Tests\TestCase;
 
 /**
  * premium = base_price × vehicle_age_factor × engine_factor × claims_history_factor
- * Seeded bands (PricingFactorSeeder):
+ * Bands from the test fixture (TestCase::seedPricing), independent of the production tariff:
  *   age:    0-3 ×1.000 | 4-7 ×1.100 | 8-12 ×1.250 | 13-20 ×1.400 | 21+ ×1.600
  *   engine: 0-1300 ×1.000 | 1301-1600 ×1.100 | 1601-2000 ×1.250 | 2001-3000 ×1.450 | 3001+ ×1.700
  *   claims: 0 ×1.000 | 1 ×1.150 | 2 ×1.300 | 3+ ×1.500
@@ -166,9 +166,9 @@ class QuoteCalculationTest extends TestCase
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.code', CoverageType::THIRD_PARTY)
-            ->assertJsonPath('data.0.name', 'تأمين ضد الغير (إجباري)');
+            ->assertJsonPath('data.0.name', 'التأمين الإجباري (ضد الغير)');
 
         $this->getJson('/api/v1/coverage-types', ['Accept-Language' => 'en'])
-            ->assertJsonPath('data.0.name', 'Third-Party Liability (Mandatory)');
+            ->assertJsonPath('data.0.name', 'Compulsory Third-Party Insurance');
     }
 }

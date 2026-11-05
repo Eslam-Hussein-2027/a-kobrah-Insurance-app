@@ -132,6 +132,12 @@ Localized for **Libya** (all values in `config/insurance.php` / `.env`):
 
 Arabic-Indic digits (`٠١٢٣`) are accepted in phone, national number, OTP, plate and year inputs.
 
+### Coverage types
+
+The company currently sells **compulsory third-party insurance only** (`THIRD_PARTY`).
+`COMPREHENSIVE` exists in `coverage_types` but is seeded with `is_active = false`; switching it on needs no code change.
+Seeded base prices are placeholders until the official tariff is provided.
+
 ### Quote engine
 
 ```
