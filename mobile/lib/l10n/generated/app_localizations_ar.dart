@@ -216,7 +216,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pendingPaymentBody =>
-      'لتفعيل الوثيقة يرجى دفع القسط في أحد مكاتب الشركة مع ذكر رقم الوثيقة. بعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها.';
+      'يمكنك دفع القسط الآن إلكترونيًا، وبعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها مباشرة.';
 
   @override
   String get customerService => 'خدمة العملاء';
@@ -310,4 +310,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get currency => 'دينار ليبي';
+
+  @override
+  String get payOnline => 'ادفع الآن إلكترونيًا';
+
+  @override
+  String get checkPaymentStatus => 'تحقق من حالة الدفع';
+
+  @override
+  String get orPayAtOffice => 'أو ادفع في أحد مكاتب الشركة مع ذكر رقم الوثيقة.';
+
+  @override
+  String get paymentSucceeded => 'تم الدفع بنجاح وتفعيل الوثيقة';
+
+  @override
+  String get paymentFailed => 'لم تتم عملية الدفع، يمكنك المحاولة مرة أخرى';
+
+  @override
+  String get paymentNotConfirmedYet => 'لم يتم تأكيد الدفع بعد، حاول بعد لحظات';
 }

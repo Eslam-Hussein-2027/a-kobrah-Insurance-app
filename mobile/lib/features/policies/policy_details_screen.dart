@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/api/api_exception.dart';
 import '../../core/config.dart';
@@ -120,6 +121,72 @@ class _PendingPayment extends ConsumerStatefulWidget {
 
 class _PendingPaymentState extends ConsumerState<_PendingPayment> {
   bool _cancelling = false;
+  bool _paying = false;
+  bool _checking = false;
+
+  /// Online attempt started from this screen; checked again when the customer returns to the app.
+  int? _paymentId;
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycle = AppLifecycleListener(
+      onResume: () {
+        if (_paymentId != null) _checkPayment(silent: true);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
+  Future<void> _payOnline() async {
+    final l10n = context.l10n;
+    setState(() => _paying = true);
+    try {
+      final payment = await ref.read(policiesRepositoryProvider).payOnline(widget.policy.id);
+      setState(() => _paymentId = payment.id);
+      final opened = await launchUrl(Uri.parse(payment.checkoutUrl!), mode: LaunchMode.inAppBrowserView);
+      if (!opened && mounted) showMessage(context, l10n.unexpectedError, isError: true);
+    } on ApiException catch (e) {
+      if (mounted) showMessage(context, errorMessage(context, e), isError: true);
+    } finally {
+      if (mounted) setState(() => _paying = false);
+    }
+  }
+
+  /// Asks the server (which asks the payment provider) for the result.
+  Future<void> _checkPayment({bool silent = false}) async {
+    final paymentId = _paymentId;
+    if (paymentId == null || _checking) return;
+
+    final l10n = context.l10n;
+    setState(() => _checking = true);
+    try {
+      final payment = await ref.read(policiesRepositoryProvider).payment(paymentId);
+      if (!mounted) return;
+
+      if (payment.isPaid) {
+        showMessage(context, l10n.paymentSucceeded);
+        ref
+          ..invalidate(policyProvider(widget.policy.id))
+          ..invalidate(policiesProvider);
+      } else if (payment.isFailed) {
+        setState(() => _paymentId = null);
+        showMessage(context, l10n.paymentFailed, isError: true);
+      } else if (!silent) {
+        showMessage(context, l10n.paymentNotConfirmedYet);
+      }
+    } on ApiException catch (e) {
+      if (mounted && !silent) showMessage(context, errorMessage(context, e), isError: true);
+    } finally {
+      if (mounted) setState(() => _checking = false);
+    }
+  }
 
   Future<void> _cancel() async {
     final l10n = context.l10n;
@@ -176,7 +243,21 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
               ),
               const SizedBox(height: 8),
               Text(l10n.pendingPaymentBody, style: theme.textTheme.bodyMedium?.copyWith(height: 1.6)),
-              const SizedBox(height: 8),
+              const SizedBox(height: 14),
+              PrimaryButton(label: l10n.payOnline, icon: Icons.credit_card, loading: _paying, onPressed: _payOnline),
+              if (_paymentId != null) ...[
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: _checking ? null : () => _checkPayment(),
+                  icon: _checking
+                      ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.refresh),
+                  label: Text(l10n.checkPaymentStatus),
+                ),
+              ],
+              const SizedBox(height: 12),
+              Text(l10n.orPayAtOffice, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted)),
+              const SizedBox(height: 6),
               Row(
                 children: [
                   Text('${l10n.customerService}: ', style: theme.textTheme.bodyMedium),

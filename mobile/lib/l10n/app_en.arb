@@ -66,7 +66,7 @@
   "downloadPdf": "Download policy for printing (PDF)",
   "pdfMobileOnly": "Policy download is available in the mobile app",
   "pendingPaymentTitle": "Awaiting payment",
-  "pendingPaymentBody": "To activate the policy, pay the premium at one of our offices and mention the policy number. Once payment is confirmed you can download and print the policy.",
+  "pendingPaymentBody": "You can pay the premium online now. Once the payment is confirmed you can download and print the policy right away.",
   "customerService": "Customer service",
   "cancelRequest": "Cancel request",
   "cancelRequestConfirm": "Cancel this policy request?",
@@ -97,5 +97,11 @@
   "requiredField": "This field is required",
   "networkError": "Can't reach the server. Check your connection and try again.",
   "unexpectedError": "Something went wrong. Please try again.",
-  "currency": "LYD"
+  "currency": "LYD",
+  "payOnline": "Pay online now",
+  "checkPaymentStatus": "Check payment status",
+  "orPayAtOffice": "Or pay at one of our offices and mention the policy number.",
+  "paymentSucceeded": "Payment successful, policy activated",
+  "paymentFailed": "The payment was not completed. You can try again",
+  "paymentNotConfirmedYet": "Payment not confirmed yet, try again in a moment"
 }

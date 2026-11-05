@@ -88,4 +88,21 @@ void main() {
   test('unknown policy status does not crash', () {
     expect(PolicyStatus.fromValue('SOMETHING_NEW'), PolicyStatus.unknown);
   });
+
+  test('OnlinePayment parses pending and paid payments', () {
+    final pending = OnlinePayment.fromJson({
+      'id': 5,
+      'status': {'value': 'PENDING', 'label': 'قيد الانتظار'},
+      'checkout_url': 'https://pay.example/checkout/5',
+    });
+    expect(pending.checkoutUrl, isNotNull);
+    expect(pending.isPaid, isFalse);
+
+    final paid = OnlinePayment.fromJson({
+      'id': 5,
+      'status': {'value': 'PAID', 'label': 'مدفوع'},
+    });
+    expect(paid.isPaid, isTrue);
+    expect(paid.checkoutUrl, isNull);
+  });
 }

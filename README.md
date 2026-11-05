@@ -12,15 +12,17 @@ UI language: Arabic (RTL) first, English second.
 |---|---|---|
 | [`backend/`](backend/README.md) | Laravel REST API (`/api/v1`) | Phase 1 ✅ |
 | [`mobile/`](mobile/README.md) | Flutter customer app (Arabic RTL + English) | Phase 1 ✅ |
-| `admin/` | React (Vite) + Tailwind admin dashboard | planned |
+| [`admin/`](admin/README.md) | React admin dashboard for staff (Arabic RTL) | ✅ |
 
 ## Build phases
 
 1. ✅ Auth (phone + OTP), roles, vehicles, quote engine, policy issuance + PDF download
-2. Payments (gateway + office), renewal, scheduled reminders, push notifications
+2. ✅ Payments (online via `PaymentGateway`, office) + admin dashboard · ⏳ real provider, renewal, reminders, push notifications
 3. Claims, surveyor flow, admin dashboard
 4. AI damage classification (FastAPI service), duplicate-image fraud detection, analytics
 
-See [`backend/README.md`](backend/README.md) for the API and [`mobile/README.md`](mobile/README.md) for the app.
+See [`backend/README.md`](backend/README.md) for the API, [`mobile/README.md`](mobile/README.md) for the app and [`admin/README.md`](admin/README.md) for the dashboard.
 
 ![Customer app](docs/mobile-app-preview.png)
+
+![Admin dashboard](docs/admin-dashboard.png)

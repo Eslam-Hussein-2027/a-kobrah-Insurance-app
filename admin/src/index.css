@@ -1,0 +1,46 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Brand colours sampled from the company logo (same as the mobile app). */
+@theme {
+  --font-sans: 'Tajawal', ui-sans-serif, system-ui, sans-serif;
+  --color-navy: #14178f;
+  --color-brand: #0a7fd4;
+  --color-sky: #14a3e6;
+  --color-page: #f4f6fb;
+  --color-line: #e1e5ef;
+  --color-muted: #667085;
+  --color-ok: #12805c;
+  --color-warn: #b54708;
+  --color-bad: #c0352b;
+}
+
+body {
+  background: var(--color-page);
+  color: #101828;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Numbers, plates, policy numbers and dates inside Arabic text. */
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}

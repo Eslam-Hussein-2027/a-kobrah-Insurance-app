@@ -107,7 +107,21 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET | `/policies/{id}` | owner/admin | Show |
 | POST | `/policies/{id}/cancel` | owner | Cancel while `PENDING_PAYMENT` |
 | GET | `/policies/{id}/pdf` | owner, `ACTIVE` only | A4 printable PDF |
+| POST | `/policies/{id}/pay-online` | owner | Start online payment → `checkout_url` |
+| GET | `/payments/{id}` | owner/admin | Payment status (re-checked with the provider while pending) |
+| POST | `/payments/webhook/{gateway}` | provider | Server-to-server notification (status is always re-fetched) |
+| POST | `/auth/staff/login` | public | Dashboard login (phone + password, staff roles only) |
+| GET | `/admin/stats` | admin | Dashboard numbers + 6-month series |
+| GET | `/admin/policies` | admin | `?status=&search=` (policy no, plate, name, phone, national number) |
+| GET | `/admin/policies/{id}` | admin | Details with customer, payments, pricing snapshot |
 | POST | `/admin/policies/{id}/confirm-office-payment` | admin | "Pay at office": records payment, activates policy, queues PDF |
+| POST | `/admin/policies/{id}/cancel` | admin | Cancel a pending policy |
+| GET | `/admin/policies/{id}/pdf` | admin | Print an active policy at the office |
+| GET | `/admin/payments` | admin | `?method=&status=&requires_refund=1` |
+| GET/PATCH | `/admin/customers[/{id}]` | admin | Search, details (documents), block/unblock (`is_active`) |
+| GET | `/admin/pricing` | admin | Coverage types, factor bands, gap report |
+| PATCH | `/admin/coverage-types/{id}` | admin | Base price, active flag, names |
+| POST/PUT/DELETE | `/admin/pricing-factors[/{id}]` | admin | Factor bands (overlaps rejected) |
 
 ### Login / registration flow
 
@@ -163,6 +177,39 @@ POST /policies → PENDING_PAYMENT ──(admin confirms office payment)──�
 - KYC (ID + license images) is required before creating a policy.
 - If payment is confirmed after the requested start date, coverage starts on the payment day (full term kept).
 
+## Online payments
+
+![Online payment flow](../docs/online-payment-flow.png)
+
+Hosted-checkout model behind `App\Services\Payments\PaymentGateway`:
+
+```
+app  → POST /policies/{id}/pay-online → checkout_url (provider page)
+customer pays on the provider page
+provider → POST /payments/webhook/{gateway}   (and/or the app polls GET /payments/{id})
+server   → fetchStatus() from the provider → PAID → policy ACTIVE → PDF queued
+```
+
+- Callback parameters are **never trusted**: the result is always re-fetched from the provider.
+- Idempotent: concurrent webhooks and polls are serialized with row locks, so a policy is activated once.
+- The amount must match the policy premium, otherwise the payment fails with `amount_mismatch` and is flagged for refund.
+- Starting a new attempt closes the previous one (`superseded`). An office payment closes open online attempts (`paid_at_office`).
+  If the customer still pays on the provider page, the money is recorded and flagged `requires_refund` instead of being lost.
+- **`simulator`** is a built-in fake provider: a signed Arabic page with "دفع ناجح" / "رفض الدفع" buttons, used for development and demos.
+  It is disabled when `APP_ENV=production` (`PAYMENT_SIMULATOR_ENABLED`).
+
+**Adding a real Libyan provider** (Sadad, Edfa3ly, Moamalat, or an aggregator):
+
+1. Implement `PaymentGateway` (`createCheckout`, `fetchStatus`, `referenceFromCallback`).
+2. Register it in `PaymentGatewayManager::GATEWAYS` and `config/payments.php`.
+3. Set `PAYMENT_GATEWAY=<name>` and the merchant credentials in `.env`.
+4. Give the provider the webhook URL `https://<api-host>/api/v1/payments/webhook/<name>`.
+
+## Admin dashboard
+
+Staff sign in at `POST /auth/staff/login` with phone + password (the demo admin is `0910000001` / `password`, seeded outside production).
+The React dashboard lives in [`../admin`](../admin/README.md).
+
 ## Policy PDF
 
 ![Policy PDF sample](../docs/policy-pdf-sample.png)
@@ -201,7 +248,7 @@ lang/{ar,en}/            messages, enums, validation (ar)
 
 ## Next phases
 
-- **Phase 2**: online payment gateway behind a `PaymentGateway` interface, renewal (`previous_policy_id`),
-  expiry job, reminders 30/7/1 days before expiry (scheduler + FCM), `notifications_log`.
+- **Phase 2**: ✅ online payments (simulator, real provider pending) and admin dashboard. Still to do: renewal
+  (`previous_policy_id`), expiry job, reminders 30/7/1 days before expiry (scheduler + FCM), `notifications_log`.
 - **Phase 3**: claims API (media upload with `image_hash`, other-party linking, status workflow and
   `claim_status_logs`), surveyor flow, admin dashboard endpoints and stats.

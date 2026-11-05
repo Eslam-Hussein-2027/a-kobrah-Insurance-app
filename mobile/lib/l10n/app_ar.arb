@@ -10,7 +10,9 @@
   "otpSubtitle": "أدخل الرمز المكوّن من 6 أرقام المرسل إلى الرقم {phone}",
   "@otpSubtitle": {
     "placeholders": {
-      "phone": {"type": "String"}
+      "phone": {
+        "type": "String"
+      }
     }
   },
   "otpLength": "الرمز يجب أن يتكون من 6 أرقام",
@@ -19,7 +21,9 @@
   "resendIn": "إعادة الإرسال بعد {seconds} ثانية",
   "@resendIn": {
     "placeholders": {
-      "seconds": {"type": "int"}
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "codeResent": "تم إرسال رمز جديد",
@@ -61,7 +65,9 @@
   "deleteVehicleConfirm": "هل تريد حذف المركبة {plate}؟",
   "@deleteVehicleConfirm": {
     "placeholders": {
-      "plate": {"type": "String"}
+      "plate": {
+        "type": "String"
+      }
     }
   },
   "vehicleAdded": "تمت إضافة المركبة",
@@ -81,7 +87,7 @@
   "downloadPdf": "تحميل الوثيقة للطباعة (PDF)",
   "pdfMobileOnly": "تحميل الوثيقة متاح من تطبيق الهاتف",
   "pendingPaymentTitle": "الوثيقة بانتظار الدفع",
-  "pendingPaymentBody": "لتفعيل الوثيقة يرجى دفع القسط في أحد مكاتب الشركة مع ذكر رقم الوثيقة. بعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها.",
+  "pendingPaymentBody": "يمكنك دفع القسط الآن إلكترونيًا، وبعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها مباشرة.",
   "customerService": "خدمة العملاء",
   "cancelRequest": "إلغاء الطلب",
   "cancelRequestConfirm": "هل تريد إلغاء طلب هذه الوثيقة؟",
@@ -112,5 +118,11 @@
   "requiredField": "هذا الحقل مطلوب",
   "networkError": "تعذّر الاتصال بالخادم. تحقق من الإنترنت وحاول مرة أخرى.",
   "unexpectedError": "حدث خطأ غير متوقع، حاول مرة أخرى.",
-  "currency": "دينار ليبي"
+  "currency": "دينار ليبي",
+  "payOnline": "ادفع الآن إلكترونيًا",
+  "checkPaymentStatus": "تحقق من حالة الدفع",
+  "orPayAtOffice": "أو ادفع في أحد مكاتب الشركة مع ذكر رقم الوثيقة.",
+  "paymentSucceeded": "تم الدفع بنجاح وتفعيل الوثيقة",
+  "paymentFailed": "لم تتم عملية الدفع، يمكنك المحاولة مرة أخرى",
+  "paymentNotConfirmedYet": "لم يتم تأكيد الدفع بعد، حاول بعد لحظات"
 }

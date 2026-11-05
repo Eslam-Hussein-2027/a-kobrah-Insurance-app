@@ -39,6 +39,14 @@ class PoliciesRepository {
 
   Future<Uint8List> pdf(int id) => _api.getBytes('/policies/$id/pdf');
 
+  /// Starts an online payment; returns the provider checkout URL to open.
+  Future<OnlinePayment> payOnline(int policyId) async =>
+      OnlinePayment.fromJson((await _api.post('/policies/$policyId/pay-online'))['data'] as Json);
+
+  /// Current status (the server re-checks with the payment provider while pending).
+  Future<OnlinePayment> payment(int paymentId) async =>
+      OnlinePayment.fromJson((await _api.get('/payments/$paymentId'))['data'] as Json);
+
   Future<PolicyVerification> verify({required String policyNo, required String plateNo}) async {
     final body = await _api.get('/policies/verify', query: {'policy_no': policyNo, 'plate_no': plateNo});
     return PolicyVerification.fromJson(body['data'] as Json);

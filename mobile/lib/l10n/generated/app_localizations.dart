@@ -491,7 +491,7 @@ abstract class AppLocalizations {
   /// No description provided for @pendingPaymentBody.
   ///
   /// In ar, this message translates to:
-  /// **'لتفعيل الوثيقة يرجى دفع القسط في أحد مكاتب الشركة مع ذكر رقم الوثيقة. بعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها.'**
+  /// **'يمكنك دفع القسط الآن إلكترونيًا، وبعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها مباشرة.'**
   String get pendingPaymentBody;
 
   /// No description provided for @customerService.
@@ -679,6 +679,42 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'دينار ليبي'**
   String get currency;
+
+  /// No description provided for @payOnline.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادفع الآن إلكترونيًا'**
+  String get payOnline;
+
+  /// No description provided for @checkPaymentStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من حالة الدفع'**
+  String get checkPaymentStatus;
+
+  /// No description provided for @orPayAtOffice.
+  ///
+  /// In ar, this message translates to:
+  /// **'أو ادفع في أحد مكاتب الشركة مع ذكر رقم الوثيقة.'**
+  String get orPayAtOffice;
+
+  /// No description provided for @paymentSucceeded.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الدفع بنجاح وتفعيل الوثيقة'**
+  String get paymentSucceeded;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تتم عملية الدفع، يمكنك المحاولة مرة أخرى'**
+  String get paymentFailed;
+
+  /// No description provided for @paymentNotConfirmedYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم تأكيد الدفع بعد، حاول بعد لحظات'**
+  String get paymentNotConfirmedYet;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -14,7 +14,7 @@ It talks to the Laravel API in [`../backend`](../backend/README.md).
 | My vehicles | List, add, edit and delete vehicles; "Insure vehicle" button |
 | Insure | Shows the price breakdown from the server, lets the customer pick a start date, then issues the policy |
 | My policies | Policies with their status (awaiting payment, active, expired, cancelled) |
-| Policy details | "Pay at office" instructions or cancel the request; download the PDF and open it to print or share |
+| Policy details | **Pay online** (provider page in an in-app browser, status re-checked when the customer returns) or pay at the office; cancel the request; download the PDF and open it to print or share |
 | Account | Personal data, document upload, Arabic/English switch, logout |
 | Verify a policy | Public check by policy number and plate number. No login needed |
 

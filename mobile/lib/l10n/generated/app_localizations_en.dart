@@ -216,7 +216,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pendingPaymentBody =>
-      'To activate the policy, pay the premium at one of our offices and mention the policy number. Once payment is confirmed you can download and print the policy.';
+      'You can pay the premium online now. Once the payment is confirmed you can download and print the policy right away.';
 
   @override
   String get customerService => 'Customer service';
@@ -310,4 +310,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currency => 'LYD';
+
+  @override
+  String get payOnline => 'Pay online now';
+
+  @override
+  String get checkPaymentStatus => 'Check payment status';
+
+  @override
+  String get orPayAtOffice => 'Or pay at one of our offices and mention the policy number.';
+
+  @override
+  String get paymentSucceeded => 'Payment successful, policy activated';
+
+  @override
+  String get paymentFailed => 'The payment was not completed. You can try again';
+
+  @override
+  String get paymentNotConfirmedYet => 'Payment not confirmed yet, try again in a moment';
 }

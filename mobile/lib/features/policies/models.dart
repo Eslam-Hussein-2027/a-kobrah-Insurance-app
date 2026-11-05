@@ -157,3 +157,30 @@ class PolicyVerification {
 
   bool get isExpired => result == 'EXPIRED';
 }
+
+class OnlinePayment {
+  const OnlinePayment({required this.id, required this.status, required this.statusLabel, this.checkoutUrl});
+
+  factory OnlinePayment.fromJson(Map<String, dynamic> json) {
+    final status = json['status'] as Map<String, dynamic>;
+    return OnlinePayment(
+      id: (json['id'] as num).toInt(),
+      status: status['value'] as String,
+      statusLabel: status['label'] as String,
+      checkoutUrl: json['checkout_url'] as String?,
+    );
+  }
+
+  final int id;
+
+  /// PENDING | PAID | FAILED | REFUNDED
+  final String status;
+  final String statusLabel;
+
+  /// Only present while the payment is pending.
+  final String? checkoutUrl;
+
+  bool get isPaid => status == 'PAID';
+
+  bool get isFailed => status == 'FAILED';
+}
