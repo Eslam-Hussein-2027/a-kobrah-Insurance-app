@@ -11,7 +11,7 @@ UI language: Arabic (RTL) first, English second.
 | Folder | App | Status |
 |---|---|---|
 | [`backend/`](backend/README.md) | Laravel REST API (`/api/v1`) | Phase 1 ✅ |
-| `mobile/` | Flutter app (customer + surveyor) | planned |
+| [`mobile/`](mobile/README.md) | Flutter customer app (Arabic RTL + English) | Phase 1 ✅ |
 | `admin/` | React (Vite) + Tailwind admin dashboard | planned |
 
 ## Build phases
@@ -21,4 +21,6 @@ UI language: Arabic (RTL) first, English second.
 3. Claims, surveyor flow, admin dashboard
 4. AI damage classification (FastAPI service), duplicate-image fraud detection, analytics
 
-See [`backend/README.md`](backend/README.md) for setup, the API reference and design notes.
+See [`backend/README.md`](backend/README.md) for the API and [`mobile/README.md`](mobile/README.md) for the app.
+
+![Customer app](docs/mobile-app-preview.png)
