@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Support\Digits;
+use App\Support\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class ApiRequest extends FormRequest
@@ -25,6 +26,11 @@ abstract class ApiRequest extends FormRequest
             if ($this->has($field)) {
                 $normalized[$field] = Digits::toWestern($this->input($field));
             }
+        }
+
+        // +218 / 00218 / spaces / Arabic digits → local format (09XXXXXXXX).
+        if ($this->has('phone')) {
+            $normalized['phone'] = PhoneNumber::normalize($this->input('phone'));
         }
 
         if ($normalized !== []) {

@@ -84,7 +84,7 @@ class PolicyIssuanceTest extends TestCase
 
         $this->createPolicy()
             ->assertUnprocessable()
-            ->assertJsonPath('message', 'يرجى رفع صورة بطاقة الرقم القومي ورخصة القيادة قبل إصدار الوثيقة.');
+            ->assertJsonPath('message', 'يرجى رفع صورة إثبات الهوية ورخصة القيادة قبل إصدار الوثيقة.');
     }
 
     public function test_overlapping_policies_for_the_same_vehicle_are_rejected(): void

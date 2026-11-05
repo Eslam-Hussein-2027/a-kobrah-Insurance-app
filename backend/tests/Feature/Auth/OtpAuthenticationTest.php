@@ -14,7 +14,7 @@ class OtpAuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const PHONE = '01012345678';
+    private const PHONE = '0911234567';
 
     public function test_it_sends_an_otp_and_stores_only_a_hash(): void
     {
@@ -36,7 +36,7 @@ class OtpAuthenticationTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonPath('success', false)
             ->assertJsonPath('message', 'البيانات المدخلة غير صحيحة.')
-            ->assertJsonPath('errors.phone.0', 'رقم الهاتف غير صحيح، يجب أن يكون رقم موبايل مصري مكوّن من 11 رقماً (مثال: 01012345678).');
+            ->assertJsonPath('errors.phone.0', 'رقم الهاتف غير صحيح، يجب أن يكون رقم هاتف محمول ليبي مكوّن من 10 أرقام (مثال: 0911234567).');
     }
 
     public function test_english_messages_are_returned_when_requested(): void
@@ -49,9 +49,34 @@ class OtpAuthenticationTest extends TestCase
 
     public function test_arabic_indic_digits_are_accepted(): void
     {
-        $this->postJson('/api/v1/auth/otp/send', ['phone' => '٠١٠١٢٣٤٥٦٧٨'])->assertOk();
+        $this->postJson('/api/v1/auth/otp/send', ['phone' => '٠٩١١٢٣٤٥٦٧'])->assertOk();
 
         $this->assertNotNull($this->sms->lastCodeFor(self::PHONE));
+    }
+
+    public function test_international_format_is_converted_to_local(): void
+    {
+        $this->postJson('/api/v1/auth/otp/send', ['phone' => '+218 91-123 4567'])->assertOk();
+        $this->assertNotNull($this->sms->lastCodeFor(self::PHONE));
+
+        // Same number, other notations → same OTP row / account.
+        $this->travel(2)->minutes();
+        $this->postJson('/api/v1/auth/otp/send', ['phone' => '00218911234567'])->assertOk();
+        $this->assertSame(2, count(array_filter($this->sms->sent, fn ($sms) => $sms['phone'] === self::PHONE)));
+    }
+
+    public function test_national_number_must_be_libyan_format(): void
+    {
+        $registrationToken = $this->verifyNewPhone();
+
+        $this->postJson('/api/v1/auth/register', [
+            'registration_token' => $registrationToken,
+            'name' => 'محمد أحمد',
+            'national_id' => '29501011234567', // 14 digits (not Libyan)
+            'device_name' => 'pixel-8',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('errors.national_id.0', 'الرقم الوطني غير صحيح، يجب أن يتكون من 12 رقماً ويبدأ بـ 1 أو 2.');
     }
 
     public function test_resending_within_a_minute_is_rate_limited(): void
@@ -70,7 +95,7 @@ class OtpAuthenticationTest extends TestCase
         $response = $this->postJson('/api/v1/auth/register', [
             'registration_token' => $registrationToken,
             'name' => 'محمد أحمد',
-            'national_id' => '29501011234567',
+            'national_id' => '119950123456',
             'device_name' => 'pixel-8',
         ]);
 
@@ -86,7 +111,7 @@ class OtpAuthenticationTest extends TestCase
         $this->withToken($response->json('data.token'))
             ->getJson('/api/v1/auth/me')
             ->assertOk()
-            ->assertJsonPath('data.national_id', '29501011234567');
+            ->assertJsonPath('data.national_id', '119950123456');
     }
 
     public function test_registration_token_is_single_use(): void
@@ -95,13 +120,13 @@ class OtpAuthenticationTest extends TestCase
         $payload = [
             'registration_token' => $registrationToken,
             'name' => 'محمد أحمد',
-            'national_id' => '29501011234567',
+            'national_id' => '119950123456',
             'device_name' => 'pixel-8',
         ];
 
         $this->postJson('/api/v1/auth/register', $payload)->assertCreated();
 
-        $this->postJson('/api/v1/auth/register', [...$payload, 'national_id' => '29501011234568'])
+        $this->postJson('/api/v1/auth/register', [...$payload, 'national_id' => '119950123457'])
             ->assertUnprocessable()
             ->assertJsonValidationErrors('registration_token');
     }
@@ -114,7 +139,7 @@ class OtpAuthenticationTest extends TestCase
         $response = $this->post('/api/v1/auth/register', [
             'registration_token' => $registrationToken,
             'name' => 'محمد أحمد',
-            'national_id' => '29501011234567',
+            'national_id' => '119950123456',
             'device_name' => 'pixel-8',
             'id_image' => UploadedFile::fake()->image('id.jpg', 800, 500),
             'license_image' => UploadedFile::fake()->image('license.png', 800, 500),

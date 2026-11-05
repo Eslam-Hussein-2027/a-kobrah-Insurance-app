@@ -114,7 +114,7 @@
         <td class="value" colspan="3">{{ $customer->name }}</td>
     </tr>
     <tr>
-        <td class="label">الرقم القومي<br><span class="en">National ID</span></td>
+        <td class="label">الرقم الوطني<br><span class="en">National Number</span></td>
         <td class="value">{{ $customer->national_id }}</td>
         <td class="label">رقم الهاتف<br><span class="en">Phone</span></td>
         <td class="value">{{ $customer->phone }}</td>

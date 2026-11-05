@@ -15,10 +15,10 @@ class DemoUserSeeder extends Seeder
     public function run(): void
     {
         $accounts = [
-            ['role' => UserRole::Admin, 'name' => 'مدير النظام', 'phone' => '01000000001', 'national_id' => '29001010100011'],
-            ['role' => UserRole::Surveyor, 'name' => 'أحمد المعاين', 'phone' => '01000000002', 'national_id' => '28805050100022'],
-            ['role' => UserRole::Customer, 'name' => 'محمد العميل', 'phone' => '01000000003', 'national_id' => '29503030100033'],
-            ['role' => UserRole::Workshop, 'name' => 'ورشة النور', 'phone' => '01000000004', 'national_id' => null],
+            ['role' => UserRole::Admin, 'name' => 'مدير النظام', 'phone' => '0910000001', 'national_id' => '119900000011'],
+            ['role' => UserRole::Surveyor, 'name' => 'أحمد المعاين', 'phone' => '0910000002', 'national_id' => '119880000022'],
+            ['role' => UserRole::Customer, 'name' => 'محمد العميل', 'phone' => '0910000003', 'national_id' => '119950000033'],
+            ['role' => UserRole::Workshop, 'name' => 'ورشة النور', 'phone' => '0910000004', 'national_id' => null],
         ];
 
         foreach ($accounts as $account) {
@@ -34,7 +34,7 @@ class DemoUserSeeder extends Seeder
 
             if ($account['role'] === UserRole::Customer) {
                 $user->vehicles()->updateOrCreate(['vin' => 'JTDBR32E720123456'], [
-                    'plate_no' => 'ق ط ن 1234',
+                    'plate_no' => '5-123456',
                     'make' => 'Toyota',
                     'model' => 'Corolla',
                     'year' => 2019,

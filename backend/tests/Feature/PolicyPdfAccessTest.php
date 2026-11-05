@@ -31,7 +31,7 @@ class PolicyPdfAccessTest extends TestCase
 
     private function policy(string $state = 'active'): Policy
     {
-        $vehicle = Vehicle::factory()->for($this->owner)->create(['plate_no' => 'ق ط ن 1234']);
+        $vehicle = Vehicle::factory()->for($this->owner)->create(['plate_no' => '5-123456']);
         $factory = Policy::factory()->for($vehicle)->for(CoverageType::query()->where('code', CoverageType::COMPREHENSIVE)->firstOrFail());
 
         return match ($state) {

@@ -55,7 +55,7 @@ return [
         'not_owner' => 'This policy is not registered to you.',
         'not_active' => 'The policy document is available only after activation.',
         'not_pending' => 'This policy is not awaiting payment.',
-        'kyc_required' => 'Please upload your national ID and driving license images before issuing a policy.',
+        'kyc_required' => 'Please upload your identity document and driving license images before issuing a policy.',
         'overlap' => 'This vehicle already has an active or pending policy for the same period.',
     ],
 

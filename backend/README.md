@@ -34,7 +34,7 @@ php artisan key:generate
 Create the MySQL database, then set `DB_*` in `.env`:
 
 ```sql
-CREATE DATABASE car_insurance CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE akobrah_insurance CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 ```bash
@@ -53,10 +53,10 @@ otherwise the code is written to `storage/logs/laravel.log` (the `log` SMS drive
 
 | Role | Phone |
 |---|---|
-| admin | 01000000001 |
-| surveyor | 01000000002 |
-| customer (has a demo vehicle) | 01000000003 |
-| workshop | 01000000004 |
+| admin | 0910000001 |
+| surveyor | 0910000002 |
+| customer (has a demo vehicle) | 0910000003 |
+| workshop | 0910000004 |
 
 ## Tests
 
@@ -121,7 +121,16 @@ POST /auth/register     {registration_token, name, national_id, device_name, id_
 ```
 
 OTP codes are stored as HMAC hashes, expire after 5 minutes, and lock after 5 wrong attempts.
-Arabic-Indic digits (`٠١٢٣`) are accepted in phone, national ID, OTP, plate and year inputs.
+Localized for **Libya** (all values in `config/insurance.php` / `.env`):
+
+| Input | Rule |
+|---|---|
+| Phone | `09[1-5]XXXXXXX` (10 digits); `+218…`, `00218…`, spaces and dashes are converted to the local format |
+| National number | 12 digits, starts with 1 or 2 |
+| Plate | free format, e.g. `5-123456`; spaces/dashes ignored when comparing |
+| Currency | LYD (دينار ليبي) |
+
+Arabic-Indic digits (`٠١٢٣`) are accepted in phone, national number, OTP, plate and year inputs.
 
 ### Quote engine
 

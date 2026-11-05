@@ -52,7 +52,7 @@ return [
     ],
 
     'user_document_type' => [
-        'id_image' => 'National ID image',
+        'id_image' => 'Identity document image (ID card or passport)',
         'license_image' => 'Driving license image',
     ],
 

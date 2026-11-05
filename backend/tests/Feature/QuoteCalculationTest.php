@@ -55,7 +55,7 @@ class QuoteCalculationTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.base_price', '6500.00')
             ->assertJsonPath('data.premium', '7865.00')
-            ->assertJsonPath('data.currency', 'EGP')
+            ->assertJsonPath('data.currency', 'LYD')
             ->assertJsonPath('data.factors.0.type', 'vehicle_age')
             ->assertJsonPath('data.factors.0.input', 6)
             ->assertJsonPath('data.factors.0.multiplier', '1.100')

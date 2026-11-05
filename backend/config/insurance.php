@@ -11,14 +11,14 @@
 
 return [
 
-    'currency' => env('INSURANCE_CURRENCY', 'EGP'),
-    'currency_label' => env('INSURANCE_CURRENCY_LABEL', 'جنيه مصري'),
+    'currency' => env('INSURANCE_CURRENCY', 'LYD'),
+    'currency_label' => env('INSURANCE_CURRENCY_LABEL', 'دينار ليبي'),
 
     'company' => [
-        'name_ar' => env('COMPANY_NAME_AR', 'شركة الكبرى للتأمين'),
-        'name_en' => env('COMPANY_NAME_EN', 'Al Kobrah Insurance Co.'),
-        'address' => env('COMPANY_ADDRESS', 'القاهرة - جمهورية مصر العربية'),
-        'phone' => env('COMPANY_PHONE', '19000'),
+        'name_ar' => env('COMPANY_NAME_AR', 'العربية الكبرى للتأمين'),
+        'name_en' => env('COMPANY_NAME_EN', 'Alarabia Kobrah'),
+        'address' => env('COMPANY_ADDRESS', 'بنغازي - ليبيا'),
+        'phone' => env('COMPANY_PHONE', '0925441206'),
         // Absolute paths (PNG/JPG/SVG). Replace the placeholders with the real assets.
         'logo_path' => env('COMPANY_LOGO_PATH', resource_path('pdf/logo.svg')),
         'stamp_path' => env('COMPANY_STAMP_PATH', resource_path('pdf/stamp.svg')),
@@ -60,10 +60,12 @@ return [
     ],
 
     'validation' => [
-        // Egyptian mobile numbers: 010 / 011 / 012 / 015 + 8 digits.
-        'phone_regex' => env('PHONE_REGEX', '/^01[0125][0-9]{8}$/'),
-        // Egyptian national ID: 14 digits, century digit 2 or 3.
-        'national_id_regex' => env('NATIONAL_ID_REGEX', '/^[23][0-9]{13}$/'),
+        // Libyan mobile numbers, local format: 091 / 092 / 093 / 094 / 095 + 7 digits.
+        // +218 / 00218 prefixes are converted to the local format before validation.
+        'phone_country_code' => env('PHONE_COUNTRY_CODE', '218'),
+        'phone_regex' => env('PHONE_REGEX', '/^09[1-5][0-9]{7}$/'),
+        // Libyan national number: 12 digits, first digit 1 (male) or 2 (female).
+        'national_id_regex' => env('NATIONAL_ID_REGEX', '/^[12][0-9]{11}$/'),
         // ISO 3779 VIN: 17 chars, excludes I, O, Q.
         'vin_regex' => '/^[A-HJ-NPR-Z0-9]{17}$/',
         'policy_no_regex' => '/^POL-[0-9]{4}-[0-9]{6}$/',

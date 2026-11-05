@@ -15,7 +15,8 @@ class VehicleFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'plate_no' => fake()->randomElement(['ق ط ن', 'م ص ر', 'ب س ع']).' '.fake()->unique()->numerify('####'),
+            // Libyan format: region code - number
+            'plate_no' => fake()->numberBetween(1, 70).'-'.fake()->unique()->numerify('######'),
             // VIN alphabet excludes I, O, Q
             'vin' => strtoupper(fake()->unique()->regexify('[A-HJ-NPR-Z0-9]{17}')),
             'make' => fake()->randomElement(['Toyota', 'Hyundai', 'Kia', 'Nissan', 'Chevrolet']),

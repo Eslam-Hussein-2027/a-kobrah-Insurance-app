@@ -15,8 +15,8 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'phone' => '010'.fake()->unique()->numerify('########'),
-            'national_id' => '2'.fake()->unique()->numerify('#############'),
+            'phone' => '091'.fake()->unique()->numerify('#######'),
+            'national_id' => '1'.fake()->unique()->numerify('###########'),
             'password' => null,
             'role' => UserRole::Customer,
             'phone_verified_at' => now(),

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Development driver: writes SMS messages to the application log.
- * Replace with a real provider (e.g. Vonage, Twilio, local Egyptian gateway) via SMS_DRIVER.
+ * Replace with a real provider (e.g. Vonage, Twilio, a Libyan SMS gateway) via SMS_DRIVER.
  */
 class LogSmsSender implements SmsSender
 {

@@ -10,9 +10,9 @@ class WorkshopSeeder extends Seeder
     public function run(): void
     {
         $workshops = [
-            ['name' => 'مركز النور لصيانة السيارات', 'phone' => '0223456789', 'lat' => 30.0444196, 'lng' => 31.2357116, 'is_approved' => true],
-            ['name' => 'ورشة الأمل - مدينة نصر', 'phone' => '0222876543', 'lat' => 30.0561000, 'lng' => 31.3301000, 'is_approved' => true],
-            ['name' => 'ورشة الإسكندرية الحديثة', 'phone' => '034567890', 'lat' => 31.2000924, 'lng' => 29.9187387, 'is_approved' => false],
+            ['name' => 'مركز النور لصيانة السيارات - بنغازي', 'phone' => '0911111111', 'lat' => 32.1166700, 'lng' => 20.0666700, 'is_approved' => true],
+            ['name' => 'ورشة الأمل - طرابلس', 'phone' => '0922222222', 'lat' => 32.8872000, 'lng' => 13.1913000, 'is_approved' => true],
+            ['name' => 'ورشة مصراتة الحديثة', 'phone' => '0943333333', 'lat' => 32.3754000, 'lng' => 15.0925000, 'is_approved' => false],
         ];
 
         foreach ($workshops as $workshop) {

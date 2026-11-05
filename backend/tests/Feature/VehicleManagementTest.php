@@ -16,7 +16,7 @@ class VehicleManagementTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return [
-            'plate_no' => 'ق  ط ن ١٢٣٤',
+            'plate_no' => ' ٥ - ١٢٣٤٥٦ ',
             'vin' => 'jtdbr32e720123456',
             'make' => 'Toyota',
             'model' => 'Corolla',
@@ -33,7 +33,7 @@ class VehicleManagementTest extends TestCase
         $this->actingAsUser($user)
             ->postJson('/api/v1/vehicles', $this->payload())
             ->assertCreated()
-            ->assertJsonPath('data.plate_no', 'ق ط ن 1234')
+            ->assertJsonPath('data.plate_no', '5-123456')
             ->assertJsonPath('data.vin', 'JTDBR32E720123456')
             ->assertJsonPath('message', 'تمت إضافة المركبة بنجاح.');
 

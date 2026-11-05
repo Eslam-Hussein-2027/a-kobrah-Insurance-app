@@ -20,7 +20,7 @@ class PolicyVerificationTest extends TestCase
         parent::setUp();
 
         $this->travelTo(CarbonImmutable::parse('2026-06-01 10:00:00'));
-        $this->vehicle = Vehicle::factory()->create(['plate_no' => 'ق ط ن 1234']);
+        $this->vehicle = Vehicle::factory()->create(['plate_no' => '5-123456']);
     }
 
     private function verify(string $policyNo, string $plateNo): TestResponse
@@ -35,7 +35,7 @@ class PolicyVerificationTest extends TestCase
     {
         $policy = Policy::factory()->active()->for($this->vehicle)->create(['policy_no' => 'POL-2026-000123']);
 
-        $this->verify('pol-2026-000123', 'قطن ١٢٣٤') // case, spacing and Arabic digits are normalized
+        $this->verify('pol-2026-000123', '٥ ١٢٣٤٥٦') // case, dash/spacing and Arabic digits are normalized
             ->assertOk()
             ->assertJsonPath('data.result.value', 'VALID')
             ->assertJsonPath('message', 'الوثيقة سارية')
@@ -56,8 +56,8 @@ class PolicyVerificationTest extends TestCase
             'end_date' => '2026-04-30',
         ]);
 
-        $this->verify('POL-2025-000001', 'ق ط ن 1234')->assertJsonPath('data.result.value', 'EXPIRED');
-        $this->verify('POL-2025-000002', 'ق ط ن 1234')->assertJsonPath('data.result.value', 'EXPIRED');
+        $this->verify('POL-2025-000001', '5-123456')->assertJsonPath('data.result.value', 'EXPIRED');
+        $this->verify('POL-2025-000002', '5-123456')->assertJsonPath('data.result.value', 'EXPIRED');
     }
 
     public function test_wrong_plate_unknown_number_or_unpaid_policy_is_not_found(): void
@@ -66,9 +66,9 @@ class PolicyVerificationTest extends TestCase
         Policy::factory()->for($this->vehicle)->create(['policy_no' => 'POL-2026-000002']); // pending payment
 
         foreach ([
-            ['POL-2026-000001', 'ق ط ن 9999'],
-            ['POL-2026-999999', 'ق ط ن 1234'],
-            ['POL-2026-000002', 'ق ط ن 1234'],
+            ['POL-2026-000001', '5-999999'],
+            ['POL-2026-999999', '5-123456'],
+            ['POL-2026-000002', '5-123456'],
         ] as [$policyNo, $plateNo]) {
             $this->verify($policyNo, $plateNo)
                 ->assertOk()
