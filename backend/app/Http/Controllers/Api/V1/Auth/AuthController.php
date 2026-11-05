@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\StaffLoginRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Responses\ApiResponse;
@@ -55,6 +56,21 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => new UserResource($result['user']),
         ], __('messages.auth.registered'));
+    }
+
+    public function staffLogin(StaffLoginRequest $request): JsonResponse
+    {
+        $result = $this->auth->staffLogin(
+            $request->validated('phone'),
+            $request->validated('password'),
+            $request->validated('device_name'),
+        );
+
+        return ApiResponse::success([
+            'token' => $result['token'],
+            'token_type' => 'Bearer',
+            'user' => new UserResource($result['user']),
+        ], __('messages.auth.logged_in'));
     }
 
     public function me(Request $request): JsonResponse

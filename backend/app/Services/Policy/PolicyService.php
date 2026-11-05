@@ -70,7 +70,7 @@ class PolicyService
 
     /**
      * "Pay at office": an admin records the cash/POS payment and the policy is activated.
-     * Phase 2's online gateway will call activate() after a successful callback.
+     * Online payments activate through PaymentService::sync() → activate().
      */
     public function confirmOfficePayment(Policy $policy, User $admin, ?string $receiptReference = null): Policy
     {
@@ -81,6 +81,11 @@ class PolicyService
             if (! $locked->isPendingPayment()) {
                 throw new BusinessRuleException(__('messages.policy.not_pending'));
             }
+
+            $locked->payments()
+                ->where('method', PaymentMethod::Online)
+                ->where('status', PaymentStatus::Pending)
+                ->update(['status' => PaymentStatus::Failed, 'failure_reason' => 'paid_at_office']);
 
             $locked->payments()->create([
                 'amount' => $locked->premium,

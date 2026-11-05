@@ -34,6 +34,13 @@ class PolicyPolicy
         return Response::allow();
     }
 
+    public function pay(User $user, Policy $policy): Response
+    {
+        return $policy->isOwnedBy($user)
+            ? Response::allow()
+            : Response::deny(__('messages.policy.not_owner'));
+    }
+
     public function cancel(User $user, Policy $policy): Response
     {
         return $policy->isOwnedBy($user)

@@ -28,6 +28,22 @@ return [
         'registration_token_invalid' => 'Registration session is invalid or expired. Please request a new code.',
         'phone_taken' => 'This phone number is already registered.',
         'account_disabled' => 'This account is disabled. Please contact customer service.',
+        'invalid_credentials' => 'Invalid phone number or password.',
+    ],
+
+    'payment' => [
+        'started' => 'Payment created. Complete it on the payment provider page.',
+    ],
+
+    'customer' => [
+        'blocked' => 'Customer account blocked.',
+        'activated' => 'Customer account activated.',
+    ],
+
+    'pricing' => [
+        'saved' => 'Pricing saved.',
+        'deleted' => 'Band deleted.',
+        'overlap' => 'This band overlaps an existing band (:min - :max).',
     ],
 
     'profile' => [

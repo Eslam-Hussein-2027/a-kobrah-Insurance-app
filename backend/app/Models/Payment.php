@@ -13,11 +13,18 @@ class Payment extends Model
         'policy_id',
         'amount',
         'method',
+        'gateway',
         'gateway_ref',
+        'checkout_url',
         'status',
+        'failure_reason',
+        'requires_refund',
+        'gateway_payload',
         'paid_at',
         'confirmed_by',
     ];
+
+    protected $hidden = ['gateway_payload'];
 
     protected function casts(): array
     {
@@ -25,6 +32,8 @@ class Payment extends Model
             'amount' => 'decimal:2',
             'method' => PaymentMethod::class,
             'status' => PaymentStatus::class,
+            'requires_refund' => 'boolean',
+            'gateway_payload' => 'array',
             'paid_at' => 'datetime',
         ];
     }

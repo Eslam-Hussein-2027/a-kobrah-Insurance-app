@@ -9,6 +9,7 @@ use App\Services\UserDocumentService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -104,6 +105,30 @@ class AuthService
             'token' => $this->issueToken($user, $data['device_name']),
             'user' => $user->refresh(),
         ];
+    }
+
+    /**
+     * Dashboard login for staff (admin, surveyor, workshop) with phone + password.
+     * Customers always use OTP.
+     *
+     * @return array{token: string, user: User}
+     */
+    public function staffLogin(string $phone, string $password, string $deviceName): array
+    {
+        $user = User::query()->where('phone', $phone)->first();
+
+        $valid = $user !== null
+            && $user->role !== UserRole::Customer
+            && $user->getAuthPassword() !== null
+            && Hash::check($password, $user->getAuthPassword());
+
+        if (! $valid) {
+            throw ValidationException::withMessages(['phone' => __('messages.auth.invalid_credentials')]);
+        }
+
+        $this->ensureActive($user);
+
+        return ['token' => $this->issueToken($user, $deviceName), 'user' => $user];
     }
 
     public function logout(User $user): void
