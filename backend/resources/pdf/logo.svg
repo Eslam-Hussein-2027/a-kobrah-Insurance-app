@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
-  <!-- Placeholder logo: replace with the company's real logo (COMPANY_LOGO_PATH). -->
-  <circle cx="120" cy="120" r="112" fill="none" stroke="#000" stroke-width="8"/>
-  <path d="M120 40 L185 70 L185 125 C185 165 155 190 120 205 C85 190 55 165 55 125 L55 70 Z" fill="none" stroke="#000" stroke-width="8"/>
-  <path d="M90 125 L112 147 L152 100" fill="none" stroke="#000" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>

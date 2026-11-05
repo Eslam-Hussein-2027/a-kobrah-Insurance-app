@@ -24,8 +24,8 @@
         table { width: 100%; border-collapse: collapse; }
 
         .company-ar { font-size: 16pt; font-weight: bold; }
-        .company-en { font-size: 9.5pt; }
-        .muted { font-size: 8.5pt; }
+        .company-en { font-size: 11pt; font-weight: bold; }
+        .muted { font-size: 9pt; line-height: 1.35; }
 
         .title-box { border: 1.5pt solid #000; text-align: center; padding: 2.5mm 0; margin: 4mm 0 3mm 0; }
         .title-ar { font-size: 17pt; font-weight: bold; }
@@ -63,21 +63,20 @@
 </htmlpagefooter>
 
 {{-- ================= Header ================= --}}
+{{-- The logo already carries the Arabic name; the English name and contact details sit opposite it. --}}
 <table>
     <tr>
-        <td style="width: 22%; text-align: right; vertical-align: middle;">
+        <td style="width: 50%; text-align: right; vertical-align: middle;">
             @if ($logo)
-                <img src="{{ $logo }}" style="height: 20mm;" alt="">
+                <img src="{{ $logo }}" style="width: 64mm;" alt="">
+            @else
+                <div class="company-ar">{{ $company['name_ar'] }}</div>
             @endif
         </td>
-        <td style="text-align: center; vertical-align: middle;">
-            <div class="company-ar">{{ $company['name_ar'] }}</div>
+        <td style="width: 50%; text-align: left; vertical-align: middle;" class="muted">
             <div class="company-en"><bdo dir="ltr">{{ $company['name_en'] }}</bdo></div>
-            <div class="muted">{{ $company['address'] }} - هاتف: {{ $company['phone'] }}</div>
-        </td>
-        <td style="width: 22%; text-align: left; vertical-align: middle;" class="muted">
-            <div>تاريخ الإصدار</div>
-            <div><bdo dir="ltr">{{ ($policy->issued_at ?? now())->format('Y-m-d') }}</bdo></div>
+            <div>{{ $company['address'] }} - هاتف: {{ $company['phone'] }}</div>
+            <div>تاريخ الإصدار: <bdo dir="ltr">{{ ($policy->issued_at ?? now())->format('Y-m-d') }}</bdo></div>
         </td>
     </tr>
 </table>
