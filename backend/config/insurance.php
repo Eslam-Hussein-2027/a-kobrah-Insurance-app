@@ -15,13 +15,13 @@ return [
     'currency_label' => env('INSURANCE_CURRENCY_LABEL', 'دينار ليبي'),
 
     'company' => [
-        'name_ar' => env('COMPANY_NAME_AR', 'العربية الكبرى للتأمين'),
+        'name_ar' => env('COMPANY_NAME_AR', 'العربية الكبرى للتأمين المساهمة'),
         'name_en' => env('COMPANY_NAME_EN', 'Alarabia Kobrah Insurance Company'),
         'address' => env('COMPANY_ADDRESS', 'بنغازي - ليبيا'),
         'phone' => env('COMPANY_PHONE', '0925441206'),
-        // Absolute paths (PNG/JPG/SVG). The PDF is printed in black & white, so the grayscale logo is the default;
-        // the original colour logo is resources/pdf/logo.png. The stamp is still a placeholder.
-        'logo_path' => env('COMPANY_LOGO_PATH', resource_path('pdf/logo-bw.png')),
+        // Absolute paths (PNG/JPG/SVG). Colour logo (company's choice); the rest of the document is black & white.
+        // The stamp is still a placeholder.
+        'logo_path' => env('COMPANY_LOGO_PATH', resource_path('pdf/logo.png')),
         'stamp_path' => env('COMPANY_STAMP_PATH', resource_path('pdf/stamp.svg')),
         // Shown on the PDF so third parties know where to verify a policy (no QR code by design).
         'verification_url' => env('POLICY_VERIFICATION_URL', env('APP_URL').'/verify'),

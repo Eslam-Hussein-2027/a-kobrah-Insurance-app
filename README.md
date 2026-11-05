@@ -1,4 +1,4 @@
-# العربية الكبرى للتأمين — Alarabia Kobrah
+# العربية الكبرى للتأمين المساهمة — Alarabia Kobrah Insurance Company
 
 Car insurance platform (Benghazi, Libya).
 
