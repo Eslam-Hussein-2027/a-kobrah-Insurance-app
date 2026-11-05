@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <!-- Placeholder stamp: replace with the scanned company stamp/signature (COMPANY_STAMP_PATH). -->
+  <circle cx="150" cy="150" r="140" fill="none" stroke="#000" stroke-width="6"/>
+  <circle cx="150" cy="150" r="118" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="150" y="140" font-size="34" text-anchor="middle" font-family="sans-serif" font-weight="bold" fill="#000">STAMP</text>
+  <text x="150" y="180" font-size="22" text-anchor="middle" font-family="sans-serif" fill="#000">AUTHORIZED</text>
+</svg>
