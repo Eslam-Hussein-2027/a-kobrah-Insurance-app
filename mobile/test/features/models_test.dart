@@ -66,6 +66,23 @@ void main() {
     expect(policy.vehicle!.plateNo, '5-123456');
     expect(policy.coverageType!.isMandatory, isTrue);
     expect(policy.canDownloadPdf, isFalse);
+    expect(policy.verificationUrl, isNull);
+  });
+
+  test('Policy keeps the QR verification link of issued policies', () {
+    final policy = Policy.fromJson({
+      'id': 2,
+      'policy_no': 'POL-2026-000002',
+      'status': {'value': 'ACTIVE', 'label': 'سارية'},
+      'start_date': '2026-11-05',
+      'end_date': '2027-11-04',
+      'premium': '1452.00',
+      'can_download_pdf': true,
+      'verification_url': 'https://app.akobrah.ly/verify/POL-2026-000002/0123456789abcdef0123',
+    });
+
+    expect(policy.status, PolicyStatus.active);
+    expect(policy.verificationUrl, endsWith('/POL-2026-000002/0123456789abcdef0123'));
   });
 
   test('Quote parses factor breakdown', () {

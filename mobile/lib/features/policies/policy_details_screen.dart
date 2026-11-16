@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/api/api_exception.dart';
@@ -33,6 +34,10 @@ class PolicyDetailsScreen extends ConsumerWidget {
               const SizedBox(height: 12),
               _Details(policy: policy),
               const SizedBox(height: 16),
+              if (policy.verificationUrl != null) ...[
+                _VerificationQr(url: policy.verificationUrl!),
+                const SizedBox(height: 16),
+              ],
               if (policy.status == PolicyStatus.pendingPayment) _PendingPayment(policy: policy),
               if (policy.canDownloadPdf) _DownloadButton(policy: policy),
             ],
@@ -319,6 +324,52 @@ class _DownloadButtonState extends ConsumerState<_DownloadButton> {
       icon: Icons.picture_as_pdf_outlined,
       loading: _loading,
       onPressed: _download,
+    );
+  }
+}
+
+/// QR code the customer can show at a checkpoint; scanning opens the company's verification page.
+class _VerificationQr extends StatelessWidget {
+  const _VerificationQr({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    return SectionCard(
+      child: Column(
+        children: [
+          Text(l10n.verificationQrTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: QrImageView(
+              data: url,
+              size: 190,
+              errorCorrectionLevel: QrErrorCorrectLevel.M,
+              eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: AppColors.navy),
+              dataModuleStyle: const QrDataModuleStyle(
+                dataModuleShape: QrDataModuleShape.square,
+                color: AppColors.navy,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.verificationQrHint,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted, height: 1.6),
+          ),
+        ],
+      ),
     );
   }
 }

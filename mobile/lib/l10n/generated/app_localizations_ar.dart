@@ -328,4 +328,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get paymentNotConfirmedYet => 'لم يتم تأكيد الدفع بعد، حاول بعد لحظات';
+
+  @override
+  String get verificationQrTitle => 'رمز التحقق من الوثيقة';
+
+  @override
+  String get verificationQrHint =>
+      'يمكن لرجال المرور والجهات الحكومية والشركات مسح هذا الرمز بكاميرا الهاتف للتأكد من صحة الوثيقة.';
 }

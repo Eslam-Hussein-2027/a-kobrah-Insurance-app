@@ -103,5 +103,7 @@
   "orPayAtOffice": "Or pay at one of our offices and mention the policy number.",
   "paymentSucceeded": "Payment successful, policy activated",
   "paymentFailed": "The payment was not completed. You can try again",
-  "paymentNotConfirmedYet": "Payment not confirmed yet, try again in a moment"
+  "paymentNotConfirmedYet": "Payment not confirmed yet, try again in a moment",
+  "verificationQrTitle": "Policy verification code",
+  "verificationQrHint": "Traffic police, government bodies and companies can scan this code with a phone camera to confirm the policy is genuine."
 }

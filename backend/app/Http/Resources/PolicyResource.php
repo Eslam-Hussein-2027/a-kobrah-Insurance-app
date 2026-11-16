@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\PolicyStatus;
 use App\Models\Policy;
+use App\Services\Policy\PolicyVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +29,11 @@ class PolicyResource extends JsonResource
             'pdf_url' => $this->when(
                 $this->isActive(),
                 fn () => route('api.v1.policies.pdf', $this->resource),
+            ),
+            // Same link as the QR printed on the policy (issued policies only).
+            'verification_url' => $this->when(
+                in_array($this->status, [PolicyStatus::Active, PolicyStatus::Expired], true),
+                fn () => app(PolicyVerificationService::class)->url($this->resource),
             ),
             'created_at' => $this->created_at?->toIso8601String(),
         ];

@@ -25,6 +25,18 @@
         .badge { display: inline-block; background: #FEF0C7; color: var(--warn); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 700; }
         .icon { width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 38px; color: #fff; }
         .icon.ok { background: var(--ok); } .icon.bad { background: var(--bad); } .icon.wait { background: var(--warn); }
+        .icon.muted { background: var(--muted); }
+        .status { font-size: 26px; font-weight: 700; margin: 6px 0 2px; }
+        .status.ok { color: var(--ok); } .status.bad { color: var(--bad); } .status.wait { color: var(--warn); } .status.muted { color: var(--muted); }
+        .note { background: var(--bg); border-radius: 12px; padding: 10px 12px; font-size: 13px; color: #344054; margin-top: 16px; text-align: start; line-height: 1.7; }
+        .checked-at { font-size: 13px; color: var(--muted); }
+        label { display: block; text-align: start; font-size: 14px; margin: 14px 0 6px; color: #344054; }
+        input { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 13px 14px; font: inherit; font-size: 16px; }
+        input:focus { outline: 2px solid rgba(10,127,212,.25); border-color: var(--blue); }
+        .error { color: var(--bad); font-size: 13px; text-align: start; margin-top: 4px; }
+        .rows { margin-top: 14px; text-align: start; }
+        .footer-links { margin-top: 18px; font-size: 13px; color: var(--muted); }
+        .footer-links a { color: var(--blue); text-decoration: none; font-weight: 700; }
     </style>
 </head>
 <body>

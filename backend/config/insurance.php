@@ -23,9 +23,14 @@ return [
         // The stamp is still a placeholder.
         'logo_path' => env('COMPANY_LOGO_PATH', resource_path('pdf/logo.png')),
         'stamp_path' => env('COMPANY_STAMP_PATH', resource_path('pdf/stamp.svg')),
-        // Shown on the PDF so third parties know where to verify a policy (no QR code by design).
-        'verification_url' => env('POLICY_VERIFICATION_URL', env('APP_URL').'/verify'),
+        // Public verification page (served by this app at /verify). The QR code on every policy
+        // points to {verification_url}/{policy_no}/{token}.
+        'verification_url' => env('POLICY_VERIFICATION_URL', rtrim((string) env('APP_URL', 'http://localhost'), '/').'/verify'),
     ],
+
+    // Signs the QR codes printed on policies. Keep it stable: changing it invalidates every printed QR.
+    // Falls back to APP_KEY when empty.
+    'verification_secret' => env('POLICY_VERIFICATION_SECRET'),
 
     'policy' => [
         'number_prefix' => 'POL',

@@ -13,6 +13,8 @@ use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
  */
 class PolicyPdfService
 {
+    public function __construct(private readonly PolicyVerificationService $verifier) {}
+
     public function render(Policy $policy): string
     {
         $policy->loadMissing(['vehicle.user', 'coverageType']);
@@ -26,6 +28,7 @@ class PolicyPdfService
             'currency_label' => config('insurance.currency_label'),
             'logo' => $this->existingPath(config('insurance.company.logo_path')),
             'stamp' => $this->existingPath(config('insurance.company.stamp_path')),
+            'verificationUrl' => $this->verifier->url($policy),
         ], [], [
             'title' => $policy->policy_no,
             'subject' => __('pdf.title'),

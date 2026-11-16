@@ -32,6 +32,16 @@ export function PolicyDetailsPage() {
           <div className="flex flex-wrap gap-2">
             {isPending && <ConfirmPaymentButton policy={p} />}
             {p.status.value === 'ACTIVE' && <PrintPolicyButton policy={p} />}
+            {p.verification_url && (
+              <a
+                href={p.verification_url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-xl border border-line bg-white px-4 py-2.5 text-sm font-bold text-navy hover:bg-page"
+              >
+                صفحة التحقق (QR)
+              </a>
+            )}
             {isPending && <CancelPolicyButton policy={p} />}
           </div>
         }

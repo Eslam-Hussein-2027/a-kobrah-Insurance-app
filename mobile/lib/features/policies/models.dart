@@ -84,6 +84,7 @@ class Policy {
     required this.endDate,
     required this.premium,
     required this.canDownloadPdf,
+    this.verificationUrl,
     this.issuedAt,
     this.vehicle,
     this.coverageType,
@@ -101,6 +102,7 @@ class Policy {
       premium: json['premium'].toString(),
       issuedAt: json['issued_at'] as String?,
       canDownloadPdf: json['can_download_pdf'] == true,
+      verificationUrl: json['verification_url'] as String?,
       vehicle: json['vehicle'] is Map ? Vehicle.fromJson((json['vehicle'] as Map).cast<String, dynamic>()) : null,
       coverageType: json['coverage_type'] is Map
           ? CoverageType.fromJson((json['coverage_type'] as Map).cast<String, dynamic>())
@@ -119,6 +121,9 @@ class Policy {
   final String premium;
   final String? issuedAt;
   final bool canDownloadPdf;
+
+  /// Same signed link as the QR printed on the policy (issued policies only).
+  final String? verificationUrl;
   final Vehicle? vehicle;
   final CoverageType? coverageType;
 }

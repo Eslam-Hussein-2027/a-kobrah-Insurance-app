@@ -11,7 +11,7 @@ Staff dashboard for **العربية الكبرى للتأمين المساهم�
 | Login | Phone number and password. Only `admin` accounts can sign in |
 | Home (الرئيسية) | Active and pending policies, revenue for the month and in total (online vs. office), customers, refunds needed, a 6-month revenue chart, and a pending-payment list with quick "confirm payment" |
 | Policies (الوثائق) | Filter by status, and search by policy number, plate, customer name, phone or national number |
-| Policy details | Customer, vehicle, the pricing breakdown at issuance and payment history. Actions: confirm office payment (with receipt number), print the PDF, cancel |
+| Policy details | Customer, vehicle, the pricing breakdown at issuance and payment history. Actions: confirm office payment (with receipt number), print the PDF, cancel, open the public verification page (the same page the QR code opens) |
 | Payments (المدفوعات) | Online and office payments, filters, and the **requires refund** flag |
 | Customers (العملاء) | Search, vehicle and policy counts, document status. Details page shows the ID and license photos (signed links), and a block/unblock button |
 | Pricing (التسعير) | Base price per coverage type, enabling coverage types, and the factor bands for vehicle age, engine and claims history. Overlapping bands are rejected and gaps are flagged |

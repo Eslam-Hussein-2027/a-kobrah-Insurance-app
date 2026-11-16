@@ -52,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('webhooks', fn (Request $request) => Limit::perMinute(120)->by('webhook:'.$request->ip()));
 
+        RateLimiter::for('qr-verification', fn (Request $request) => Limit::perMinute(60)->by('qr:'.$request->ip()));
+
         RateLimiter::for('policy-verification', fn (Request $request) => Limit::perMinute(10)->by('verify:'.$request->ip()));
     }
 }

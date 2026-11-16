@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Web\PaymentPageController;
+use App\Http\Controllers\Web\PublicVerificationController;
 use Illuminate\Support\Facades\Route;
 
 // API-only backend. The admin dashboard (React) and mobile app (Flutter) consume /api/v1.
@@ -16,3 +17,12 @@ Route::middleware('signed')->prefix('payments')->name('payments.')->group(functi
     Route::post('simulator/{payment}', [PaymentPageController::class, 'completeSimulator'])->name('simulator.complete');
     Route::get('{payment}/result', [PaymentPageController::class, 'result'])->name('result');
 });
+
+// Public policy verification for police, government bodies and companies (no login).
+Route::get('verify', [PublicVerificationController::class, 'form'])
+    ->middleware('throttle:policy-verification')
+    ->name('verify.form');
+Route::get('verify/{policyNo}/{token}', [PublicVerificationController::class, 'qr'])
+    ->where(['policyNo' => 'POL-[0-9]{4}-[0-9]{6}', 'token' => '[a-f0-9]{20}'])
+    ->middleware('throttle:qr-verification')
+    ->name('verify.qr');

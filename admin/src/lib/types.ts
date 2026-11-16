@@ -75,6 +75,8 @@ export interface AdminPolicy {
   coverage_type?: CoverageType;
   payments?: Payment[];
   pricing_snapshot?: PricingSnapshot | null;
+  /** Same signed link as the QR printed on the policy (issued policies only). */
+  verification_url?: string;
   created_at: string;
 }
 

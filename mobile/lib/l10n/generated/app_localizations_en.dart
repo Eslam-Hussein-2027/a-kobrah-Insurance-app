@@ -328,4 +328,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paymentNotConfirmedYet => 'Payment not confirmed yet, try again in a moment';
+
+  @override
+  String get verificationQrTitle => 'Policy verification code';
+
+  @override
+  String get verificationQrHint =>
+      'Traffic police, government bodies and companies can scan this code with a phone camera to confirm the policy is genuine.';
 }

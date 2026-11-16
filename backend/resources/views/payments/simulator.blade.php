@@ -1,4 +1,4 @@
-@extends('payments.layout')
+@extends('layouts.public')
 
 @section('title', 'بوابة الدفع التجريبية')
 

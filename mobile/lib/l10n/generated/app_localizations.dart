@@ -715,6 +715,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'لم يتم تأكيد الدفع بعد، حاول بعد لحظات'**
   String get paymentNotConfirmedYet;
+
+  /// No description provided for @verificationQrTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق من الوثيقة'**
+  String get verificationQrTitle;
+
+  /// No description provided for @verificationQrHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكن لرجال المرور والجهات الحكومية والشركات مسح هذا الرمز بكاميرا الهاتف للتأكد من صحة الوثيقة.'**
+  String get verificationQrHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

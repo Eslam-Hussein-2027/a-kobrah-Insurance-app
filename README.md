@@ -16,7 +16,7 @@ UI language: Arabic (RTL) first, English second.
 
 ## Build phases
 
-1. ✅ Auth (phone + OTP), roles, vehicles, quote engine, policy issuance + PDF download
+1. ✅ Auth (phone + OTP), roles, vehicles, quote engine, policy issuance + PDF download, public QR verification
 2. ✅ Payments (online via `PaymentGateway`, office) + admin dashboard · ⏳ real provider, renewal, reminders, push notifications
 3. Claims, surveyor flow, admin dashboard
 4. AI damage classification (FastAPI service), duplicate-image fraud detection, analytics

@@ -44,6 +44,8 @@
         .terms ol { margin: 0; padding-right: 5mm; }
 
         .stamp-cell { text-align: center; vertical-align: bottom; }
+        .qr-cell { text-align: center; vertical-align: middle; }
+        .qr-caption { font-size: 8.5pt; font-weight: bold; margin-top: 1mm; }
         .stamp-line { border-top: 0.6pt solid #000; padding-top: 1mm; font-weight: bold; }
 
         .footer { font-size: 8pt; border-top: 0.6pt solid #000; }
@@ -55,7 +57,7 @@
     <table class="footer">
         <tr>
             <td style="text-align: right; padding-top: 1.5mm;">
-                للتحقق من صحة الوثيقة يرجى زيارة الرابط التالي وإدخال رقم الوثيقة ورقم اللوحة:
+                للتحقق من صحة الوثيقة امسح رمز QR بكاميرا الهاتف، أو أدخل رقم الوثيقة ورقم اللوحة في:
             </td>
             <td style="text-align: left; padding-top: 1.5mm;"><bdo dir="ltr">{{ $company['verification_url'] }}</bdo></td>
         </tr>
@@ -147,14 +149,19 @@
 <div class="section-title">ملاحظات هامة</div>
 <table>
     <tr>
-        <td class="terms" style="width: 64%;">
+        <td class="terms" style="width: 50%;">
             <ol>
                 <li>تسري هذه الوثيقة خلال الفترة المذكورة أعلاه فقط، وتخضع للشروط والأحكام العامة لوثائق تأمين السيارات لدى الشركة.</li>
                 <li>يجب الإبلاغ عن أي حادث خلال المدة المحددة في الشروط العامة عبر تطبيق الشركة أو أحد فروعها.</li>
-                <li>أي كشط أو تعديل في بيانات هذه الوثيقة يلغيها، ويمكن التحقق من صحتها عبر رابط التحقق أسفل الصفحة.</li>
+                <li>أي كشط أو تعديل في بيانات هذه الوثيقة يلغيها، ويمكن التحقق من صحتها في أي وقت بمسح رمز QR.</li>
             </ol>
         </td>
-        <td class="stamp-cell" style="width: 36%;">
+        {{-- Signed verification link: scanning opens the company's official page with the live status. --}}
+        <td class="qr-cell" style="width: 22%;">
+            <barcode code="{{ $verificationUrl }}" type="QR" size="1.25" error="M" disableborder="1" />
+            <div class="qr-caption">امسح للتحقق</div>
+        </td>
+        <td class="stamp-cell" style="width: 28%;">
             @if ($stamp)
                 <img src="{{ $stamp }}" style="height: 26mm;" alt=""><br>
             @endif

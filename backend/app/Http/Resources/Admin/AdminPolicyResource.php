@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources\Admin;
 
+use App\Enums\PolicyStatus;
 use App\Http\Resources\CoverageTypeResource;
 use App\Http\Resources\PaymentResource;
 use App\Http\Resources\VehicleResource;
 use App\Models\Policy;
+use App\Services\Policy\PolicyVerificationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -35,6 +37,11 @@ class AdminPolicyResource extends JsonResource
             'coverage_type' => new CoverageTypeResource($this->whenLoaded('coverageType')),
             'payments' => PaymentResource::collection($this->whenLoaded('payments')),
             'pricing_snapshot' => $this->when($request->routeIs('api.v1.admin.policies.show'), $this->pricing_snapshot),
+            // Same link as the QR printed on the policy (issued policies only).
+            'verification_url' => $this->when(
+                in_array($this->status, [PolicyStatus::Active, PolicyStatus::Expired], true),
+                fn () => app(PolicyVerificationService::class)->url($this->resource),
+            ),
             'created_at' => $this->created_at?->toIso8601String(),
         ];
     }
