@@ -23,8 +23,8 @@ return [
         // Shown in the app under "Branches & agents". Add agents here as they are appointed.
         'branches' => [
             [
-                'name_ar' => 'المقر الرئيسي',
-                'name_en' => 'Head office',
+                'name_ar' => 'الإدارة العامة',
+                'name_en' => 'General management',
                 'city_ar' => 'بنغازي',
                 'city_en' => 'Benghazi',
                 'phone' => env('COMPANY_PHONE', '0925441206'),
