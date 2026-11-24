@@ -53,6 +53,11 @@ return [
         'pdf_directory' => 'policies',
     ],
 
+    'travel' => [
+        // Travellers per policy.
+        'max_travellers' => (int) env('TRAVEL_MAX_TRAVELLERS', 10),
+    ],
+
     'claim' => [
         'number_prefix' => 'CLM',
     ],

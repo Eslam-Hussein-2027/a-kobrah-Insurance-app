@@ -94,4 +94,10 @@ return [
         'CANCELLED' => 'Cancelled',
     ],
 
+    'travel_zone' => [
+        'arab' => 'Arab countries',
+        'schengen' => 'Europe (Schengen)',
+        'worldwide' => 'Worldwide',
+    ],
+
 ];

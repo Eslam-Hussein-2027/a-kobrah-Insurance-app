@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             CoverageTypeSeeder::class,
             PricingFactorSeeder::class,
+            TravelRateSeeder::class,
         ]);
 
         // Demo data — never in production.

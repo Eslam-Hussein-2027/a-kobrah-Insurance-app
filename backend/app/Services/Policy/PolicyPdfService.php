@@ -17,12 +17,13 @@ class PolicyPdfService
 
     public function render(Policy $policy): string
     {
-        $policy->loadMissing(['vehicle.user', 'coverageType']);
+        $policy->loadMissing(['user', 'vehicle', 'coverageType', 'travellers']);
 
-        $pdf = LaravelMpdf::loadView('pdf.policy', [
+        $pdf = LaravelMpdf::loadView($policy->isTravel() ? 'pdf.travel-policy' : 'pdf.policy', [
             'policy' => $policy,
             'vehicle' => $policy->vehicle,
-            'customer' => $policy->vehicle->user,
+            'travellers' => $policy->travellers,
+            'customer' => $policy->user,
             'coverage' => $policy->coverageType,
             'company' => config('insurance.company'),
             'currency_label' => config('insurance.currency_label'),
@@ -31,7 +32,7 @@ class PolicyPdfService
             'verificationUrl' => $this->verifier->url($policy),
         ], [], [
             'title' => $policy->policy_no,
-            'subject' => __('pdf.title'),
+            'subject' => $policy->isTravel() ? __('pdf.travel_title') : __('pdf.title'),
         ]);
 
         return $pdf->output();

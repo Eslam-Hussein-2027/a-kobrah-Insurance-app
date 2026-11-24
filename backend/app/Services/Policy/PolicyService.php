@@ -2,24 +2,30 @@
 
 namespace App\Services\Policy;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\PolicyStatus;
+use App\Enums\TravelZone;
 use App\Exceptions\BusinessRuleException;
 use App\Jobs\GeneratePolicyPdf;
 use App\Models\CoverageType;
+use App\Models\InsuredPerson;
 use App\Models\Policy;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\DocumentNumberGenerator;
 use App\Services\Pricing\QuoteService;
+use App\Services\Pricing\TravelQuoteService;
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class PolicyService
 {
     public function __construct(
         private readonly QuoteService $quotes,
+        private readonly TravelQuoteService $travelQuotes,
         private readonly DocumentNumberGenerator $numbers,
     ) {}
 
@@ -37,7 +43,7 @@ class PolicyService
         }
 
         $start = ($startDate ?? CarbonImmutable::today())->startOfDay();
-        $end = $this->endDateFor($start);
+        $end = $this->motorEndDate($start);
 
         if ($this->hasOverlappingPolicy($vehicle, $start, $end)) {
             throw new BusinessRuleException(__('messages.policy.overlap'));
@@ -47,6 +53,8 @@ class PolicyService
 
         return DB::transaction(fn () => Policy::create([
             'policy_no' => $this->numbers->next((string) config('insurance.policy.number_prefix')),
+            'user_id' => $customer->id,
+            'product' => InsuranceProduct::Motor,
             'vehicle_id' => $vehicle->id,
             'coverage_type_id' => $coverageType->id,
             'start_date' => $start,
@@ -55,6 +63,54 @@ class PolicyService
             'pricing_snapshot' => $quote->snapshot(),
             'status' => PolicyStatus::PendingPayment,
         ]));
+    }
+
+    /**
+     * Travel policy awaiting payment, for one or more of the customer's saved persons.
+     *
+     * @param  Collection<int, InsuredPerson>  $travellers
+     */
+    public function createPendingTravel(
+        User $customer,
+        TravelZone $zone,
+        int $days,
+        CarbonImmutable $startDate,
+        Collection $travellers,
+    ): Policy {
+        $withoutPassport = $travellers->filter(fn (InsuredPerson $person) => blank($person->passport_no));
+
+        if ($withoutPassport->isNotEmpty()) {
+            throw new BusinessRuleException(__('messages.travel.passport_required', [
+                'names' => $withoutPassport->pluck('full_name')->implode('، '),
+            ]));
+        }
+
+        $quote = $this->travelQuotes->quote($zone, $days, $travellers->count());
+        $start = $startDate->startOfDay();
+
+        return DB::transaction(function () use ($customer, $zone, $days, $start, $travellers, $quote) {
+            $policy = Policy::create([
+                'policy_no' => $this->numbers->next((string) config('insurance.policy.number_prefix')),
+                'user_id' => $customer->id,
+                'product' => InsuranceProduct::Travel,
+                'travel_zone' => $zone,
+                'travel_days' => $days,
+                'start_date' => $start,
+                'end_date' => $start->addDays($days - 1),
+                'premium' => $quote->premium,
+                'pricing_snapshot' => $quote->snapshot(),
+                'status' => PolicyStatus::PendingPayment,
+            ]);
+
+            $policy->travellers()->createMany($travellers->map(fn (InsuredPerson $person) => [
+                'insured_person_id' => $person->id,
+                'full_name' => $person->full_name,
+                'birth_date' => $person->birth_date,
+                'passport_no' => $person->passport_no,
+            ])->all());
+
+            return $policy;
+        });
     }
 
     public function cancelPending(Policy $policy): Policy
@@ -114,7 +170,7 @@ class PolicyService
 
         if ($policy->start_date->lt($today)) {
             $attributes['start_date'] = $today;
-            $attributes['end_date'] = $this->endDateFor($today);
+            $attributes['end_date'] = $this->endDateFor($policy, $today);
         }
 
         $policy->update($attributes);
@@ -124,7 +180,15 @@ class PolicyService
         return $policy;
     }
 
-    private function endDateFor(CarbonImmutable $start): CarbonImmutable
+    /** Same term length as purchased: one year (motor) or the trip length (travel). */
+    private function endDateFor(Policy $policy, CarbonImmutable $start): CarbonImmutable
+    {
+        return $policy->isTravel()
+            ? $start->addDays((int) $policy->travel_days - 1)
+            : $this->motorEndDate($start);
+    }
+
+    private function motorEndDate(CarbonImmutable $start): CarbonImmutable
     {
         return $start->addMonthsNoOverflow((int) config('insurance.policy.duration_months'))->subDay();
     }

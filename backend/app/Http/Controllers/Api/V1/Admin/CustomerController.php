@@ -36,7 +36,7 @@ class CustomerController extends Controller
     {
         $this->ensureCustomer($customer);
 
-        $customer->load(['vehicles', 'policies.vehicle.user', 'policies.coverageType'])->loadCount(['vehicles', 'policies']);
+        $customer->load(['vehicles', 'policies.user', 'policies.vehicle', 'policies.coverageType', 'policies.travellers'])->loadCount(['vehicles', 'policies']);
 
         return ApiResponse::success(new CustomerResource($customer));
     }

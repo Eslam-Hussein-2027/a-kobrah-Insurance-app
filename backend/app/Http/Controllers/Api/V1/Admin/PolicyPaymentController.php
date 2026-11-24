@@ -20,7 +20,7 @@ class PolicyPaymentController extends Controller
         $policy = $policies->confirmOfficePayment($policy, $request->user(), $request->validated('reference'));
 
         return ApiResponse::success(
-            new PolicyResource($policy->load(['vehicle', 'coverageType'])),
+            new PolicyResource($policy->load(PolicyResource::RELATIONS)),
             __('messages.policy.payment_confirmed'),
         );
     }

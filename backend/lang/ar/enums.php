@@ -94,4 +94,10 @@ return [
         'CANCELLED' => 'ملغى',
     ],
 
+    'travel_zone' => [
+        'arab' => 'الدول العربية',
+        'schengen' => 'أوروبا (شنغن)',
+        'worldwide' => 'جميع دول العالم',
+    ],
+
 ];

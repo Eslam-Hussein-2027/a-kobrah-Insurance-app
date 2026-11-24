@@ -2,9 +2,11 @@
 
 namespace App\Services\Admin;
 
+use App\Enums\InsuranceRequestStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\PolicyStatus;
 use App\Enums\UserRole;
+use App\Models\InsuranceRequest;
 use App\Models\Payment;
 use App\Models\Policy;
 use App\Models\User;
@@ -49,6 +51,15 @@ class DashboardStatsService
             ],
             'customers' => User::query()->where('role', UserRole::Customer)->count(),
             'vehicles' => Vehicle::query()->count(),
+            'active_by_product' => Policy::query()
+                ->where('status', PolicyStatus::Active)
+                ->selectRaw('product, COUNT(*) as total')
+                ->groupBy('product')
+                ->pluck('total', 'product')
+                ->map(fn ($total) => (int) $total),
+            'open_requests' => InsuranceRequest::query()
+                ->whereIn('status', [InsuranceRequestStatus::Submitted, InsuranceRequestStatus::InReview])
+                ->count(),
             'refunds_required' => Payment::query()->where('requires_refund', true)->where('status', '!=', PaymentStatus::Refunded)->count(),
             'monthly' => $this->monthly(),
         ];

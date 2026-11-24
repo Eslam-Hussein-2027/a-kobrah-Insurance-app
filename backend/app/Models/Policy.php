@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PolicyStatus;
+use App\Enums\TravelZone;
 use Carbon\CarbonImmutable;
 use Database\Factories\PolicyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,8 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id
  * @property string $policy_no
- * @property int $vehicle_id
- * @property int $coverage_type_id
+ * @property int $user_id
+ * @property InsuranceProduct $product
+ * @property int|null $vehicle_id motor only
+ * @property int|null $coverage_type_id motor only
+ * @property TravelZone|null $travel_zone travel only
+ * @property int|null $travel_days travel only
  * @property int|null $previous_policy_id
  * @property CarbonImmutable $start_date
  * @property CarbonImmutable $end_date
@@ -34,8 +40,12 @@ class Policy extends Model
 
     protected $fillable = [
         'policy_no',
+        'user_id',
+        'product',
         'vehicle_id',
         'coverage_type_id',
+        'travel_zone',
+        'travel_days',
         'previous_policy_id',
         'start_date',
         'end_date',
@@ -49,6 +59,9 @@ class Policy extends Model
     protected function casts(): array
     {
         return [
+            'product' => InsuranceProduct::class,
+            'travel_zone' => TravelZone::class,
+            'travel_days' => 'integer',
             'start_date' => 'date',
             'end_date' => 'date',
             'premium' => 'decimal:2',
@@ -59,6 +72,12 @@ class Policy extends Model
     }
 
     // ---------------------------------------------------------------- Relations
+
+    /** The policyholder. */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function vehicle(): BelongsTo
     {
@@ -91,11 +110,33 @@ class Policy extends Model
         return $this->hasMany(Claim::class);
     }
 
+    public function travellers(): HasMany
+    {
+        return $this->hasMany(PolicyTraveller::class);
+    }
+
     // ---------------------------------------------------------------- Helpers
 
     public function isOwnedBy(User $user): bool
     {
-        return $this->vehicle()->where('user_id', $user->id)->exists();
+        return $this->user_id === $user->id;
+    }
+
+    public function isTravel(): bool
+    {
+        return $this->product === InsuranceProduct::Travel;
+    }
+
+    /**
+     * Short human name: "التأمين الإجباري (ضد الغير)" or "تأمين السفر - أوروبا (شنغن)".
+     */
+    public function displayName(): string
+    {
+        if ($this->isTravel()) {
+            return $this->product->label().' - '.$this->travel_zone?->label();
+        }
+
+        return $this->coverageType?->localizedName() ?? $this->product->label();
     }
 
     public function isActive(): bool

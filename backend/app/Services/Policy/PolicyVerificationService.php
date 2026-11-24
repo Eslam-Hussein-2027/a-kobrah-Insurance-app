@@ -49,7 +49,8 @@ class PolicyVerificationService
     {
         $policy = $this->find($policyNo);
 
-        return $policy !== null && PlateNumber::equals($policy->vehicle->plate_no, $plateNo) ? $policy : null;
+        // Typed verification is for motor policies (travel policies are checked through their QR code).
+        return $policy?->vehicle !== null && PlateNumber::equals($policy->vehicle->plate_no, $plateNo) ? $policy : null;
     }
 
     /** Policy referenced by a QR link, or null when the number is unknown or the token is wrong. */
@@ -97,7 +98,7 @@ class PolicyVerificationService
     private function find(string $policyNo): ?Policy
     {
         return Policy::query()
-            ->with(['vehicle.user', 'coverageType'])
+            ->with(['user', 'vehicle', 'coverageType', 'travellers'])
             ->where('policy_no', strtoupper(trim($policyNo)))
             ->first();
     }

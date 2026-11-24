@@ -26,7 +26,7 @@ class PolicyController extends Controller
         ]);
 
         $policies = Policy::query()
-            ->with(['vehicle.user', 'coverageType'])
+            ->with(AdminPolicyResource::RELATIONS)
             ->when($request->filled('status'), fn (Builder $q) => $q->where('status', $request->input('status')))
             ->when($request->filled('search'), fn (Builder $q) => $this->search($q, (string) $request->input('search')))
             ->latest('id')
@@ -37,7 +37,7 @@ class PolicyController extends Controller
 
     public function show(Policy $policy): JsonResponse
     {
-        $policy->load(['vehicle.user', 'coverageType', 'payments.confirmedBy']);
+        $policy->load([...AdminPolicyResource::RELATIONS, 'payments.confirmedBy']);
 
         return ApiResponse::success(new AdminPolicyResource($policy));
     }
@@ -47,7 +47,7 @@ class PolicyController extends Controller
         $policies->cancelPending($policy);
 
         return ApiResponse::success(
-            new AdminPolicyResource($policy->load(['vehicle.user', 'coverageType', 'payments.confirmedBy'])),
+            new AdminPolicyResource($policy->load([...AdminPolicyResource::RELATIONS, 'payments.confirmedBy'])),
             __('messages.policy.cancelled'),
         );
     }
@@ -71,11 +71,13 @@ class PolicyController extends Controller
 
         $query->where(fn (Builder $q) => $q
             ->where('policy_no', 'like', $like)
-            ->orWhereHas('vehicle', fn (Builder $v) => $v
-                ->where('plate_no', 'like', $like)
-                ->orWhereHas('user', fn (Builder $u) => $u
-                    ->where('name', 'like', $like)
-                    ->orWhere('phone', 'like', $like)
-                    ->orWhere('national_id', 'like', $like))));
+            ->orWhereHas('vehicle', fn (Builder $v) => $v->where('plate_no', 'like', $like))
+            ->orWhereHas('travellers', fn (Builder $t) => $t
+                ->where('full_name', 'like', $like)
+                ->orWhere('passport_no', 'like', $like))
+            ->orWhereHas('user', fn (Builder $u) => $u
+                ->where('name', 'like', $like)
+                ->orWhere('phone', 'like', $like)
+                ->orWhere('national_id', 'like', $like)));
     }
 }

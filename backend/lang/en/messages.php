@@ -69,7 +69,6 @@ return [
         'updated' => 'Person updated.',
         'deleted' => 'Person deleted.',
         'not_owner' => 'This person is not registered in your account.',
-        'in_use' => 'A person listed on an insurance policy cannot be deleted.',
     ],
 
     'request' => [
@@ -80,6 +79,11 @@ return [
         'closed' => 'This request is closed and cannot be changed.',
         'invalid_status' => 'The request cannot be moved to this status.',
         'instant_product' => 'This product is issued directly in the app, without a request.',
+    ],
+
+    'travel' => [
+        'no_rate' => 'There is no price for this destination and duration. Choose another duration or contact customer service.',
+        'passport_required' => 'Please add a passport number before issuing: :names',
     ],
 
     'policy' => [

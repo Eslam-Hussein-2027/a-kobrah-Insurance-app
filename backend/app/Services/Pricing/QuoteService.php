@@ -89,7 +89,7 @@ class QuoteService
         $years = (int) config('insurance.quote.claims_history_years');
 
         return Claim::query()
-            ->whereHas('policy.vehicle', fn ($query) => $query->where('user_id', $userId))
+            ->whereHas('policy', fn ($query) => $query->where('user_id', $userId))
             ->where('status', '!=', ClaimStatus::Rejected)
             ->where('incident_date', '>=', now()->subYears($years))
             ->count();

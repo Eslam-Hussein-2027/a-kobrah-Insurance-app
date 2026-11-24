@@ -25,7 +25,7 @@ class PolicyVerificationController extends Controller
 
         if ($policy !== null && $result !== PolicyVerificationResult::NotFound) {
             $data['policy_no'] = $policy->policy_no;
-            $data['coverage_type'] = $policy->coverageType->localizedName();
+            $data['coverage_type'] = $policy->displayName();
             $data['start_date'] = $policy->start_date->toDateString();
             $data['end_date'] = $policy->end_date->toDateString();
         }

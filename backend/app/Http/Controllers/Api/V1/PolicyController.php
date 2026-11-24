@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PolicyStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Policy\StorePolicyRequest;
@@ -26,12 +27,14 @@ class PolicyController extends Controller
         $request->validate([
             'status' => ['nullable', Rule::enum(PolicyStatus::class)],
             'vehicle_id' => ['nullable', 'integer'],
+            'product' => ['nullable', Rule::enum(InsuranceProduct::class)],
         ]);
 
         $policies = $request->user()->policies()
-            ->with(['vehicle', 'coverageType'])
+            ->with(PolicyResource::RELATIONS)
             ->when($request->filled('status'), fn ($q) => $q->where('policies.status', $request->input('status')))
             ->when($request->filled('vehicle_id'), fn ($q) => $q->where('policies.vehicle_id', $request->integer('vehicle_id')))
+            ->when($request->filled('product'), fn ($q) => $q->where('policies.product', $request->input('product')))
             ->latest('policies.id')
             ->paginate(15);
 
@@ -51,7 +54,7 @@ class PolicyController extends Controller
         );
 
         return ApiResponse::created(
-            new PolicyResource($policy->load(['vehicle', 'coverageType'])),
+            new PolicyResource($policy->load(PolicyResource::RELATIONS)),
             __('messages.policy.created'),
         );
     }
@@ -60,7 +63,7 @@ class PolicyController extends Controller
     {
         $this->authorize('view', $policy);
 
-        return ApiResponse::success(new PolicyResource($policy->load(['vehicle', 'coverageType'])));
+        return ApiResponse::success(new PolicyResource($policy->load(PolicyResource::RELATIONS)));
     }
 
     public function cancel(Policy $policy): JsonResponse
@@ -70,7 +73,7 @@ class PolicyController extends Controller
         $this->policies->cancelPending($policy);
 
         return ApiResponse::success(
-            new PolicyResource($policy->load(['vehicle', 'coverageType'])),
+            new PolicyResource($policy->load(PolicyResource::RELATIONS)),
             __('messages.policy.cancelled'),
         );
     }

@@ -1,7 +1,8 @@
 # Car Insurance API (Laravel)
 
-REST API for the car insurance platform: customers register vehicles, get quotes, buy policies,
-download a printable Arabic PDF, and (later phases) renew and file claims.
+REST API for the insurance platform: customers buy compulsory motor and travel insurance in the app
+(quote → pay → printable Arabic PDF with a QR code), and send requests for products that staff price
+manually (orange card, foreign workers, medical liability, marine cargo).
 
 **Status: Phase 1 complete** — auth (phone + OTP), roles, vehicles, quote engine, policy issuance,
 office-payment confirmation, PDF download, public policy verification (QR code on every policy).
@@ -97,6 +98,8 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET | `/auth/me` | any role | Current user (document URLs are temporary signed links) |
 | POST | `/auth/logout` | any role | Revoke current token |
 | GET | `/coverage-types` | public | Active coverage types |
+| GET | `/products` | public | Product catalog (localized): `issuance` = `instant` / `request`, covers, documents, request form fields |
+| GET | `/company` | public | Company info, branches, about and privacy texts |
 | GET | `/policies/verify?policy_no=&plate_no=` | public, 10/min/IP | `VALID` / `EXPIRED` / `NOT_FOUND`, no personal data |
 | GET | `/verify` (web) | public | Verification page (form): policy number + plate number |
 | GET | `/verify/{policy_no}/{token}` (web) | public, 60/min/IP | Page opened by the **QR code** printed on the policy |
@@ -104,7 +107,16 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET/POST | `/vehicles` | customer | List (paginated) / create |
 | GET/PATCH/DELETE | `/vehicles/{id}` | owner | Show / update / delete |
 | POST | `/quotes` | owner | `vehicle_id`, `coverage_type_id` → premium + factor breakdown (not saved) |
-| GET | `/policies` | customer | Own policies (`?status=ACTIVE&vehicle_id=`) |
+| POST | `/quotes/estimate` | customer | "Know the price": `manufacture_year`, `engine_cc` (compulsory coverage by default) |
+| GET/POST | `/persons` | customer | People the customer insures (travellers, family) |
+| GET/PUT/DELETE | `/persons/{id}` | owner | Show / replace / delete |
+| GET | `/travel/options` | customer | Zones, trip lengths and price per traveller |
+| POST | `/quotes/travel` | customer | `zone`, `days`, `travellers` → premium (not saved) |
+| POST | `/policies/travel` | customer | `zone`, `days`, `start_date`, `person_ids[]` → `PENDING_PAYMENT` travel policy |
+| GET/POST | `/requests` | customer | Requests for staff-handled products (multipart: `product`, `kind`, `answers[...]`, `documents[...]`) |
+| GET | `/requests/{id}` | owner/admin | Show |
+| POST | `/requests/{id}/cancel` | owner | Withdraw while open |
+| GET | `/policies` | customer | Own policies, motor and travel (`?status=ACTIVE&vehicle_id=&product=travel`) |
 | POST | `/policies` | owner | Create `PENDING_PAYMENT` policy (`start_date` optional, ≤ 60 days ahead) |
 | GET | `/policies/{id}` | owner/admin | Show |
 | POST | `/policies/{id}/cancel` | owner | Cancel while `PENDING_PAYMENT` |
@@ -124,6 +136,9 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET | `/admin/pricing` | admin | Coverage types, factor bands, gap report |
 | PATCH | `/admin/coverage-types/{id}` | admin | Base price, active flag, names |
 | POST/PUT/DELETE | `/admin/pricing-factors[/{id}]` | admin | Factor bands (overlaps rejected) |
+| POST/PATCH | `/admin/travel-rates[/{id}]` | admin | Travel price per traveller by zone and trip length |
+| GET | `/admin/requests[/{id}]` | admin | `?status=&product=&search=`; details include signed links to attachments |
+| POST | `/admin/requests/{id}/respond` | admin | `status` (IN_REVIEW / QUOTED / COMPLETED / REJECTED), `reply`, `quoted_amount` |
 
 ### Login / registration flow
 
@@ -250,6 +265,20 @@ The QR code is drawn by mPDF (`mpdf/qrcode`, error correction M). It is tested t
   next to Arabic text in `<bdo dir="ltr">`. Amiri **0.113** is bundled because newer Amiri builds use
   GPOS lookups that mPDF cannot parse.
 
+## Products
+
+Defined in `config/products.php` (structure) and `lang/{ar,en}/products.php` (text):
+
+| Product | Issuance | Flow |
+|---|---|---|
+| `motor` | instant | vehicle → quote → policy → payment → PDF + QR |
+| `travel` | instant | zone + trip length + saved persons → policy → payment → PDF + QR |
+| `orange_card`, `foreign_workers`, `medical_liability`, `marine_cargo` | request | form + attachments → staff reply (price offer / completed / rejected) |
+
+Policies belong to the customer (`policies.user_id`); `vehicle_id` / `coverage_type_id` are set for motor,
+`travel_zone` / `travel_days` and `policy_travellers` (snapshot of names and passports) for travel.
+Travel prices (`travel_rates`) are placeholders until the company's tariff is entered from the dashboard.
+
 ## Project layout
 
 ```
@@ -263,14 +292,17 @@ app/
     Resources/           JSON resources
     Responses/ApiResponse.php
   Jobs/GeneratePolicyPdf.php
-  Models/                User, Vehicle, CoverageType, PricingFactor, Policy, Payment, Claim, ClaimMedia,
+  Models/                User, Vehicle, CoverageType, PricingFactor, Policy, PolicyTraveller, TravelRate,
+                         InsuredPerson, InsuranceRequest(+Document), Payment, Claim, ClaimMedia,
                          Inspection, ClaimStatusLog, Workshop, NotificationLog, OtpCode
   Policies/              VehiclePolicy, PolicyPolicy (authorization)
-  Services/              Auth/OtpService, Auth/AuthService, Pricing/QuoteService,
+  Services/              Auth/OtpService, Auth/AuthService, Pricing/QuoteService, Pricing/TravelQuoteService,
+                         Catalog/ProductCatalog, Requests/InsuranceRequestService,
                          Policy/PolicyService, Policy/PolicyPdfService, Policy/PolicyVerificationService,
                          DocumentNumberGenerator, UserDocumentService, Sms/*
-config/insurance.php     All business settings (currency, OTP, regexes, upload limits, company info)
-lang/{ar,en}/            messages, enums, validation (ar)
+config/insurance.php     All business settings (currency, OTP, regexes, upload limits, company info, branches)
+config/products.php      Product catalog structure (issuance mode, request form fields, documents)
+lang/{ar,en}/            messages, enums, products, company (about/privacy drafts), travel, validation (ar)
 ```
 
 ## Next phases

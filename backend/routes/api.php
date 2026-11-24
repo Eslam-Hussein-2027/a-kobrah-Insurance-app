@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\V1\PolicyController;
 use App\Http\Controllers\Api\V1\PolicyVerificationController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\QuoteController;
+use App\Http\Controllers\Api\V1\TravelController;
 use App\Http\Controllers\Api\V1\VehicleController;
 use Illuminate\Support\Facades\Route;
 
@@ -83,6 +84,10 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('quotes', [QuoteController::class, 'store'])->name('quotes.store');
             Route::post('quotes/estimate', [QuoteController::class, 'estimate'])->name('quotes.estimate');
 
+            Route::get('travel/options', [TravelController::class, 'options'])->name('travel.options');
+            Route::post('quotes/travel', [TravelController::class, 'quote'])->name('quotes.travel');
+            Route::post('policies/travel', [TravelController::class, 'store'])->name('policies.travel.store');
+
             Route::get('requests', [InsuranceRequestController::class, 'index'])->name('requests.index');
             Route::post('requests', [InsuranceRequestController::class, 'store'])->name('requests.store');
             Route::get('requests/{insuranceRequest}', [InsuranceRequestController::class, 'show'])->whereNumber('insuranceRequest')->name('requests.show');
@@ -127,6 +132,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::post('pricing-factors', [PricingController::class, 'storeFactor'])->name('pricing-factors.store');
             Route::put('pricing-factors/{pricingFactor}', [PricingController::class, 'updateFactor'])->name('pricing-factors.update');
             Route::delete('pricing-factors/{pricingFactor}', [PricingController::class, 'destroyFactor'])->name('pricing-factors.destroy');
+            Route::post('travel-rates', [PricingController::class, 'storeTravelRate'])->name('travel-rates.store');
+            Route::patch('travel-rates/{travelRate}', [PricingController::class, 'updateTravelRate'])->name('travel-rates.update');
         });
     });
 });

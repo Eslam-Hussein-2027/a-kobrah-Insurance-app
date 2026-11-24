@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PersonRelationship;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -39,6 +40,13 @@ class DemoUserSeeder extends Seeder
                     'model' => 'Corolla',
                     'year' => 2019,
                     'engine_cc' => 1600,
+                ]);
+
+                $user->insuredPersons()->updateOrCreate(['full_name' => $account['name']], [
+                    'relationship' => PersonRelationship::Self,
+                    'birth_date' => '1995-03-14',
+                    'passport_no' => 'LY1234567',
+                    'national_id' => $account['national_id'],
                 ]);
             }
         }

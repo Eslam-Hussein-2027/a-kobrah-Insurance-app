@@ -7,7 +7,6 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -71,9 +70,9 @@ class User extends Authenticatable
         return $this->hasMany(InsuranceRequest::class);
     }
 
-    public function policies(): HasManyThrough
+    public function policies(): HasMany
     {
-        return $this->hasManyThrough(Policy::class, Vehicle::class);
+        return $this->hasMany(Policy::class);
     }
 
     /** Inspections assigned to this user as a surveyor. */

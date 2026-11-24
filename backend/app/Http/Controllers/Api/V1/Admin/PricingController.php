@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Enums\PricingFactorType;
+use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminCoverageTypeResource;
 use App\Http\Resources\Admin\PricingFactorResource;
+use App\Http\Resources\Admin\TravelRateResource;
 use App\Http\Responses\ApiResponse;
 use App\Models\CoverageType;
 use App\Models\PricingFactor;
+use App\Models\TravelRate;
 use App\Services\Admin\PricingFactorService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,6 +35,10 @@ class PricingController extends Controller
             ),
             'factor_types' => array_map(fn (PricingFactorType $t) => $t->toArray(), PricingFactorType::cases()),
             'gaps' => $this->factors->gaps(),
+            'travel_rates' => TravelRateResource::collection(
+                TravelRate::query()->orderBy('zone')->orderBy('days')->get(),
+            ),
+            'travel_zones' => array_map(fn (TravelZone $zone) => $zone->toArray(), TravelZone::cases()),
         ]);
     }
 
@@ -82,5 +89,35 @@ class PricingController extends Controller
             'max_value' => ['nullable', 'integer', 'gte:min_value'],
             'multiplier' => ['required', 'numeric', 'min:0.1', 'max:10'],
         ]) + ['max_value' => null];
+    }
+
+    /** Add a trip length to a travel zone. */
+    public function storeTravelRate(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'zone' => ['required', Rule::enum(TravelZone::class)],
+            'days' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:366',
+                Rule::unique('travel_rates', 'days')->where('zone', $request->input('zone')),
+            ],
+            'price' => ['required', 'numeric', 'min:0', 'max:1000000'],
+            'is_active' => ['sometimes', 'boolean'],
+        ]);
+
+        return ApiResponse::created(new TravelRateResource(TravelRate::create($data)), __('messages.pricing.saved'));
+    }
+
+    /** Change a travel price or switch a trip length on/off (new quotes only). */
+    public function updateTravelRate(Request $request, TravelRate $travelRate): JsonResponse
+    {
+        $travelRate->update($request->validate([
+            'price' => ['sometimes', 'numeric', 'min:0', 'max:1000000'],
+            'is_active' => ['sometimes', 'boolean'],
+        ]));
+
+        return ApiResponse::success(new TravelRateResource($travelRate), __('messages.pricing.saved'));
     }
 }
