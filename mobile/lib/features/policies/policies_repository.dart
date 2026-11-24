@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api/api_client.dart';
 import '../auth/auth_controller.dart';
+import '../../shared/formatters.dart';
 import 'models.dart';
 
 class PoliciesRepository {
@@ -19,6 +20,15 @@ class PoliciesRepository {
     return Quote.fromJson(body['data'] as Json);
   }
 
+  /// "Know the price" for a vehicle that is not registered yet (compulsory coverage).
+  Future<Quote> estimate({required int manufactureYear, required int engineCc}) async {
+    final body = await _api.post(
+      '/quotes/estimate',
+      data: {'manufacture_year': manufactureYear, 'engine_cc': engineCc},
+    );
+    return Quote.fromJson(body['data'] as Json);
+  }
+
   Future<List<Policy>> list() async => (await _api.getAllPages('/policies')).map(Policy.fromJson).toList();
 
   Future<Policy> get(int id) async => Policy.fromJson((await _api.get('/policies/$id'))['data'] as Json);
@@ -29,7 +39,7 @@ class PoliciesRepository {
       data: {
         'vehicle_id': vehicleId,
         'coverage_type_id': coverageTypeId,
-        if (startDate != null) 'start_date': _date(startDate),
+        if (startDate != null) 'start_date': isoDate(startDate),
       },
     );
     return Policy.fromJson(body['data'] as Json);
@@ -51,9 +61,6 @@ class PoliciesRepository {
     final body = await _api.get('/policies/verify', query: {'policy_no': policyNo, 'plate_no': plateNo});
     return PolicyVerification.fromJson(body['data'] as Json);
   }
-
-  static String _date(DateTime d) =>
-      '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 }
 
 final policiesRepositoryProvider = Provider<PoliciesRepository>(

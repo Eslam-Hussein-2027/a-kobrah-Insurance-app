@@ -4,6 +4,10 @@ import 'package:akobrah_insurance/core/api/api_exception.dart';
 import 'package:akobrah_insurance/core/storage.dart';
 import 'package:akobrah_insurance/features/auth/auth_repository.dart';
 import 'package:akobrah_insurance/features/auth/models.dart';
+import 'package:akobrah_insurance/features/catalog/catalog_models.dart';
+import 'package:akobrah_insurance/features/catalog/catalog_repository.dart';
+import 'package:akobrah_insurance/features/policies/models.dart';
+import 'package:akobrah_insurance/features/policies/policies_repository.dart';
 import 'package:akobrah_insurance/features/vehicles/vehicle.dart';
 import 'package:akobrah_insurance/features/vehicles/vehicles_repository.dart';
 import 'package:dio/dio.dart';
@@ -75,6 +79,43 @@ class FakeVehiclesRepository extends VehiclesRepository {
   ];
 }
 
+class FakePoliciesRepository extends PoliciesRepository {
+  FakePoliciesRepository() : super(ApiClient(Dio()));
+
+  @override
+  Future<List<Policy>> list() async => const [];
+}
+
+class FakeCatalogRepository extends CatalogRepository {
+  FakeCatalogRepository() : super(ApiClient(Dio()));
+
+  @override
+  Future<List<Product>> products() async => const [
+    Product(
+      code: 'motor',
+      name: 'التأمين الإجباري',
+      title: 'التأمين الإجباري للمركبات',
+      description: '',
+      issuance: Issuance.instant,
+      icon: 'car',
+      covers: [],
+      documents: [],
+      fields: [],
+    ),
+    Product(
+      code: 'marine_cargo',
+      name: 'التأمين البحري',
+      title: 'التأمين البحري للبضائع',
+      description: '',
+      issuance: Issuance.request,
+      icon: 'ship',
+      covers: [],
+      documents: [],
+      fields: [],
+    ),
+  ];
+}
+
 Future<FakeAuthRepository> _pumpApp(WidgetTester tester, {bool isNewUser = false}) async {
   final auth = FakeAuthRepository(isNewUser: isNewUser);
   await tester.binding.setSurfaceSize(const Size(420, 900));
@@ -85,6 +126,8 @@ Future<FakeAuthRepository> _pumpApp(WidgetTester tester, {bool isNewUser = false
         keyValueStoreProvider.overrideWithValue(MemoryKeyValueStore()),
         authRepositoryProvider.overrideWithValue(auth),
         vehiclesRepositoryProvider.overrideWithValue(FakeVehiclesRepository()),
+        policiesRepositoryProvider.overrideWithValue(FakePoliciesRepository()),
+        catalogRepositoryProvider.overrideWithValue(FakeCatalogRepository()),
       ],
       child: const AkobrahApp(),
     ),
@@ -112,7 +155,7 @@ void main() {
     expect(find.text('رقم الهاتف غير صحيح'), findsOneWidget);
   });
 
-  testWidgets('existing customer: phone → OTP → home with vehicles', (tester) async {
+  testWidgets('existing customer: phone → OTP → home with products and uninsured vehicle', (tester) async {
     final auth = await _pumpApp(tester);
 
     await tester.enterText(find.byKey(const Key('phone-field')), '+218 91 123 4567');
@@ -125,8 +168,13 @@ void main() {
     await tester.enterText(find.byKey(const Key('otp-field')), '123456');
     await tester.pumpAndSettle();
 
-    expect(find.text('5-123456'), findsOneWidget);
-    expect(find.text('تأمين المركبة'), findsOneWidget);
+    expect(find.text('محمد العميل'), findsOneWidget);
+    expect(find.text('لا توجد وثيقة سارية'), findsOneWidget);
+    expect(find.text('مركبة بدون تأمين'), findsOneWidget);
+    expect(find.text('Toyota Corolla 2019 · 5-123456'), findsOneWidget);
+    expect(find.text('التأمين الإجباري'), findsOneWidget);
+    expect(find.text('إصدار فوري'), findsOneWidget);
+    expect(find.text('بطلب عرض سعر'), findsOneWidget);
   });
 
   testWidgets('wrong OTP shows the server message', (tester) async {

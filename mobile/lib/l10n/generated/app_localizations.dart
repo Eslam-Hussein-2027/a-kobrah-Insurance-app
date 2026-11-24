@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @loginSubtitle.
   ///
   /// In ar, this message translates to:
-  /// **'سجّل الدخول برقم هاتفك لإدارة تأمين سيارتك'**
+  /// **'سجّل الدخول برقم هاتفك لإدارة وثائق التأمين'**
   String get loginSubtitle;
 
   /// No description provided for @phoneLabel.
@@ -209,7 +209,7 @@ abstract class AppLocalizations {
   /// No description provided for @documentsOptionalHint.
   ///
   /// In ar, this message translates to:
-  /// **'يمكنك رفع المستندات الآن أو لاحقًا من صفحة «حسابي»، وهي مطلوبة قبل إصدار الوثيقة.'**
+  /// **'يمكنك رفع المستندات الآن أو لاحقًا من «المزيد ← المعلومات الشخصية»، وهي مطلوبة قبل إصدار وثيقة التأمين الإجباري.'**
   String get documentsOptionalHint;
 
   /// No description provided for @chooseImage.
@@ -253,18 +253,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'مركباتي'**
   String get tabVehicles;
-
-  /// No description provided for @tabPolicies.
-  ///
-  /// In ar, this message translates to:
-  /// **'وثائقي'**
-  String get tabPolicies;
-
-  /// No description provided for @tabProfile.
-  ///
-  /// In ar, this message translates to:
-  /// **'حسابي'**
-  String get tabProfile;
 
   /// No description provided for @addVehicle.
   ///
@@ -368,12 +356,6 @@ abstract class AppLocalizations {
   /// **'إلغاء'**
   String get cancel;
 
-  /// No description provided for @insureVehicle.
-  ///
-  /// In ar, this message translates to:
-  /// **'تأمين المركبة'**
-  String get insureVehicle;
-
   /// No description provided for @deleteVehicleTitle.
   ///
   /// In ar, this message translates to:
@@ -404,12 +386,6 @@ abstract class AppLocalizations {
   /// **'تم حذف المركبة'**
   String get vehicleDeleted;
 
-  /// No description provided for @vehicleNotFound.
-  ///
-  /// In ar, this message translates to:
-  /// **'المركبة غير موجودة'**
-  String get vehicleNotFound;
-
   /// No description provided for @noPolicies.
   ///
   /// In ar, this message translates to:
@@ -419,7 +395,7 @@ abstract class AppLocalizations {
   /// No description provided for @noPoliciesHint.
   ///
   /// In ar, this message translates to:
-  /// **'اذهب إلى «مركباتي» واضغط «تأمين المركبة»'**
+  /// **'اختر منتجًا من الرئيسية لإصدار أول وثيقة.'**
   String get noPoliciesHint;
 
   /// No description provided for @policyNo.
@@ -500,12 +476,6 @@ abstract class AppLocalizations {
   /// **'خدمة العملاء'**
   String get customerService;
 
-  /// No description provided for @cancelRequest.
-  ///
-  /// In ar, this message translates to:
-  /// **'إلغاء الطلب'**
-  String get cancelRequest;
-
   /// No description provided for @cancelRequestConfirm.
   ///
   /// In ar, this message translates to:
@@ -524,12 +494,6 @@ abstract class AppLocalizations {
   /// **'تم إنشاء الوثيقة، يرجى إتمام الدفع لتفعيلها'**
   String get policyCreated;
 
-  /// No description provided for @quoteTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'سعر التأمين'**
-  String get quoteTitle;
-
   /// No description provided for @basePrice.
   ///
   /// In ar, this message translates to:
@@ -541,12 +505,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تفاصيل السعر'**
   String get priceDetails;
-
-  /// No description provided for @totalPremium.
-  ///
-  /// In ar, this message translates to:
-  /// **'القسط الإجمالي'**
-  String get totalPremium;
 
   /// No description provided for @coverageStart.
   ///
@@ -569,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @kycMissingBody.
   ///
   /// In ar, this message translates to:
-  /// **'يجب رفع صورة إثبات الهوية وصورة رخصة القيادة قبل إصدار الوثيقة.'**
+  /// **'يجب رفع صورة إثبات الهوية وصورة رخصة القيادة قبل إصدار وثيقة التأمين الإجباري.'**
   String get kycMissingBody;
 
   /// No description provided for @goToProfile.
@@ -677,7 +635,7 @@ abstract class AppLocalizations {
   /// No description provided for @currency.
   ///
   /// In ar, this message translates to:
-  /// **'دينار ليبي'**
+  /// **'د.ل'**
   String get currency;
 
   /// No description provided for @payOnline.
@@ -727,6 +685,864 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'يمكن لرجال المرور والجهات الحكومية والشركات مسح هذا الرمز بكاميرا الهاتف للتأكد من صحة الوثيقة.'**
   String get verificationQrHint;
+
+  /// No description provided for @tabHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرئيسية'**
+  String get tabHome;
+
+  /// No description provided for @tabMyInsurance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأميناتي'**
+  String get tabMyInsurance;
+
+  /// No description provided for @tabPersons.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأشخاص'**
+  String get tabPersons;
+
+  /// No description provided for @tabMore.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزيد'**
+  String get tabMore;
+
+  /// No description provided for @hello.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحبًا،'**
+  String get hello;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معنا'**
+  String get contactUs;
+
+  /// No description provided for @insuranceProducts.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتجات التأمين'**
+  String get insuranceProducts;
+
+  /// No description provided for @myPoliciesCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{وثائقي} other{وثائقي ({count})}}'**
+  String myPoliciesCount(int count);
+
+  /// No description provided for @instantIssue.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار فوري'**
+  String get instantIssue;
+
+  /// No description provided for @onRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطلب عرض سعر'**
+  String get onRequest;
+
+  /// No description provided for @calculatePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'احسب السعر'**
+  String get calculatePrice;
+
+  /// No description provided for @verifyPolicyShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحقق من وثيقة'**
+  String get verifyPolicyShort;
+
+  /// No description provided for @branches.
+  ///
+  /// In ar, this message translates to:
+  /// **'فروعنا'**
+  String get branches;
+
+  /// No description provided for @uninsuredVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مركبة بدون تأمين'**
+  String get uninsuredVehicle;
+
+  /// No description provided for @insureItNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمّنها الآن'**
+  String get insureItNow;
+
+  /// No description provided for @noActivePolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد وثيقة سارية'**
+  String get noActivePolicy;
+
+  /// No description provided for @noActivePolicyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أصدر وثيقة التأمين الإجباري لمركبتك في دقائق.'**
+  String get noActivePolicyHint;
+
+  /// No description provided for @verificationCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق'**
+  String get verificationCode;
+
+  /// No description provided for @endsOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنتهي في {date}'**
+  String endsOn(String date);
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{تنتهي اليوم} =1{متبقٍ يوم واحد} =2{متبقٍ يومان} few{متبقٍ {count} أيام} many{متبقٍ {count} يومًا} other{متبقٍ {count} يوم}}'**
+  String daysLeft(int count);
+
+  /// No description provided for @otherActivePolicies.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{ولديك وثيقة سارية أخرى في «تأميناتي»} =2{ولديك وثيقتان ساريتان أخريان في «تأميناتي»} few{ولديك {count} وثائق سارية أخرى في «تأميناتي»} other{ولديك {count} وثيقة سارية أخرى في «تأميناتي»}}'**
+  String otherActivePolicies(int count);
+
+  /// No description provided for @issuedInstantly.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدر فورًا عبر التطبيق'**
+  String get issuedInstantly;
+
+  /// No description provided for @issuedAfterReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدر بعد مراجعة الطلب'**
+  String get issuedAfterReview;
+
+  /// No description provided for @issuePolicyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادفع إلكترونيًا واستلم الوثيقة في الحال'**
+  String get issuePolicyHint;
+
+  /// No description provided for @requestPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب إصدار وثيقة'**
+  String get requestPolicy;
+
+  /// No description provided for @requestPolicyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرسل بياناتك وسيتواصل معك موظف'**
+  String get requestPolicyHint;
+
+  /// No description provided for @knowThePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعرف السعر'**
+  String get knowThePrice;
+
+  /// No description provided for @knowThePriceHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'احسب القيمة قبل إصدار الوثيقة'**
+  String get knowThePriceHint;
+
+  /// No description provided for @requestQuote.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب عرض سعر'**
+  String get requestQuote;
+
+  /// No description provided for @requestQuoteHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يصلك السعر خلال يوم عمل'**
+  String get requestQuoteHint;
+
+  /// No description provided for @whatIsCovered.
+  ///
+  /// In ar, this message translates to:
+  /// **'ماذا تغطي الوثيقة'**
+  String get whatIsCovered;
+
+  /// No description provided for @requiredDocuments.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستندات المطلوبة'**
+  String get requiredDocuments;
+
+  /// No description provided for @haveAQuestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديك سؤال؟ اتصل بنا على'**
+  String get haveAQuestion;
+
+  /// No description provided for @add.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة'**
+  String get add;
+
+  /// No description provided for @more.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزيد'**
+  String get more;
+
+  /// No description provided for @choose.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر'**
+  String get choose;
+
+  /// No description provided for @optional.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختياري'**
+  String get optional;
+
+  /// No description provided for @notes.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات'**
+  String get notes;
+
+  /// No description provided for @notice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه'**
+  String get notice;
+
+  /// No description provided for @total.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجمالي'**
+  String get total;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة'**
+  String get continueLabel;
+
+  /// No description provided for @stepReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة 2 من 3 · المراجعة'**
+  String get stepReview;
+
+  /// No description provided for @payAfterIssueHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بعد الإصدار تنتقل إلى صفحة الوثيقة لإتمام الدفع إلكترونيًا أو في المقر الرئيسي.'**
+  String get payAfterIssueHint;
+
+  /// No description provided for @issueNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'أصدر الوثيقة الآن'**
+  String get issueNow;
+
+  /// No description provided for @estimateDisclaimer.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر تقديري، ويظهر السعر النهائي عند الإصدار حسب البيانات المسجّلة.'**
+  String get estimateDisclaimer;
+
+  /// No description provided for @estimatedPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر التقديري'**
+  String get estimatedPrice;
+
+  /// No description provided for @estimatedPriceOneYear.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر التقديري لسنة واحدة'**
+  String get estimatedPriceOneYear;
+
+  /// No description provided for @increase.
+  ///
+  /// In ar, this message translates to:
+  /// **'زيادة'**
+  String get increase;
+
+  /// No description provided for @decrease.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنقاص'**
+  String get decrease;
+
+  /// No description provided for @call.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال'**
+  String get call;
+
+  /// No description provided for @motorIssueTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار تأمين إجباري'**
+  String get motorIssueTitle;
+
+  /// No description provided for @motorStepVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة 1 من 3 · المركبة'**
+  String get motorStepVehicle;
+
+  /// No description provided for @checkDataNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى التأكد من صحة بيانات المركبة قبل الإصدار، فهي تُطبع على الوثيقة.'**
+  String get checkDataNotice;
+
+  /// No description provided for @chooseVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر المركبة'**
+  String get chooseVehicle;
+
+  /// No description provided for @addNewVehicle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة مركبة جديدة'**
+  String get addNewVehicle;
+
+  /// No description provided for @policyData.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الوثيقة'**
+  String get policyData;
+
+  /// No description provided for @policyDuration.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدة التأمين'**
+  String get policyDuration;
+
+  /// No description provided for @oneYear.
+  ///
+  /// In ar, this message translates to:
+  /// **'سنة واحدة'**
+  String get oneYear;
+
+  /// No description provided for @insuredPerson.
+  ///
+  /// In ar, this message translates to:
+  /// **'المؤمَّن له'**
+  String get insuredPerson;
+
+  /// No description provided for @insuredUntil.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤمّنة حتى {date}'**
+  String insuredUntil(String date);
+
+  /// No description provided for @hasPendingPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'لها وثيقة بانتظار الدفع'**
+  String get hasPendingPolicy;
+
+  /// No description provided for @notInsured.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مؤمّنة'**
+  String get notInsured;
+
+  /// No description provided for @viewPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الوثيقة'**
+  String get viewPolicy;
+
+  /// No description provided for @motorPriceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعرف سعر التأمين الإجباري'**
+  String get motorPriceTitle;
+
+  /// No description provided for @engineCcInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سعة محرك صحيحة (50 - 10000)'**
+  String get engineCcInvalid;
+
+  /// No description provided for @travelIssueTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار تأمين سفر'**
+  String get travelIssueTitle;
+
+  /// No description provided for @travelStepTrip.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخطوة 1 من 3 · الرحلة والمسافرون'**
+  String get travelStepTrip;
+
+  /// No description provided for @travelPriceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعرف سعر تأمين السفر'**
+  String get travelPriceTitle;
+
+  /// No description provided for @travelUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأمين السفر غير متاح حاليًا، تواصل مع خدمة العملاء.'**
+  String get travelUnavailable;
+
+  /// No description provided for @destination.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوجهة'**
+  String get destination;
+
+  /// No description provided for @tripLength.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدة الرحلة'**
+  String get tripLength;
+
+  /// No description provided for @tripDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الرحلة'**
+  String get tripDetails;
+
+  /// No description provided for @travelDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ السفر'**
+  String get travelDate;
+
+  /// No description provided for @coverageEndsOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنتهي التغطية في {date}'**
+  String coverageEndsOn(String date);
+
+  /// No description provided for @travellers.
+  ///
+  /// In ar, this message translates to:
+  /// **'المسافرون'**
+  String get travellers;
+
+  /// No description provided for @travellersNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد المسافرين'**
+  String get travellersNumber;
+
+  /// No description provided for @travellersCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =0{لم تختر أي مسافر} =1{مسافر واحد} =2{مسافران} few{{count} مسافرين} many{{count} مسافرًا} other{{count} مسافر}}'**
+  String travellersCount(int count);
+
+  /// No description provided for @daysCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count, plural, =1{يوم واحد} =2{يومان} few{{count} أيام} many{{count} يومًا} other{{count} يوم}}'**
+  String daysCount(int count);
+
+  /// No description provided for @fromPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'من {price}'**
+  String fromPrice(String price);
+
+  /// No description provided for @pricePerTraveller.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر الفرد'**
+  String get pricePerTraveller;
+
+  /// No description provided for @addTravellersHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف الأشخاص المسافرين أولًا (الاسم وتاريخ الميلاد ورقم الجواز).'**
+  String get addTravellersHint;
+
+  /// No description provided for @passportMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدون رقم جواز'**
+  String get passportMissing;
+
+  /// No description provided for @passportRequiredFor.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إضافة رقم جواز السفر لـ: {names}'**
+  String passportRequiredFor(String names);
+
+  /// No description provided for @addPassport.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة رقم الجواز'**
+  String get addPassport;
+
+  /// No description provided for @personsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تختارهم مباشرة عند إصدار تأمين السفر بدون إعادة إدخال البيانات.'**
+  String get personsHint;
+
+  /// No description provided for @noPersons.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تضف أي شخص بعد'**
+  String get noPersons;
+
+  /// No description provided for @noPersonsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف نفسك وأفراد عائلتك لتأمين سفرهم.'**
+  String get noPersonsHint;
+
+  /// No description provided for @addPerson.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة شخص'**
+  String get addPerson;
+
+  /// No description provided for @editPerson.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل بيانات الشخص'**
+  String get editPerson;
+
+  /// No description provided for @deletePerson.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الشخص'**
+  String get deletePerson;
+
+  /// No description provided for @deletePersonConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد حذف {name} من قائمة الأشخاص؟ الوثائق الصادرة له لا تتأثر.'**
+  String deletePersonConfirm(String name);
+
+  /// No description provided for @personAdded.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إضافة الشخص'**
+  String get personAdded;
+
+  /// No description provided for @personUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث البيانات'**
+  String get personUpdated;
+
+  /// No description provided for @personDeleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حذف الشخص'**
+  String get personDeleted;
+
+  /// No description provided for @relationship.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلة القرابة'**
+  String get relationship;
+
+  /// No description provided for @relationshipSelf.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنا'**
+  String get relationshipSelf;
+
+  /// No description provided for @relationshipSpouse.
+  ///
+  /// In ar, this message translates to:
+  /// **'الزوج / الزوجة'**
+  String get relationshipSpouse;
+
+  /// No description provided for @relationshipChild.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابن / ابنة'**
+  String get relationshipChild;
+
+  /// No description provided for @relationshipParent.
+  ///
+  /// In ar, this message translates to:
+  /// **'أب / أم'**
+  String get relationshipParent;
+
+  /// No description provided for @relationshipSibling.
+  ///
+  /// In ar, this message translates to:
+  /// **'أخ / أخت'**
+  String get relationshipSibling;
+
+  /// No description provided for @relationshipOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر'**
+  String get relationshipOther;
+
+  /// No description provided for @birthDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الميلاد'**
+  String get birthDate;
+
+  /// No description provided for @bornOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'مواليد {date}'**
+  String bornOn(String date);
+
+  /// No description provided for @passportNo.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم جواز السفر'**
+  String get passportNo;
+
+  /// No description provided for @passportShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'جواز {number}'**
+  String passportShort(String number);
+
+  /// No description provided for @passportNeededForTravel.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب لتأمين السفر'**
+  String get passportNeededForTravel;
+
+  /// No description provided for @sendRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب'**
+  String get sendRequest;
+
+  /// No description provided for @requestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلبك، وسيتواصل معك أحد موظفي الشركة.'**
+  String get requestSent;
+
+  /// No description provided for @attach.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق'**
+  String get attach;
+
+  /// No description provided for @documentsLaterHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك إرسال الطلب الآن وإرفاق المستندات لاحقًا عند تواصل الموظف معك.'**
+  String get documentsLaterHint;
+
+  /// No description provided for @addVehicleFirst.
+  ///
+  /// In ar, this message translates to:
+  /// **'أضف مركبتك أولًا من «مركباتي».'**
+  String get addVehicleFirst;
+
+  /// No description provided for @requestContactHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتواصل معك موظف من الشركة على الرقم {phone} خلال يوم عمل.'**
+  String requestContactHint(String phone);
+
+  /// No description provided for @requestDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get requestDetails;
+
+  /// No description provided for @sentOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل في {date}'**
+  String sentOn(String date);
+
+  /// No description provided for @requestWaitingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبك قيد المتابعة، وسيصلك رد الشركة هنا.'**
+  String get requestWaitingHint;
+
+  /// No description provided for @requestData.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الطلب'**
+  String get requestData;
+
+  /// No description provided for @companyReply.
+  ///
+  /// In ar, this message translates to:
+  /// **'رد الشركة'**
+  String get companyReply;
+
+  /// No description provided for @offeredPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر المعروض'**
+  String get offeredPrice;
+
+  /// No description provided for @acceptOfferHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'لقبول العرض تواصل مع خدمة العملاء أو انتظر اتصال الموظف.'**
+  String get acceptOfferHint;
+
+  /// No description provided for @withdrawRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب الطلب'**
+  String get withdrawRequest;
+
+  /// No description provided for @withdrawRequestConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد سحب هذا الطلب؟'**
+  String get withdrawRequestConfirm;
+
+  /// No description provided for @requestWithdrawn.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم سحب الطلب'**
+  String get requestWithdrawn;
+
+  /// No description provided for @noRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات'**
+  String get noRequests;
+
+  /// No description provided for @noRequestsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات التي ترسلها للمنتجات الأخرى تظهر هنا.'**
+  String get noRequestsHint;
+
+  /// No description provided for @requestsNotificationHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'يصلك إشعار عند رد الشركة على أي طلب.'**
+  String get requestsNotificationHint;
+
+  /// No description provided for @filterAllPolicies.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل الوثائق'**
+  String get filterAllPolicies;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'السارية'**
+  String get filterActive;
+
+  /// No description provided for @filterRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات'**
+  String get filterRequests;
+
+  /// No description provided for @validUntil.
+  ///
+  /// In ar, this message translates to:
+  /// **'سارية حتى {date}'**
+  String validUntil(String date);
+
+  /// No description provided for @endedOn.
+  ///
+  /// In ar, this message translates to:
+  /// **'انتهت في {date}'**
+  String endedOn(String date);
+
+  /// No description provided for @awaitingPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الدفع'**
+  String get awaitingPayment;
+
+  /// No description provided for @cancelPolicyRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الوثيقة'**
+  String get cancelPolicyRequest;
+
+  /// No description provided for @account.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get account;
+
+  /// No description provided for @settings.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات'**
+  String get settings;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعلومات الشخصية'**
+  String get personalInfo;
+
+  /// No description provided for @documentsMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستندات غير مكتملة'**
+  String get documentsMissing;
+
+  /// No description provided for @branchesAndAgents.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفروع والوكلاء'**
+  String get branchesAndAgents;
+
+  /// No description provided for @headOffice.
+  ///
+  /// In ar, this message translates to:
+  /// **'المقر الرئيسي'**
+  String get headOffice;
+
+  /// No description provided for @agentsComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُضاف الفروع والوكلاء الجدد هنا فور اعتمادهم.'**
+  String get agentsComingSoon;
+
+  /// No description provided for @website.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع الإلكتروني'**
+  String get website;
+
+  /// No description provided for @privacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'الخصوصية'**
+  String get privacy;
+
+  /// No description provided for @aboutCompany.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن الشركة'**
+  String get aboutCompany;
+
+  /// No description provided for @appVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار التطبيق'**
+  String get appVersion;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

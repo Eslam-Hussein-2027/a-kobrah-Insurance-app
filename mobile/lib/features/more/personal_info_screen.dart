@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api/api_exception.dart';
-import '../../core/config.dart';
 import '../../core/l10n.dart';
-import '../../core/locale_controller.dart';
 import '../../core/theme.dart';
 import '../../shared/image_picking.dart';
 import '../../shared/widgets.dart';
 import '../auth/auth_controller.dart';
 import '../auth/models.dart';
 
-class ProfileTab extends ConsumerWidget {
-  const ProfileTab({super.key});
+/// Account details and the KYC documents required before issuing a motor policy.
+class PersonalInfoScreen extends ConsumerWidget {
+  const PersonalInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final user = ref.watch(authControllerProvider).asData?.value;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.tabProfile)),
+      appBar: AppBar(title: Text(context.l10n.personalInfo)),
       body: user == null
           ? const SizedBox.shrink()
           : RefreshIndicator(
@@ -31,39 +29,6 @@ class ProfileTab extends ConsumerWidget {
                   _UserCard(user: user),
                   const SizedBox(height: 12),
                   _DocumentsCard(user: user),
-                  const SizedBox(height: 12),
-                  const _LanguageCard(),
-                  const SizedBox(height: 12),
-                  SectionCard(
-                    child: Row(
-                      children: [
-                        const Icon(Icons.support_agent, color: AppColors.blue),
-                        const SizedBox(width: 12),
-                        Expanded(child: Text(l10n.customerService)),
-                        const Text(
-                          AppConfig.customerServicePhone,
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(foregroundColor: AppColors.danger),
-                    icon: const Icon(Icons.logout),
-                    label: Text(l10n.logout),
-                    onPressed: () async {
-                      final confirmed = await confirmDialog(
-                        context,
-                        title: l10n.logout,
-                        message: l10n.logoutConfirm,
-                        confirmLabel: l10n.logout,
-                        destructive: true,
-                      );
-                      if (confirmed) await ref.read(authControllerProvider.notifier).logout();
-                    },
-                  ),
                 ],
               ),
             ),
@@ -172,26 +137,6 @@ class _DocumentsCardState extends ConsumerState<_DocumentsCard> {
               onPressed: _uploading == null ? () => _upload(field) : null,
               child: Text(status.uploaded ? l10n.replace : l10n.upload),
             ),
-    );
-  }
-}
-
-class _LanguageCard extends ConsumerWidget {
-  const _LanguageCard();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final locale = ref.watch(localeProvider);
-    return SectionCard(
-      title: context.l10n.language,
-      child: SegmentedButton<String>(
-        segments: const [
-          ButtonSegment(value: 'ar', label: Text('العربية')),
-          ButtonSegment(value: 'en', label: Text('English')),
-        ],
-        selected: {locale.languageCode},
-        onSelectionChanged: (selection) => ref.read(localeProvider.notifier).setLocale(Locale(selection.first)),
-      ),
     );
   }
 }

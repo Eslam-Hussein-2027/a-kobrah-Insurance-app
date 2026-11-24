@@ -2,7 +2,7 @@
   "@@locale": "ar",
   "appTitle": "العربية الكبرى للتأمين",
   "welcome": "مرحبًا بك",
-  "loginSubtitle": "سجّل الدخول برقم هاتفك لإدارة تأمين سيارتك",
+  "loginSubtitle": "سجّل الدخول برقم هاتفك لإدارة وثائق التأمين",
   "phoneLabel": "رقم الهاتف",
   "sendCode": "إرسال رمز التحقق",
   "verifyPolicyLink": "التحقق من وثيقة تأمين",
@@ -33,7 +33,7 @@
   "nationalNumber": "الرقم الوطني",
   "idImage": "صورة إثبات الهوية",
   "licenseImage": "صورة رخصة القيادة",
-  "documentsOptionalHint": "يمكنك رفع المستندات الآن أو لاحقًا من صفحة «حسابي»، وهي مطلوبة قبل إصدار الوثيقة.",
+  "documentsOptionalHint": "يمكنك رفع المستندات الآن أو لاحقًا من «المزيد ← المعلومات الشخصية»، وهي مطلوبة قبل إصدار وثيقة التأمين الإجباري.",
   "chooseImage": "اختيار صورة",
   "imageSelected": "تم اختيار الصورة",
   "createAccount": "إنشاء الحساب",
@@ -41,8 +41,6 @@
   "camera": "الكاميرا",
   "gallery": "معرض الصور",
   "tabVehicles": "مركباتي",
-  "tabPolicies": "وثائقي",
-  "tabProfile": "حسابي",
   "addVehicle": "إضافة مركبة",
   "editVehicle": "تعديل المركبة",
   "noVehicles": "لم تضف أي مركبة بعد",
@@ -60,7 +58,6 @@
   "delete": "حذف",
   "edit": "تعديل",
   "cancel": "إلغاء",
-  "insureVehicle": "تأمين المركبة",
   "deleteVehicleTitle": "حذف المركبة",
   "deleteVehicleConfirm": "هل تريد حذف المركبة {plate}؟",
   "@deleteVehicleConfirm": {
@@ -73,9 +70,8 @@
   "vehicleAdded": "تمت إضافة المركبة",
   "vehicleUpdated": "تم تحديث بيانات المركبة",
   "vehicleDeleted": "تم حذف المركبة",
-  "vehicleNotFound": "المركبة غير موجودة",
   "noPolicies": "لا توجد وثائق تأمين بعد",
-  "noPoliciesHint": "اذهب إلى «مركباتي» واضغط «تأمين المركبة»",
+  "noPoliciesHint": "اختر منتجًا من الرئيسية لإصدار أول وثيقة.",
   "policyNo": "رقم الوثيقة",
   "coverage": "نوع التأمين",
   "startDate": "تاريخ البداية",
@@ -89,18 +85,15 @@
   "pendingPaymentTitle": "الوثيقة بانتظار الدفع",
   "pendingPaymentBody": "يمكنك دفع القسط الآن إلكترونيًا، وبعد تأكيد الدفع ستتمكن من تحميل الوثيقة وطباعتها مباشرة.",
   "customerService": "خدمة العملاء",
-  "cancelRequest": "إلغاء الطلب",
   "cancelRequestConfirm": "هل تريد إلغاء طلب هذه الوثيقة؟",
   "policyCancelled": "تم إلغاء الطلب",
   "policyCreated": "تم إنشاء الوثيقة، يرجى إتمام الدفع لتفعيلها",
-  "quoteTitle": "سعر التأمين",
   "basePrice": "السعر الأساسي",
   "priceDetails": "تفاصيل السعر",
-  "totalPremium": "القسط الإجمالي",
   "coverageStart": "تاريخ بداية التأمين",
   "issuePolicy": "إصدار الوثيقة",
   "kycMissingTitle": "المستندات مطلوبة",
-  "kycMissingBody": "يجب رفع صورة إثبات الهوية وصورة رخصة القيادة قبل إصدار الوثيقة.",
+  "kycMissingBody": "يجب رفع صورة إثبات الهوية وصورة رخصة القيادة قبل إصدار وثيقة التأمين الإجباري.",
   "goToProfile": "رفع المستندات",
   "documents": "المستندات",
   "uploaded": "تم الرفع",
@@ -118,7 +111,7 @@
   "requiredField": "هذا الحقل مطلوب",
   "networkError": "تعذّر الاتصال بالخادم. تحقق من الإنترنت وحاول مرة أخرى.",
   "unexpectedError": "حدث خطأ غير متوقع، حاول مرة أخرى.",
-  "currency": "دينار ليبي",
+  "currency": "د.ل",
   "payOnline": "ادفع الآن إلكترونيًا",
   "checkPaymentStatus": "تحقق من حالة الدفع",
   "orPayAtOffice": "أو ادفع في أحد مكاتب الشركة مع ذكر رقم الوثيقة.",
@@ -126,5 +119,267 @@
   "paymentFailed": "لم تتم عملية الدفع، يمكنك المحاولة مرة أخرى",
   "paymentNotConfirmedYet": "لم يتم تأكيد الدفع بعد، حاول بعد لحظات",
   "verificationQrTitle": "رمز التحقق من الوثيقة",
-  "verificationQrHint": "يمكن لرجال المرور والجهات الحكومية والشركات مسح هذا الرمز بكاميرا الهاتف للتأكد من صحة الوثيقة."
+  "verificationQrHint": "يمكن لرجال المرور والجهات الحكومية والشركات مسح هذا الرمز بكاميرا الهاتف للتأكد من صحة الوثيقة.",
+  "tabHome": "الرئيسية",
+  "tabMyInsurance": "تأميناتي",
+  "tabPersons": "الأشخاص",
+  "tabMore": "المزيد",
+  "hello": "مرحبًا،",
+  "contactUs": "تواصل معنا",
+  "insuranceProducts": "منتجات التأمين",
+  "myPoliciesCount": "{count, plural, =0{وثائقي} other{وثائقي ({count})}}",
+  "@myPoliciesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "instantIssue": "إصدار فوري",
+  "onRequest": "بطلب عرض سعر",
+  "calculatePrice": "احسب السعر",
+  "verifyPolicyShort": "تحقق من وثيقة",
+  "branches": "فروعنا",
+  "uninsuredVehicle": "مركبة بدون تأمين",
+  "insureItNow": "أمّنها الآن",
+  "noActivePolicy": "لا توجد وثيقة سارية",
+  "noActivePolicyHint": "أصدر وثيقة التأمين الإجباري لمركبتك في دقائق.",
+  "verificationCode": "رمز التحقق",
+  "endsOn": "تنتهي في {date}",
+  "@endsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "daysLeft": "{count, plural, =0{تنتهي اليوم} =1{متبقٍ يوم واحد} =2{متبقٍ يومان} few{متبقٍ {count} أيام} many{متبقٍ {count} يومًا} other{متبقٍ {count} يوم}}",
+  "@daysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "otherActivePolicies": "{count, plural, =1{ولديك وثيقة سارية أخرى في «تأميناتي»} =2{ولديك وثيقتان ساريتان أخريان في «تأميناتي»} few{ولديك {count} وثائق سارية أخرى في «تأميناتي»} other{ولديك {count} وثيقة سارية أخرى في «تأميناتي»}}",
+  "@otherActivePolicies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "issuedInstantly": "تصدر فورًا عبر التطبيق",
+  "issuedAfterReview": "تصدر بعد مراجعة الطلب",
+  "issuePolicyHint": "ادفع إلكترونيًا واستلم الوثيقة في الحال",
+  "requestPolicy": "طلب إصدار وثيقة",
+  "requestPolicyHint": "أرسل بياناتك وسيتواصل معك موظف",
+  "knowThePrice": "اعرف السعر",
+  "knowThePriceHint": "احسب القيمة قبل إصدار الوثيقة",
+  "requestQuote": "طلب عرض سعر",
+  "requestQuoteHint": "يصلك السعر خلال يوم عمل",
+  "whatIsCovered": "ماذا تغطي الوثيقة",
+  "requiredDocuments": "المستندات المطلوبة",
+  "haveAQuestion": "لديك سؤال؟ اتصل بنا على",
+  "add": "إضافة",
+  "more": "المزيد",
+  "choose": "اختر",
+  "optional": "اختياري",
+  "notes": "ملاحظات",
+  "notice": "تنبيه",
+  "total": "الإجمالي",
+  "continueLabel": "متابعة",
+  "stepReview": "الخطوة 2 من 3 · المراجعة",
+  "payAfterIssueHint": "بعد الإصدار تنتقل إلى صفحة الوثيقة لإتمام الدفع إلكترونيًا أو في المقر الرئيسي.",
+  "issueNow": "أصدر الوثيقة الآن",
+  "estimateDisclaimer": "السعر تقديري، ويظهر السعر النهائي عند الإصدار حسب البيانات المسجّلة.",
+  "estimatedPrice": "السعر التقديري",
+  "estimatedPriceOneYear": "السعر التقديري لسنة واحدة",
+  "increase": "زيادة",
+  "decrease": "إنقاص",
+  "call": "اتصال",
+  "motorIssueTitle": "إصدار تأمين إجباري",
+  "motorStepVehicle": "الخطوة 1 من 3 · المركبة",
+  "checkDataNotice": "يرجى التأكد من صحة بيانات المركبة قبل الإصدار، فهي تُطبع على الوثيقة.",
+  "chooseVehicle": "اختر المركبة",
+  "addNewVehicle": "إضافة مركبة جديدة",
+  "policyData": "بيانات الوثيقة",
+  "policyDuration": "مدة التأمين",
+  "oneYear": "سنة واحدة",
+  "insuredPerson": "المؤمَّن له",
+  "insuredUntil": "مؤمّنة حتى {date}",
+  "@insuredUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "hasPendingPolicy": "لها وثيقة بانتظار الدفع",
+  "notInsured": "غير مؤمّنة",
+  "viewPolicy": "عرض الوثيقة",
+  "motorPriceTitle": "اعرف سعر التأمين الإجباري",
+  "engineCcInvalid": "أدخل سعة محرك صحيحة (50 - 10000)",
+  "travelIssueTitle": "إصدار تأمين سفر",
+  "travelStepTrip": "الخطوة 1 من 3 · الرحلة والمسافرون",
+  "travelPriceTitle": "اعرف سعر تأمين السفر",
+  "travelUnavailable": "تأمين السفر غير متاح حاليًا، تواصل مع خدمة العملاء.",
+  "destination": "الوجهة",
+  "tripLength": "مدة الرحلة",
+  "tripDetails": "بيانات الرحلة",
+  "travelDate": "تاريخ السفر",
+  "coverageEndsOn": "تنتهي التغطية في {date}",
+  "@coverageEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "travellers": "المسافرون",
+  "travellersNumber": "عدد المسافرين",
+  "travellersCount": "{count, plural, =0{لم تختر أي مسافر} =1{مسافر واحد} =2{مسافران} few{{count} مسافرين} many{{count} مسافرًا} other{{count} مسافر}}",
+  "@travellersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count, plural, =1{يوم واحد} =2{يومان} few{{count} أيام} many{{count} يومًا} other{{count} يوم}}",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fromPrice": "من {price}",
+  "@fromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerTraveller": "سعر الفرد",
+  "addTravellersHint": "أضف الأشخاص المسافرين أولًا (الاسم وتاريخ الميلاد ورقم الجواز).",
+  "passportMissing": "بدون رقم جواز",
+  "passportRequiredFor": "يرجى إضافة رقم جواز السفر لـ: {names}",
+  "@passportRequiredFor": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "addPassport": "إضافة رقم الجواز",
+  "personsHint": "تختارهم مباشرة عند إصدار تأمين السفر بدون إعادة إدخال البيانات.",
+  "noPersons": "لم تضف أي شخص بعد",
+  "noPersonsHint": "أضف نفسك وأفراد عائلتك لتأمين سفرهم.",
+  "addPerson": "إضافة شخص",
+  "editPerson": "تعديل بيانات الشخص",
+  "deletePerson": "حذف الشخص",
+  "deletePersonConfirm": "هل تريد حذف {name} من قائمة الأشخاص؟ الوثائق الصادرة له لا تتأثر.",
+  "@deletePersonConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "personAdded": "تمت إضافة الشخص",
+  "personUpdated": "تم تحديث البيانات",
+  "personDeleted": "تم حذف الشخص",
+  "relationship": "صلة القرابة",
+  "relationshipSelf": "أنا",
+  "relationshipSpouse": "الزوج / الزوجة",
+  "relationshipChild": "ابن / ابنة",
+  "relationshipParent": "أب / أم",
+  "relationshipSibling": "أخ / أخت",
+  "relationshipOther": "آخر",
+  "birthDate": "تاريخ الميلاد",
+  "bornOn": "مواليد {date}",
+  "@bornOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "passportNo": "رقم جواز السفر",
+  "passportShort": "جواز {number}",
+  "@passportShort": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "passportNeededForTravel": "مطلوب لتأمين السفر",
+  "sendRequest": "إرسال الطلب",
+  "requestSent": "تم إرسال طلبك، وسيتواصل معك أحد موظفي الشركة.",
+  "attach": "إرفاق",
+  "documentsLaterHint": "يمكنك إرسال الطلب الآن وإرفاق المستندات لاحقًا عند تواصل الموظف معك.",
+  "addVehicleFirst": "أضف مركبتك أولًا من «مركباتي».",
+  "requestContactHint": "سيتواصل معك موظف من الشركة على الرقم {phone} خلال يوم عمل.",
+  "@requestContactHint": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "requestDetails": "تفاصيل الطلب",
+  "sentOn": "أُرسل في {date}",
+  "@sentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "requestWaitingHint": "طلبك قيد المتابعة، وسيصلك رد الشركة هنا.",
+  "requestData": "بيانات الطلب",
+  "companyReply": "رد الشركة",
+  "offeredPrice": "السعر المعروض",
+  "acceptOfferHint": "لقبول العرض تواصل مع خدمة العملاء أو انتظر اتصال الموظف.",
+  "withdrawRequest": "سحب الطلب",
+  "withdrawRequestConfirm": "هل تريد سحب هذا الطلب؟",
+  "requestWithdrawn": "تم سحب الطلب",
+  "noRequests": "لا توجد طلبات",
+  "noRequestsHint": "الطلبات التي ترسلها للمنتجات الأخرى تظهر هنا.",
+  "requestsNotificationHint": "يصلك إشعار عند رد الشركة على أي طلب.",
+  "filterAllPolicies": "كل الوثائق",
+  "filterActive": "السارية",
+  "filterRequests": "الطلبات",
+  "validUntil": "سارية حتى {date}",
+  "@validUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "endedOn": "انتهت في {date}",
+  "@endedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "awaitingPayment": "بانتظار الدفع",
+  "cancelPolicyRequest": "إلغاء الوثيقة",
+  "account": "الحساب",
+  "settings": "الإعدادات",
+  "personalInfo": "المعلومات الشخصية",
+  "documentsMissing": "المستندات غير مكتملة",
+  "branchesAndAgents": "الفروع والوكلاء",
+  "headOffice": "المقر الرئيسي",
+  "agentsComingSoon": "تُضاف الفروع والوكلاء الجدد هنا فور اعتمادهم.",
+  "website": "الموقع الإلكتروني",
+  "privacy": "الخصوصية",
+  "aboutCompany": "عن الشركة",
+  "appVersion": "إصدار التطبيق"
 }

@@ -35,10 +35,13 @@ flutter:
     - assets/images/
 
   fonts:
-    - family: Tajawal
+    # IBM Plex Sans Arabic (SIL OFL 1.1, assets/fonts/OFL.txt): Arabic + Latin in one family.
+    - family: IBMPlexSansArabic
       fonts:
-        - asset: assets/fonts/Tajawal-Regular.ttf
-        - asset: assets/fonts/Tajawal-Medium.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Regular.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Tajawal-Bold.ttf
+        - asset: assets/fonts/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/IBMPlexSansArabic-Bold.ttf
           weight: 700

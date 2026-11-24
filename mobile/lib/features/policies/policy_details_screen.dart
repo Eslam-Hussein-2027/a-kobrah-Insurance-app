@@ -11,6 +11,7 @@ import '../../shared/widgets.dart';
 import 'models.dart';
 import 'pdf_saver.dart';
 import 'policies_repository.dart';
+import 'policy_tile.dart';
 import 'status_chip.dart';
 
 class PolicyDetailsScreen extends ConsumerWidget {
@@ -28,18 +29,25 @@ class PolicyDetailsScreen extends ConsumerWidget {
         builder: (policy) => RefreshIndicator(
           onRefresh: () async => ref.refresh(policyProvider(policyId).future),
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
             children: [
               _Header(policy: policy),
-              const SizedBox(height: 12),
-              _Details(policy: policy),
               const SizedBox(height: 16),
               if (policy.verificationUrl != null) ...[
                 _VerificationQr(url: policy.verificationUrl!),
                 const SizedBox(height: 16),
               ],
-              if (policy.status == PolicyStatus.pendingPayment) _PendingPayment(policy: policy),
-              if (policy.canDownloadPdf) _DownloadButton(policy: policy),
+              if (policy.status == PolicyStatus.pendingPayment) ...[
+                _PendingPayment(policy: policy),
+                const SizedBox(height: 4),
+              ],
+              SectionTitle(context.l10n.policyData, padding: const EdgeInsets.fromLTRB(0, 8, 0, 10)),
+              _Details(policy: policy),
+              if (policy.travel != null) ...[
+                SectionTitle(context.l10n.travellers),
+                _Travellers(travel: policy.travel!),
+              ],
+              if (policy.canDownloadPdf) ...[const SizedBox(height: 16), _DownloadButton(policy: policy)],
             ],
           ),
         ),
@@ -55,33 +63,28 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: const LinearGradient(colors: [AppColors.navy, AppColors.blue]),
-      ),
-      child: Column(
-        children: [
-          Text(context.l10n.policyNo, style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white70)),
-          const SizedBox(height: 4),
-          Text(
-            policy.policyNo,
-            textDirection: TextDirection.ltr,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(policy.productName, style: const TextStyle(fontSize: 13, color: AppColors.muted)),
             ),
-          ),
-          const SizedBox(height: 12),
-          DecoratedBox(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: PolicyStatusChip(status: policy.status, label: policy.statusLabel),
-          ),
-        ],
-      ),
+            PolicyStatusChip(status: policy.status, label: policy.statusLabel),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(
+          policySubject(context, policy),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, height: 1.35),
+        ),
+        Text(
+          policy.policyNo,
+          textDirection: TextDirection.ltr,
+          style: const TextStyle(fontSize: 14, color: AppColors.muted, letterSpacing: 0.3),
+        ),
+      ],
     );
   }
 }
@@ -95,22 +98,48 @@ class _Details extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final vehicle = policy.vehicle;
+    final travel = policy.travel;
     return SectionCard(
       child: Column(
         children: [
-          if (policy.coverageType != null) InfoRow(label: l10n.coverage, value: policy.coverageType!.name),
+          InfoRow(label: l10n.coverage, value: policy.coverageType?.name ?? policy.title),
           if (vehicle != null) ...[
-            InfoRow(label: l10n.plateNo, value: vehicle.plateNo, ltr: true),
             InfoRow(label: l10n.vehicle, value: '${vehicle.title} ${vehicle.year}'),
+            InfoRow(label: l10n.plateNo, value: vehicle.plateNo, ltr: true),
           ],
-          InfoRow(label: l10n.startDate, value: policy.startDate, ltr: true),
-          InfoRow(label: l10n.endDate, value: policy.endDate, ltr: true),
-          if (policy.issuedAt != null)
-            InfoRow(label: l10n.issuedAt, value: policy.issuedAt!.substring(0, 10), ltr: true),
+          if (travel != null) ...[
+            InfoRow(label: l10n.destination, value: travel.zoneLabel),
+            InfoRow(label: l10n.tripLength, value: l10n.daysCount(travel.days)),
+          ],
+          InfoRow(label: l10n.startDate, value: formatDate(context, policy.startDate)),
+          InfoRow(label: l10n.endDate, value: formatDate(context, policy.endDate)),
+          if (policy.issuedAt != null) InfoRow(label: l10n.issuedAt, value: formatDate(context, policy.issuedAt!)),
           const Divider(height: 20),
           InfoRow(label: l10n.premium, value: formatMoney(context, policy.premium), emphasize: true),
         ],
       ),
+    );
+  }
+}
+
+class _Travellers extends StatelessWidget {
+  const _Travellers({required this.travel});
+
+  final TravelDetails travel;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return ListGroup(
+      children: [
+        for (final traveller in travel.travellers)
+          NavRow(
+            icon: Icons.person_outline,
+            title: traveller.fullName,
+            subtitle:
+                '${l10n.bornOn(formatDate(context, traveller.birthDate))} · ${l10n.passportShort(traveller.passportNo)}',
+          ),
+      ],
     );
   }
 }
@@ -197,9 +226,9 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
     final l10n = context.l10n;
     final confirmed = await confirmDialog(
       context,
-      title: l10n.cancelRequest,
+      title: l10n.cancelPolicyRequest,
       message: l10n.cancelRequestConfirm,
-      confirmLabel: l10n.cancelRequest,
+      confirmLabel: l10n.cancelPolicyRequest,
       destructive: true,
     );
     if (!confirmed || !mounted) return;
@@ -229,25 +258,19 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.warning.withValues(alpha: 0.08),
+            color: AppColors.notice,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+            border: Border.all(color: AppColors.noticeBorder),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Icon(Icons.storefront_outlined, color: AppColors.warning),
-                  const SizedBox(width: 8),
-                  Text(
-                    l10n.pendingPaymentTitle,
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700, color: AppColors.warning),
-                  ),
-                ],
+              Text(l10n.pendingPaymentTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+              const SizedBox(height: 4),
+              Text(
+                l10n.pendingPaymentBody,
+                style: theme.textTheme.bodyMedium?.copyWith(height: 1.6, color: const Color(0xFF4A4E60)),
               ),
-              const SizedBox(height: 8),
-              Text(l10n.pendingPaymentBody, style: theme.textTheme.bodyMedium?.copyWith(height: 1.6)),
               const SizedBox(height: 14),
               PrimaryButton(label: l10n.payOnline, icon: Icons.credit_card, loading: _paying, onPressed: _payOnline),
               if (_paymentId != null) ...[
@@ -262,7 +285,7 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
               ],
               const SizedBox(height: 12),
               Text(l10n.orPayAtOffice, style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted)),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Row(
                 children: [
                   Text('${l10n.customerService}: ', style: theme.textTheme.bodyMedium),
@@ -276,12 +299,12 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
+        const SizedBox(height: 10),
+        TextButton.icon(
           onPressed: _cancelling ? null : _cancel,
-          style: OutlinedButton.styleFrom(foregroundColor: AppColors.danger),
-          icon: const Icon(Icons.close),
-          label: Text(l10n.cancelRequest),
+          style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+          icon: const Icon(Icons.close, size: 18),
+          label: Text(l10n.cancelPolicyRequest),
         ),
       ],
     );
@@ -340,29 +363,19 @@ class _VerificationQr extends StatelessWidget {
     final theme = Theme.of(context);
 
     return SectionCard(
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          Text(l10n.verificationQrTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: QrImageView(
-              data: url,
-              size: 190,
-              errorCorrectionLevel: QrErrorCorrectLevel.M,
-              eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: AppColors.navy),
-              dataModuleStyle: const QrDataModuleStyle(
-                dataModuleShape: QrDataModuleShape.square,
-                color: AppColors.navy,
-              ),
-            ),
+          QrImageView(
+            data: url,
+            size: 176,
+            errorCorrectionLevel: QrErrorCorrectLevel.M,
+            eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: AppColors.ink),
+            dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
+          Text(l10n.verificationQrTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 4),
           Text(
             l10n.verificationQrHint,
             textAlign: TextAlign.center,

@@ -24,6 +24,8 @@ class ApiClient {
 
   Future<Json> post(String path, {Object? data}) => _send(() => _dio.post<dynamic>(path, data: data));
 
+  Future<Json> put(String path, {Object? data}) => _send(() => _dio.put<dynamic>(path, data: data));
+
   Future<Json> patch(String path, {Object? data}) => _send(() => _dio.patch<dynamic>(path, data: data));
 
   Future<Json> delete(String path) => _send(() => _dio.delete<dynamic>(path));

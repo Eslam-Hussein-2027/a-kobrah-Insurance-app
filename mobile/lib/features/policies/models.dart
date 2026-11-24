@@ -74,10 +74,37 @@ enum PolicyStatus {
       PolicyStatus.values.firstWhere((s) => s.value == value, orElse: () => PolicyStatus.unknown);
 }
 
+/// Travellers and trip of a travel policy.
+class TravelDetails {
+  const TravelDetails({required this.zoneLabel, required this.days, required this.travellers});
+
+  factory TravelDetails.fromJson(Map<String, dynamic> json) => TravelDetails(
+    zoneLabel: ((json['zone'] as Map?)?['label'] as String?) ?? '',
+    days: (json['days'] as num?)?.toInt() ?? 0,
+    travellers: (json['travellers'] as List)
+        .cast<Map<String, dynamic>>()
+        .map(
+          (t) => (
+            fullName: t['full_name'] as String,
+            birthDate: t['birth_date'] as String,
+            passportNo: t['passport_no'] as String,
+          ),
+        )
+        .toList(),
+  );
+
+  final String zoneLabel;
+  final int days;
+  final List<({String fullName, String birthDate, String passportNo})> travellers;
+}
+
 class Policy {
   const Policy({
     required this.id,
     required this.policyNo,
+    required this.product,
+    required this.productName,
+    required this.title,
     required this.status,
     required this.statusLabel,
     required this.startDate,
@@ -88,13 +115,18 @@ class Policy {
     this.issuedAt,
     this.vehicle,
     this.coverageType,
+    this.travel,
   });
 
   factory Policy.fromJson(Map<String, dynamic> json) {
     final status = json['status'] as Map<String, dynamic>;
+    final product = (json['product'] as Map?)?.cast<String, dynamic>();
     return Policy(
       id: (json['id'] as num).toInt(),
       policyNo: json['policy_no'] as String,
+      product: (product?['value'] as String?) ?? 'motor',
+      productName: (product?['label'] as String?) ?? '',
+      title: (json['title'] as String?) ?? '',
       status: PolicyStatus.fromValue(status['value'] as String),
       statusLabel: status['label'] as String,
       startDate: json['start_date'] as String,
@@ -107,11 +139,21 @@ class Policy {
       coverageType: json['coverage_type'] is Map
           ? CoverageType.fromJson((json['coverage_type'] as Map).cast<String, dynamic>())
           : null,
+      travel: json['travel'] is Map ? TravelDetails.fromJson((json['travel'] as Map).cast<String, dynamic>()) : null,
     );
   }
 
   final int id;
   final String policyNo;
+
+  /// Product code: motor | travel.
+  final String product;
+
+  /// Localized product name ("التأمين الإجباري").
+  final String productName;
+
+  /// Localized full name ("تأمين السفر - أوروبا (شنغن)").
+  final String title;
   final PolicyStatus status;
 
   /// Localized by the server.
@@ -126,6 +168,12 @@ class Policy {
   final String? verificationUrl;
   final Vehicle? vehicle;
   final CoverageType? coverageType;
+  final TravelDetails? travel;
+
+  bool get isTravel => product == 'travel';
+
+  /// Pending or in force: the vehicle cannot get another policy for the same period.
+  bool get isBlocking => status == PolicyStatus.active || status == PolicyStatus.pendingPayment;
 }
 
 class PolicyVerification {

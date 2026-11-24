@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/l10n.dart';
 import '../core/theme.dart';
 
+export 'formatters.dart';
+export 'ui.dart';
+
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key, this.height = 56});
 
@@ -80,10 +83,15 @@ class EmptyView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: AppColors.blue.withValues(alpha: 0.1),
-              child: Icon(icon, size: 40, color: AppColors.blue),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Icon(icon, size: 30, color: AppColors.navy),
             ),
             const SizedBox(height: 16),
             Text(
@@ -154,7 +162,7 @@ class InfoRow extends StatelessWidget {
               textAlign: TextAlign.end,
               textDirection: ltr ? TextDirection.ltr : null,
               style: (emphasize ? theme.textTheme.titleMedium : theme.textTheme.bodyLarge)?.copyWith(
-                fontWeight: emphasize ? FontWeight.w700 : FontWeight.w600,
+                fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
                 color: emphasize ? AppColors.navy : null,
               ),
             ),
@@ -224,6 +232,3 @@ Future<bool> confirmDialog(
   );
   return result ?? false;
 }
-
-/// "1452.00 دينار ليبي"
-String formatMoney(BuildContext context, String amount) => '$amount ${context.l10n.currency}';

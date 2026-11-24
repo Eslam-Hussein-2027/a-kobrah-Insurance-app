@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcome => 'Welcome';
 
   @override
-  String get loginSubtitle => 'Sign in with your phone number to manage your car insurance';
+  String get loginSubtitle => 'Sign in with your phone number to manage your insurance';
 
   @override
   String get phoneLabel => 'Phone number';
@@ -72,7 +72,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get documentsOptionalHint =>
-      'You can upload documents now or later from \"Account\". They are required before a policy is issued.';
+      'You can upload the documents now or later from More → Personal information. They are required before issuing a compulsory policy.';
 
   @override
   String get chooseImage => 'Choose image';
@@ -94,12 +94,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tabVehicles => 'My vehicles';
-
-  @override
-  String get tabPolicies => 'My policies';
-
-  @override
-  String get tabProfile => 'Account';
 
   @override
   String get addVehicle => 'Add vehicle';
@@ -153,9 +147,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
-  String get insureVehicle => 'Insure vehicle';
-
-  @override
   String get deleteVehicleTitle => 'Delete vehicle';
 
   @override
@@ -173,13 +164,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vehicleDeleted => 'Vehicle deleted';
 
   @override
-  String get vehicleNotFound => 'Vehicle not found';
-
-  @override
   String get noPolicies => 'No insurance policies yet';
 
   @override
-  String get noPoliciesHint => 'Go to \"My vehicles\" and tap \"Insure vehicle\"';
+  String get noPoliciesHint => 'Choose a product on the home screen to issue your first policy.';
 
   @override
   String get policyNo => 'Policy number';
@@ -222,9 +210,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customerService => 'Customer service';
 
   @override
-  String get cancelRequest => 'Cancel request';
-
-  @override
   String get cancelRequestConfirm => 'Cancel this policy request?';
 
   @override
@@ -234,16 +219,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get policyCreated => 'Policy created. Please complete the payment to activate it';
 
   @override
-  String get quoteTitle => 'Insurance price';
-
-  @override
   String get basePrice => 'Base price';
 
   @override
   String get priceDetails => 'Price details';
-
-  @override
-  String get totalPremium => 'Total premium';
 
   @override
   String get coverageStart => 'Coverage start date';
@@ -255,7 +234,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kycMissingTitle => 'Documents required';
 
   @override
-  String get kycMissingBody => 'Upload your identity document and driving license images before issuing a policy.';
+  String get kycMissingBody => 'Upload your ID and driving licence images before issuing a compulsory policy.';
 
   @override
   String get goToProfile => 'Upload documents';
@@ -335,4 +314,494 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get verificationQrHint =>
       'Traffic police, government bodies and companies can scan this code with a phone camera to confirm the policy is genuine.';
+
+  @override
+  String get tabHome => 'Home';
+
+  @override
+  String get tabMyInsurance => 'My insurance';
+
+  @override
+  String get tabPersons => 'People';
+
+  @override
+  String get tabMore => 'More';
+
+  @override
+  String get hello => 'Hello,';
+
+  @override
+  String get contactUs => 'Contact us';
+
+  @override
+  String get insuranceProducts => 'Insurance products';
+
+  @override
+  String myPoliciesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'My policies ($count)',
+      zero: 'My policies',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get instantIssue => 'Instant issue';
+
+  @override
+  String get onRequest => 'On request';
+
+  @override
+  String get calculatePrice => 'Calculate price';
+
+  @override
+  String get verifyPolicyShort => 'Verify a policy';
+
+  @override
+  String get branches => 'Branches';
+
+  @override
+  String get uninsuredVehicle => 'Vehicle without insurance';
+
+  @override
+  String get insureItNow => 'Insure it now';
+
+  @override
+  String get noActivePolicy => 'No active policy';
+
+  @override
+  String get noActivePolicyHint => 'Issue your vehicle\'s compulsory policy in minutes.';
+
+  @override
+  String get verificationCode => 'Verification code';
+
+  @override
+  String endsOn(String date) {
+    return 'Ends on $date';
+  }
+
+  @override
+  String daysLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days left',
+      one: '1 day left',
+      zero: 'Ends today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String otherActivePolicies(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'You have $count more active policies in My insurance',
+      one: 'You have 1 more active policy in My insurance',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get issuedInstantly => 'Issued instantly in the app';
+
+  @override
+  String get issuedAfterReview => 'Issued after the company reviews your request';
+
+  @override
+  String get issuePolicyHint => 'Pay online and get the policy right away';
+
+  @override
+  String get requestPolicy => 'Request a policy';
+
+  @override
+  String get requestPolicyHint => 'Send your details and an employee will contact you';
+
+  @override
+  String get knowThePrice => 'Know the price';
+
+  @override
+  String get knowThePriceHint => 'Calculate the price before you buy';
+
+  @override
+  String get requestQuote => 'Request a price offer';
+
+  @override
+  String get requestQuoteHint => 'You\'ll get a price within one working day';
+
+  @override
+  String get whatIsCovered => 'What is covered';
+
+  @override
+  String get requiredDocuments => 'Required documents';
+
+  @override
+  String get haveAQuestion => 'Questions? Call us on';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get choose => 'Choose';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get notice => 'Please note';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get stepReview => 'Step 2 of 3 · Review';
+
+  @override
+  String get payAfterIssueHint => 'After issuing, you\'ll go to the policy page to pay online or at the head office.';
+
+  @override
+  String get issueNow => 'Issue the policy now';
+
+  @override
+  String get estimateDisclaimer => 'This is an estimate; the final price is shown when you issue the policy.';
+
+  @override
+  String get estimatedPrice => 'Estimated price';
+
+  @override
+  String get estimatedPriceOneYear => 'Estimated price for one year';
+
+  @override
+  String get increase => 'Increase';
+
+  @override
+  String get decrease => 'Decrease';
+
+  @override
+  String get call => 'Call';
+
+  @override
+  String get motorIssueTitle => 'Compulsory insurance';
+
+  @override
+  String get motorStepVehicle => 'Step 1 of 3 · Vehicle';
+
+  @override
+  String get checkDataNotice => 'Please check the vehicle details before issuing; they are printed on the policy.';
+
+  @override
+  String get chooseVehicle => 'Choose the vehicle';
+
+  @override
+  String get addNewVehicle => 'Add a new vehicle';
+
+  @override
+  String get policyData => 'Policy details';
+
+  @override
+  String get policyDuration => 'Duration';
+
+  @override
+  String get oneYear => 'One year';
+
+  @override
+  String get insuredPerson => 'Insured';
+
+  @override
+  String insuredUntil(String date) {
+    return 'Insured until $date';
+  }
+
+  @override
+  String get hasPendingPolicy => 'Has a policy awaiting payment';
+
+  @override
+  String get notInsured => 'Not insured';
+
+  @override
+  String get viewPolicy => 'View policy';
+
+  @override
+  String get motorPriceTitle => 'Compulsory insurance price';
+
+  @override
+  String get engineCcInvalid => 'Enter a valid engine size (50 - 10000)';
+
+  @override
+  String get travelIssueTitle => 'Travel insurance';
+
+  @override
+  String get travelStepTrip => 'Step 1 of 3 · Trip and travellers';
+
+  @override
+  String get travelPriceTitle => 'Travel insurance price';
+
+  @override
+  String get travelUnavailable => 'Travel insurance is not available right now. Please contact customer service.';
+
+  @override
+  String get destination => 'Destination';
+
+  @override
+  String get tripLength => 'Trip length';
+
+  @override
+  String get tripDetails => 'Trip details';
+
+  @override
+  String get travelDate => 'Travel date';
+
+  @override
+  String coverageEndsOn(String date) {
+    return 'Cover ends on $date';
+  }
+
+  @override
+  String get travellers => 'Travellers';
+
+  @override
+  String get travellersNumber => 'Number of travellers';
+
+  @override
+  String travellersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count travellers',
+      one: '1 traveller',
+      zero: 'No travellers selected',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(count, locale: localeName, other: '$count days', one: '1 day');
+    return '$_temp0';
+  }
+
+  @override
+  String fromPrice(String price) {
+    return 'from $price';
+  }
+
+  @override
+  String get pricePerTraveller => 'Price per traveller';
+
+  @override
+  String get addTravellersHint => 'Add the travellers first (name, date of birth and passport number).';
+
+  @override
+  String get passportMissing => 'No passport number';
+
+  @override
+  String passportRequiredFor(String names) {
+    return 'Please add a passport number for: $names';
+  }
+
+  @override
+  String get addPassport => 'Add passport number';
+
+  @override
+  String get personsHint => 'Pick them when issuing travel insurance, without typing their details again.';
+
+  @override
+  String get noPersons => 'No people added yet';
+
+  @override
+  String get noPersonsHint => 'Add yourself and your family to insure their trips.';
+
+  @override
+  String get addPerson => 'Add person';
+
+  @override
+  String get editPerson => 'Edit person';
+
+  @override
+  String get deletePerson => 'Delete person';
+
+  @override
+  String deletePersonConfirm(String name) {
+    return 'Delete $name from your people? Policies already issued are not affected.';
+  }
+
+  @override
+  String get personAdded => 'Person added';
+
+  @override
+  String get personUpdated => 'Details updated';
+
+  @override
+  String get personDeleted => 'Person deleted';
+
+  @override
+  String get relationship => 'Relationship';
+
+  @override
+  String get relationshipSelf => 'Me';
+
+  @override
+  String get relationshipSpouse => 'Spouse';
+
+  @override
+  String get relationshipChild => 'Child';
+
+  @override
+  String get relationshipParent => 'Parent';
+
+  @override
+  String get relationshipSibling => 'Sibling';
+
+  @override
+  String get relationshipOther => 'Other';
+
+  @override
+  String get birthDate => 'Date of birth';
+
+  @override
+  String bornOn(String date) {
+    return 'Born $date';
+  }
+
+  @override
+  String get passportNo => 'Passport number';
+
+  @override
+  String passportShort(String number) {
+    return 'Passport $number';
+  }
+
+  @override
+  String get passportNeededForTravel => 'Required for travel insurance';
+
+  @override
+  String get sendRequest => 'Send request';
+
+  @override
+  String get requestSent => 'Your request was sent. A company employee will contact you.';
+
+  @override
+  String get attach => 'Attach';
+
+  @override
+  String get documentsLaterHint => 'You can send the request now and provide the documents later.';
+
+  @override
+  String get addVehicleFirst => 'Add your vehicle first in Vehicles.';
+
+  @override
+  String requestContactHint(String phone) {
+    return 'A company employee will contact you on $phone within one working day.';
+  }
+
+  @override
+  String get requestDetails => 'Request details';
+
+  @override
+  String sentOn(String date) {
+    return 'Sent on $date';
+  }
+
+  @override
+  String get requestWaitingHint => 'Your request is being handled; the company\'s reply will appear here.';
+
+  @override
+  String get requestData => 'Request details';
+
+  @override
+  String get companyReply => 'Company reply';
+
+  @override
+  String get offeredPrice => 'Offered price';
+
+  @override
+  String get acceptOfferHint => 'To accept the offer, contact customer service or wait for the employee\'s call.';
+
+  @override
+  String get withdrawRequest => 'Withdraw request';
+
+  @override
+  String get withdrawRequestConfirm => 'Withdraw this request?';
+
+  @override
+  String get requestWithdrawn => 'Request withdrawn';
+
+  @override
+  String get noRequests => 'No requests';
+
+  @override
+  String get noRequestsHint => 'Requests you send for other products appear here.';
+
+  @override
+  String get requestsNotificationHint => 'You\'ll be notified when the company replies.';
+
+  @override
+  String get filterAllPolicies => 'All policies';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterRequests => 'Requests';
+
+  @override
+  String validUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String endedOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String get awaitingPayment => 'Awaiting payment';
+
+  @override
+  String get cancelPolicyRequest => 'Cancel this policy';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get personalInfo => 'Personal information';
+
+  @override
+  String get documentsMissing => 'Documents incomplete';
+
+  @override
+  String get branchesAndAgents => 'Branches and agents';
+
+  @override
+  String get headOffice => 'Head office';
+
+  @override
+  String get agentsComingSoon => 'New branches and agents appear here once appointed.';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get privacy => 'Privacy';
+
+  @override
+  String get aboutCompany => 'About us';
+
+  @override
+  String get appVersion => 'App version';
 }

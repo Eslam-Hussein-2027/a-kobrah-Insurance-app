@@ -10,4 +10,9 @@ class AppConfig {
   static const apiBaseUrl = String.fromEnvironment('API_BASE_URL', defaultValue: 'http://10.0.2.2:8000/api/v1');
 
   static const customerServicePhone = '0925441206';
+
+  static const appVersion = '1.0.0';
+
+  /// Same limit as the API (insurance.policy.max_start_days_ahead).
+  static const maxPolicyStartDaysAhead = 60;
 }
