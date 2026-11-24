@@ -52,7 +52,7 @@ export function PolicyDetailsPage() {
           <Field label="الحالة">
             <StatusBadge status={p.status} />
           </Field>
-          <Field label="نوع التأمين">{p.coverage_type?.name}</Field>
+          <Field label="نوع التأمين">{p.title}</Field>
           <Field label="تاريخ البداية">
             <span className="ltr">{formatDate(p.start_date)}</span>
           </Field>
@@ -85,39 +85,80 @@ export function PolicyDetailsPage() {
           )}
         </Card>
 
-        <Card title="المركبة">
-          {p.vehicle && (
-            <>
-              <Field label="رقم اللوحة">
-                <span className="ltr">{p.vehicle.plate_no}</span>
-              </Field>
-              <Field label="رقم الهيكل">
-                <span className="ltr">{p.vehicle.vin}</span>
-              </Field>
-              <Field label="الماركة والموديل">
-                <span className="ltr">
-                  {p.vehicle.make} {p.vehicle.model}
-                </span>
-              </Field>
-              <Field label="سنة الصنع">
-                <span className="ltr">{p.vehicle.year}</span>
-              </Field>
-              <Field label="سعة المحرك">
-                <span className="ltr">{p.vehicle.engine_cc}</span> سي سي
-              </Field>
-            </>
-          )}
-        </Card>
+        {p.travel ? (
+          <Card title="الرحلة">
+            <Field label="الوجهة">{p.travel.zone?.label}</Field>
+            <Field label="مدة الرحلة">
+              <span className="ltr">{p.travel.days}</span> يومًا
+            </Field>
+            <Field label="عدد المسافرين">
+              <span className="ltr">{p.travel.travellers.length}</span>
+            </Field>
+          </Card>
+        ) : (
+          <Card title="المركبة">
+            {p.vehicle && (
+              <>
+                <Field label="رقم اللوحة">
+                  <span className="ltr">{p.vehicle.plate_no}</span>
+                </Field>
+                <Field label="رقم الهيكل">
+                  <span className="ltr">{p.vehicle.vin}</span>
+                </Field>
+                <Field label="الماركة والموديل">
+                  <span className="ltr">
+                    {p.vehicle.make} {p.vehicle.model}
+                  </span>
+                </Field>
+                <Field label="سنة الصنع">
+                  <span className="ltr">{p.vehicle.year}</span>
+                </Field>
+                <Field label="سعة المحرك">
+                  <span className="ltr">{p.vehicle.engine_cc}</span> سي سي
+                </Field>
+              </>
+            )}
+          </Card>
+        )}
       </div>
+
+      {p.travel && (
+        <Card title="المسافرون" className="mt-6">
+          <div className="-m-5">
+            <Table head={['#', 'الاسم', 'تاريخ الميلاد', 'رقم الجواز']}>
+              {p.travel.travellers.map((t, index) => (
+                <tr key={t.passport_no}>
+                  <Td ltr>{index + 1}</Td>
+                  <Td>{t.full_name}</Td>
+                  <Td ltr>{formatDate(t.birth_date)}</Td>
+                  <Td ltr>{t.passport_no}</Td>
+                </tr>
+              ))}
+            </Table>
+          </div>
+        </Card>
+      )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-3">
         <Card title="تفاصيل التسعير عند الإصدار">
-          {p.pricing_snapshot ? (
+          {p.pricing_snapshot?.price_per_traveller ? (
+            <>
+              <Field label="سعر الفرد">
+                <span className="whitespace-nowrap">{formatMoney(p.pricing_snapshot.price_per_traveller)}</span>
+              </Field>
+              <Field label="عدد المسافرين">
+                <span className="ltr">× {p.pricing_snapshot.travellers}</span>
+              </Field>
+              <Field label="القسط">
+                <span className="whitespace-nowrap text-navy">{formatMoney(p.pricing_snapshot.premium)}</span>
+              </Field>
+            </>
+          ) : p.pricing_snapshot ? (
             <>
               <Field label="السعر الأساسي">
-                <span className="whitespace-nowrap">{formatMoney(p.pricing_snapshot.base_price)}</span>
+                <span className="whitespace-nowrap">{formatMoney(p.pricing_snapshot.base_price ?? '0')}</span>
               </Field>
-              {p.pricing_snapshot.factors.map((f) => (
+              {p.pricing_snapshot.factors?.map((f) => (
                 <Field key={f.type} label={`${FACTOR_LABELS[f.type] ?? f.type} (${f.input})`}>
                   <span className="ltr">× {f.multiplier}</span>
                 </Field>

@@ -6,6 +6,7 @@ import { Loading } from './ui';
 const NAV = [
   { to: '/', label: 'الرئيسية', icon: '▦', end: true },
   { to: '/policies', label: 'الوثائق', icon: '▤' },
+  { to: '/requests', label: 'الطلبات', icon: '✉' },
   { to: '/payments', label: 'المدفوعات', icon: '◈' },
   { to: '/customers', label: 'العملاء', icon: '◉' },
   { to: '/pricing', label: 'التسعير', icon: '◧' },

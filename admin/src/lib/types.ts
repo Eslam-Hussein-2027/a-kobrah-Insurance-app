@@ -55,15 +55,36 @@ export interface Payment {
   created_at: string;
 }
 
+/** Motor: base × factors. Travel: price per traveller × travellers. */
 export interface PricingSnapshot {
-  base_price: string;
+  product?: 'travel';
+  base_price?: string;
+  factors?: { type: string; input: number; multiplier: string }[];
+  price_per_traveller?: string;
+  travellers?: number;
   premium: string;
-  factors: { type: string; input: number; multiplier: string }[];
+}
+
+export type ProductCode = 'motor' | 'travel' | 'orange_card' | 'foreign_workers' | 'medical_liability' | 'marine_cargo';
+
+export interface Traveller {
+  full_name: string;
+  birth_date: string;
+  passport_no: string;
+}
+
+export interface TravelInfo {
+  zone: EnumValue | null;
+  days: number | null;
+  travellers: Traveller[];
 }
 
 export interface AdminPolicy {
   id: number;
   policy_no: string;
+  product: EnumValue<ProductCode>;
+  /** "التأمين الإجباري (ضد الغير)" / "تأمين السفر - أوروبا (شنغن)" */
+  title: string;
   status: EnumValue<PolicyStatus>;
   start_date: string;
   end_date: string;
@@ -71,8 +92,11 @@ export interface AdminPolicy {
   currency: string;
   issued_at: string | null;
   customer: { id: number; name: string; phone: string; national_id: string | null } | null;
-  vehicle?: Vehicle;
-  coverage_type?: CoverageType;
+  /** Motor only. */
+  vehicle?: Vehicle | null;
+  coverage_type?: CoverageType | null;
+  /** Travel only. */
+  travel?: TravelInfo | null;
   payments?: Payment[];
   pricing_snapshot?: PricingSnapshot | null;
   /** Same signed link as the QR printed on the policy (issued policies only). */
@@ -106,6 +130,8 @@ export interface Stats {
   revenue: { currency: string; total: string; this_month: string; online: string; office: string };
   customers: number;
   vehicles: number;
+  active_by_product: Partial<Record<ProductCode, number>>;
+  open_requests: number;
   refunds_required: number;
   monthly: { month: string; policies: number; revenue: string }[];
 }
@@ -120,9 +146,41 @@ export interface PricingFactor {
   multiplier: string;
 }
 
+export interface TravelRate {
+  id: number;
+  zone: EnumValue;
+  days: number;
+  price: string;
+  is_active: boolean;
+}
+
 export interface Pricing {
   coverage_types: CoverageType[];
   factors: PricingFactor[];
   factor_types: EnumValue<FactorType>[];
   gaps: Record<FactorType, string[]>;
+  travel_rates: TravelRate[];
+  travel_zones: EnumValue[];
+}
+
+export type RequestStatus = 'SUBMITTED' | 'IN_REVIEW' | 'QUOTED' | 'COMPLETED' | 'REJECTED' | 'CANCELLED';
+
+/** A customer's request for a staff-handled product (orange card, workers, medical, marine). */
+export interface InsuranceRequest {
+  id: number;
+  request_no: string;
+  product: EnumValue<ProductCode>;
+  kind: EnumValue<'issue' | 'quote'>;
+  status: EnumValue<RequestStatus>;
+  details: { key: string; label: string; value: string }[];
+  notes: string | null;
+  staff_reply: string | null;
+  quoted_amount: string | null;
+  currency: string;
+  replied_at: string | null;
+  can_cancel: boolean;
+  /** Present on the details endpoint; `url` is a short-lived signed link. */
+  documents?: { id: number; key: string; label: string; name: string; url?: string }[];
+  customer?: { id: number; name: string; phone: string };
+  created_at: string;
 }

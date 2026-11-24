@@ -8,6 +8,8 @@ import { PaymentsPage } from './pages/PaymentsPage';
 import { PoliciesPage } from './pages/PoliciesPage';
 import { PolicyDetailsPage } from './pages/PolicyDetailsPage';
 import { PricingPage } from './pages/PricingPage';
+import { RequestDetailsPage } from './pages/RequestDetailsPage';
+import { RequestsPage } from './pages/RequestsPage';
 
 export function App() {
   return (
@@ -24,6 +26,8 @@ export function App() {
           <Route index element={<OverviewPage />} />
           <Route path="policies" element={<PoliciesPage />} />
           <Route path="policies/:id" element={<PolicyDetailsPage />} />
+          <Route path="requests" element={<RequestsPage />} />
+          <Route path="requests/:id" element={<RequestDetailsPage />} />
           <Route path="payments" element={<PaymentsPage />} />
           <Route path="customers" element={<CustomersPage />} />
           <Route path="customers/:id" element={<CustomerDetailsPage />} />

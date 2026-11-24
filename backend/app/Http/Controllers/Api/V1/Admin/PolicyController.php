@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PolicyStatus;
 use App\Exceptions\BusinessRuleException;
 use App\Http\Controllers\Controller;
@@ -22,12 +23,14 @@ class PolicyController extends Controller
     {
         $request->validate([
             'status' => ['nullable', Rule::enum(PolicyStatus::class)],
+            'product' => ['nullable', Rule::enum(InsuranceProduct::class)],
             'search' => ['nullable', 'string', 'max:50'],
         ]);
 
         $policies = Policy::query()
             ->with(AdminPolicyResource::RELATIONS)
             ->when($request->filled('status'), fn (Builder $q) => $q->where('status', $request->input('status')))
+            ->when($request->filled('product'), fn (Builder $q) => $q->where('product', $request->input('product')))
             ->when($request->filled('search'), fn (Builder $q) => $this->search($q, (string) $request->input('search')))
             ->latest('id')
             ->paginate(20);

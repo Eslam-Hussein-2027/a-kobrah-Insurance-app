@@ -6,6 +6,7 @@ import { Badge, Button, Card, EmptyState, ErrorState, Field, Loading, PageHeader
 import type { ApiError } from '../lib/api';
 import { api } from '../lib/api';
 import { formatDate, formatMoney } from '../lib/format';
+import { policySubject } from '../lib/policy';
 import type { Customer } from '../lib/types';
 
 export function CustomerDetailsPage() {
@@ -107,7 +108,7 @@ export function CustomerDetailsPage() {
             <EmptyState message="لا توجد وثائق" />
           ) : (
             <div className="-m-5">
-              <Table head={['رقم الوثيقة', 'اللوحة', 'القسط', 'الحالة']}>
+              <Table head={['رقم الوثيقة', 'المنتج', 'المركبة / الرحلة', 'القسط', 'الحالة']}>
                 {c.policies.map((p) => (
                   <tr key={p.id}>
                     <Td>
@@ -115,7 +116,8 @@ export function CustomerDetailsPage() {
                         {p.policy_no}
                       </Link>
                     </Td>
-                    <Td ltr>{p.vehicle?.plate_no}</Td>
+                    <Td>{p.product.label}</Td>
+                    <Td>{policySubject(p)}</Td>
                     <Td>{formatMoney(p.premium)}</Td>
                     <Td>
                       <StatusBadge status={p.status} />

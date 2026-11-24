@@ -201,6 +201,9 @@ class TravelInsuranceTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.product.value', 'travel')
             ->assertJsonPath('data.0.customer.name', 'أحمد الشريف');
+
+        $this->getJson('/api/v1/admin/policies?product=travel')->assertJsonCount(1, 'data');
+        $this->getJson('/api/v1/admin/policies?product=motor')->assertJsonCount(0, 'data');
     }
 
     public function test_admin_manages_travel_prices(): void

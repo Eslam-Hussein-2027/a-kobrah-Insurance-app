@@ -98,6 +98,12 @@ const STATUS_TONES: Record<string, Tone> = {
   FAILED: 'bad',
   EXPIRED: 'muted',
   REFUNDED: 'muted',
+  // Insurance requests
+  SUBMITTED: 'brand',
+  IN_REVIEW: 'brand',
+  QUOTED: 'warn',
+  COMPLETED: 'ok',
+  REJECTED: 'bad',
 };
 
 export function StatusBadge({ status }: { status: { value: string; label: string } }) {

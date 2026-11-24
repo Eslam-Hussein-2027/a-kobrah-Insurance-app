@@ -61,8 +61,20 @@ export function OverviewPage() {
         <StatCard label="إيرادات هذا الشهر" value={formatMoney(s.revenue.this_month)} />
         <StatCard label="إجمالي الإيرادات" value={formatMoney(s.revenue.total)} hint={`إلكتروني ${formatMoney(s.revenue.online)} · مكتب ${formatMoney(s.revenue.office)}`} />
         <StatCard label="العملاء" value={s.customers} />
-        <StatCard label="المركبات المسجلة" value={s.vehicles} />
-        <StatCard label="وثائق منتهية" value={s.policies.expired} />
+        <StatCard label="المركبات المسجلة" value={s.vehicles} hint={`وثائق منتهية: ${s.policies.expired}`} />
+        <Link to="/requests?status=SUBMITTED" className="rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand">
+          <StatCard
+            label="طلبات تحتاج رد"
+            value={s.open_requests}
+            hint="البطاقة البرتقالية، العمالة، المسؤولية الطبية، البحري"
+            tone={s.open_requests > 0 ? 'warn' : 'navy'}
+          />
+        </Link>
+        <StatCard
+          label="سارية حسب المنتج"
+          value={`${s.active_by_product.motor ?? 0} / ${s.active_by_product.travel ?? 0}`}
+          hint="التأمين الإجباري / تأمين السفر"
+        />
         <StatCard label="مبالغ تحتاج استرداد" value={s.refunds_required} tone={s.refunds_required > 0 ? 'bad' : 'navy'} />
       </div>
 

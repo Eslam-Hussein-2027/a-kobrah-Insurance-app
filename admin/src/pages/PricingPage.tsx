@@ -5,7 +5,7 @@ import { Badge, Button, Card, ErrorState, Input, Loading, PageHeader, Table, Td 
 import type { ApiError } from '../lib/api';
 import { api } from '../lib/api';
 import { formatMoney, rangeLabel } from '../lib/format';
-import type { CoverageType, FactorType, Pricing, PricingFactor } from '../lib/types';
+import type { CoverageType, EnumValue, FactorType, Pricing, PricingFactor, TravelRate } from '../lib/types';
 
 const UNITS: Record<FactorType, string> = {
   vehicle_age: 'سنة',
@@ -205,6 +205,108 @@ function EffectBadge({ multiplier }: { multiplier: number }) {
   return pct > 0 ? <Badge tone="warn">{`زيادة ${pct}%`}</Badge> : <Badge tone="ok">{`خصم ${Math.abs(pct)}%`}</Badge>;
 }
 
+/** Travel: one price per traveller for each destination zone and trip length. */
+function TravelRatesSection({ rates, zones }: { rates: TravelRate[]; zones: EnumValue[] }) {
+  const days = [...new Set(rates.map((r) => r.days))].sort((a, b) => a - b);
+  const [newZone, setNewZone] = useState(zones[0]?.value ?? '');
+  const [newDays, setNewDays] = useState('');
+  const [newPrice, setNewPrice] = useState('');
+  const toast = useToast();
+  const invalidate = useInvalidatePricing();
+
+  const add = useMutation({
+    mutationFn: () => api<TravelRate>('/admin/travel-rates', { method: 'POST', body: { zone: newZone, days: newDays, price: newPrice } }),
+    onSuccess: (res) => {
+      toast(res.message ?? 'تم الحفظ');
+      setNewDays('');
+      setNewPrice('');
+      void invalidate();
+    },
+    onError: (e: ApiError) => toast(e.field('days') ?? e.field('price') ?? e.message, 'error'),
+  });
+
+  return (
+    <Card title="تأمين السفر: سعر الفرد حسب الوجهة ومدة الرحلة" className="mt-6">
+      <div className="-m-5">
+        <Table head={['الوجهة', ...days.map((d) => `${d} يوم`)]}>
+          {zones.map((zone) => (
+            <tr key={zone.value}>
+              <Td className="font-bold">{zone.label}</Td>
+              {days.map((d) => {
+                const rate = rates.find((r) => r.zone.value === zone.value && r.days === d);
+                return <Td key={d}>{rate ? <TravelRateCell key={`${rate.id}-${rate.price}-${String(rate.is_active)}`} rate={rate} /> : '—'}</Td>;
+              })}
+            </tr>
+          ))}
+        </Table>
+        <form
+          className="flex flex-wrap items-end gap-3 border-t border-line p-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            add.mutate();
+          }}
+        >
+          <label className="block">
+            <span className="mb-1.5 block text-sm font-medium text-slate-700">الوجهة</span>
+            <select value={newZone} onChange={(e) => setNewZone(e.target.value)} className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm">
+              {zones.map((z) => (
+                <option key={z.value} value={z.value}>
+                  {z.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Input className="w-32" label="المدة (يوم)" ltr type="number" min="1" required value={newDays} onChange={(e) => setNewDays(e.target.value)} />
+          <Input className="w-40" label="سعر الفرد (د.ل)" ltr type="number" min="0" step="0.01" required value={newPrice} onChange={(e) => setNewPrice(e.target.value)} />
+          <Button type="submit" variant="secondary" loading={add.isPending}>
+            إضافة مدة
+          </Button>
+        </form>
+      </div>
+    </Card>
+  );
+}
+
+function TravelRateCell({ rate }: { rate: TravelRate }) {
+  const [price, setPrice] = useState(rate.price);
+  const toast = useToast();
+  const invalidate = useInvalidatePricing();
+
+  const save = useMutation({
+    mutationFn: (body: Partial<Pick<TravelRate, 'price' | 'is_active'>>) =>
+      api<TravelRate>(`/admin/travel-rates/${rate.id}`, { method: 'PATCH', body }),
+    onSuccess: (res) => {
+      toast(res.message ?? 'تم الحفظ');
+      void invalidate();
+    },
+    onError: (e: ApiError) => toast(e.field('price') ?? e.message, 'error'),
+  });
+
+  return (
+    <div className={`flex items-center gap-2 ${rate.is_active ? '' : 'opacity-50'}`}>
+      <input
+        aria-label="سعر الفرد"
+        dir="ltr"
+        type="number"
+        min="0"
+        step="0.01"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+        className="w-24 rounded-lg border border-line px-2 py-1.5 text-right text-sm"
+      />
+      {price !== rate.price && price !== '' ? (
+        <Button className="px-3 py-1.5" loading={save.isPending} onClick={() => save.mutate({ price })}>
+          حفظ
+        </Button>
+      ) : (
+        <button className="text-xs font-bold text-brand hover:underline" onClick={() => save.mutate({ is_active: !rate.is_active })}>
+          {rate.is_active ? 'إيقاف' : 'تفعيل'}
+        </button>
+      )}
+    </div>
+  );
+}
+
 export function PricingPage() {
   const query = useQuery({ queryKey: ['pricing'], queryFn: () => api<Pricing>('/admin/pricing').then((r) => r.data) });
 
@@ -244,6 +346,8 @@ export function PricingPage() {
           />
         ))}
       </div>
+
+      <TravelRatesSection rates={pricing.travel_rates} zones={pricing.travel_zones} />
     </>
   );
 }

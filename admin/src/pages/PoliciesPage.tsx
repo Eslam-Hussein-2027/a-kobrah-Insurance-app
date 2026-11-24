@@ -5,7 +5,14 @@ import { Card, EmptyState, ErrorState, Input, Loading, PageHeader, Pagination, S
 import { api } from '../lib/api';
 import { formatDate, formatMoney } from '../lib/format';
 import { useDebounced, useUrlFilters } from '../lib/hooks';
+import { policySubject } from '../lib/policy';
 import type { AdminPolicy } from '../lib/types';
+
+const PRODUCTS = [
+  { value: '', label: 'كل المنتجات' },
+  { value: 'motor', label: 'التأمين الإجباري' },
+  { value: 'travel', label: 'تأمين السفر' },
+];
 
 const TABS = [
   { value: '', label: 'الكل' },
@@ -16,7 +23,7 @@ const TABS = [
 ];
 
 export function PoliciesPage() {
-  const { values, page, set } = useUrlFilters(['status', 'search'] as const);
+  const { values, page, set } = useUrlFilters(['status', 'product', 'search'] as const);
   const [search, setSearch] = useState(values.search);
   const debounced = useDebounced(search);
 
@@ -26,8 +33,11 @@ export function PoliciesPage() {
   }, [debounced]);
 
   const query = useQuery({
-    queryKey: ['policies', { status: values.status, search: values.search, page }],
-    queryFn: () => api<AdminPolicy[]>('/admin/policies', { query: { status: values.status, search: values.search, page } }),
+    queryKey: ['policies', { status: values.status, product: values.product, search: values.search, page }],
+    queryFn: () =>
+      api<AdminPolicy[]>('/admin/policies', {
+        query: { status: values.status, product: values.product, search: values.search, page },
+      }),
     placeholderData: keepPreviousData,
   });
 
@@ -49,12 +59,26 @@ export function PoliciesPage() {
                 </button>
               ))}
             </div>
-            <Input
-              className="w-full sm:w-80"
-              placeholder="بحث برقم الوثيقة أو اللوحة أو اسم/هاتف العميل"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+              <select
+                aria-label="المنتج"
+                value={values.product}
+                onChange={(e) => set('product', e.target.value)}
+                className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm"
+              >
+                {PRODUCTS.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+              <Input
+                className="w-full sm:w-80"
+                placeholder="رقم الوثيقة، اللوحة، الجواز، اسم أو هاتف العميل"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
           </div>
 
           {query.isPending ? (
@@ -65,7 +89,7 @@ export function PoliciesPage() {
             <EmptyState message="لا توجد وثائق مطابقة" />
           ) : (
             <>
-              <Table head={['رقم الوثيقة', 'العميل', 'الهاتف', 'رقم اللوحة', 'القسط', 'تاريخ النهاية', 'الحالة']}>
+              <Table head={['رقم الوثيقة', 'المنتج', 'العميل', 'الهاتف', 'المركبة / الرحلة', 'القسط', 'تاريخ النهاية', 'الحالة']}>
                 {query.data.data.map((p) => (
                   <tr key={p.id} className="hover:bg-page/60">
                     <Td>
@@ -73,9 +97,10 @@ export function PoliciesPage() {
                         {p.policy_no}
                       </Link>
                     </Td>
+                    <Td>{p.product.label}</Td>
                     <Td>{p.customer?.name}</Td>
                     <Td ltr>{p.customer?.phone}</Td>
-                    <Td ltr>{p.vehicle?.plate_no}</Td>
+                    <Td>{policySubject(p)}</Td>
                     <Td>{formatMoney(p.premium)}</Td>
                     <Td ltr>{formatDate(p.end_date)}</Td>
                     <Td>
