@@ -8,6 +8,7 @@ use App\Exceptions\BusinessRuleException;
 use App\Models\Claim;
 use App\Models\CoverageType;
 use App\Models\PricingFactor;
+use App\Models\User;
 use App\Models\Vehicle;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
@@ -22,11 +23,34 @@ class QuoteService
 {
     public function calculate(Vehicle $vehicle, CoverageType $coverageType): Quote
     {
+        return $this->price($coverageType, [
+            PricingFactorType::VehicleAge->value => $vehicle->ageInYears(),
+            PricingFactorType::EngineCc->value => $vehicle->engine_cc,
+            PricingFactorType::ClaimsHistory->value => $this->ownerClaimsCount($vehicle->user_id),
+        ], $vehicle);
+    }
+
+    /**
+     * "Know the price" calculator: same tariff, for a vehicle that is not registered yet.
+     */
+    public function estimate(User $customer, int $manufactureYear, int $engineCc, CoverageType $coverageType): Quote
+    {
+        return $this->price($coverageType, [
+            PricingFactorType::VehicleAge->value => Vehicle::ageForYear($manufactureYear),
+            PricingFactorType::EngineCc->value => $engineCc,
+            PricingFactorType::ClaimsHistory->value => $this->ownerClaimsCount($customer->id),
+        ]);
+    }
+
+    /**
+     * @param  array<string, int>  $inputs  keyed by PricingFactorType value
+     */
+    private function price(CoverageType $coverageType, array $inputs, ?Vehicle $vehicle = null): Quote
+    {
         if (! $coverageType->is_active) {
             throw new BusinessRuleException(__('messages.quote.coverage_inactive'));
         }
 
-        $inputs = $this->factorInputs($vehicle);
         $rules = PricingFactor::query()->orderByDesc('min_value')->get()
             ->groupBy(fn (PricingFactor $factor) => $factor->factor_type->value);
 
@@ -58,26 +82,14 @@ class QuoteService
     }
 
     /**
-     * @return array<string, int> keyed by PricingFactorType value
-     */
-    private function factorInputs(Vehicle $vehicle): array
-    {
-        return [
-            PricingFactorType::VehicleAge->value => $vehicle->ageInYears(),
-            PricingFactorType::EngineCc->value => $vehicle->engine_cc,
-            PricingFactorType::ClaimsHistory->value => $this->ownerClaimsCount($vehicle),
-        ];
-    }
-
-    /**
      * Claims history follows the policyholder (all of the owner's vehicles), not a single car.
      */
-    private function ownerClaimsCount(Vehicle $vehicle): int
+    private function ownerClaimsCount(int $userId): int
     {
         $years = (int) config('insurance.quote.claims_history_years');
 
         return Claim::query()
-            ->whereHas('policy.vehicle', fn ($query) => $query->where('user_id', $vehicle->user_id))
+            ->whereHas('policy.vehicle', fn ($query) => $query->where('user_id', $userId))
             ->where('status', '!=', ClaimStatus::Rejected)
             ->where('incident_date', '>=', now()->subYears($years))
             ->count();

@@ -62,4 +62,36 @@ return [
         'NOT_FOUND' => 'لا توجد وثيقة سارية بهذه البيانات',
     ],
 
+    'insurance_product' => [
+        'motor' => 'التأمين الإجباري',
+        'travel' => 'تأمين السفر',
+        'orange_card' => 'البطاقة البرتقالية',
+        'foreign_workers' => 'العمالة الوافدة',
+        'medical_liability' => 'المسؤولية الطبية',
+        'marine_cargo' => 'التأمين البحري',
+    ],
+
+    'person_relationship' => [
+        'self' => 'أنا',
+        'spouse' => 'الزوج / الزوجة',
+        'child' => 'ابن / ابنة',
+        'parent' => 'أب / أم',
+        'sibling' => 'أخ / أخت',
+        'other' => 'آخر',
+    ],
+
+    'insurance_request_kind' => [
+        'issue' => 'طلب إصدار',
+        'quote' => 'طلب عرض سعر',
+    ],
+
+    'insurance_request_status' => [
+        'SUBMITTED' => 'تم الإرسال',
+        'IN_REVIEW' => 'قيد المراجعة',
+        'QUOTED' => 'وصل عرض السعر',
+        'COMPLETED' => 'مكتمل',
+        'REJECTED' => 'مرفوض',
+        'CANCELLED' => 'ملغى',
+    ],
+
 ];

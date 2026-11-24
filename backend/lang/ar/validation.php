@@ -223,6 +223,16 @@ return [
         'policy_no' => 'رقم الوثيقة',
         'reference' => 'رقم الإيصال',
         'status' => 'الحالة',
+        'full_name' => 'الاسم الكامل',
+        'relationship' => 'صلة القرابة',
+        'birth_date' => 'تاريخ الميلاد',
+        'passport_no' => 'رقم جواز السفر',
+        'manufacture_year' => 'سنة الصنع',
+        'product' => 'المنتج',
+        'kind' => 'نوع الطلب',
+        'notes' => 'الملاحظات',
+        'reply' => 'الرد',
+        'quoted_amount' => 'قيمة العرض',
     ],
 
 ];

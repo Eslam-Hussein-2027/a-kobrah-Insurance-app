@@ -61,6 +61,16 @@ class User extends Authenticatable
         return $this->hasMany(Vehicle::class);
     }
 
+    public function insuredPersons(): HasMany
+    {
+        return $this->hasMany(InsuredPerson::class);
+    }
+
+    public function insuranceRequests(): HasMany
+    {
+        return $this->hasMany(InsuranceRequest::class);
+    }
+
     public function policies(): HasManyThrough
     {
         return $this->hasManyThrough(Policy::class, Vehicle::class);

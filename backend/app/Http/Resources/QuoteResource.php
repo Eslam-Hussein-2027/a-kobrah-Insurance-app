@@ -14,7 +14,7 @@ class QuoteResource extends JsonResource
         $quote = $this->resource;
 
         return [
-            'vehicle' => new VehicleResource($quote->vehicle),
+            'vehicle' => $quote->vehicle ? new VehicleResource($quote->vehicle) : null,
             'coverage_type' => new CoverageTypeResource($quote->coverageType),
             'base_price' => $quote->basePrice,
             'factors' => array_map(fn (array $factor) => [

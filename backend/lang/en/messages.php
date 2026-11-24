@@ -64,6 +64,24 @@ return [
         'missing_factor' => 'No pricing factor is configured for (:factor) with value :value. Please contact customer service.',
     ],
 
+    'person' => [
+        'created' => 'Person added.',
+        'updated' => 'Person updated.',
+        'deleted' => 'Person deleted.',
+        'not_owner' => 'This person is not registered in your account.',
+        'in_use' => 'A person listed on an insurance policy cannot be deleted.',
+    ],
+
+    'request' => [
+        'created' => 'Your request was sent. A company employee will contact you.',
+        'cancelled' => 'Request cancelled.',
+        'replied' => 'Reply saved.',
+        'not_owner' => 'This request is not registered in your name.',
+        'closed' => 'This request is closed and cannot be changed.',
+        'invalid_status' => 'The request cannot be moved to this status.',
+        'instant_product' => 'This product is issued directly in the app, without a request.',
+    ],
+
     'policy' => [
         'created' => 'Policy created. Please complete the payment to activate it.',
         'cancelled' => 'Policy cancelled.',

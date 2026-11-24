@@ -62,4 +62,36 @@ return [
         'NOT_FOUND' => 'No valid policy matches these details',
     ],
 
+    'insurance_product' => [
+        'motor' => 'Compulsory motor',
+        'travel' => 'Travel',
+        'orange_card' => 'Orange Card',
+        'foreign_workers' => 'Foreign workers',
+        'medical_liability' => 'Medical liability',
+        'marine_cargo' => 'Marine cargo',
+    ],
+
+    'person_relationship' => [
+        'self' => 'Me',
+        'spouse' => 'Spouse',
+        'child' => 'Child',
+        'parent' => 'Parent',
+        'sibling' => 'Sibling',
+        'other' => 'Other',
+    ],
+
+    'insurance_request_kind' => [
+        'issue' => 'Issue request',
+        'quote' => 'Price request',
+    ],
+
+    'insurance_request_status' => [
+        'SUBMITTED' => 'Submitted',
+        'IN_REVIEW' => 'In review',
+        'QUOTED' => 'Price offered',
+        'COMPLETED' => 'Completed',
+        'REJECTED' => 'Rejected',
+        'CANCELLED' => 'Cancelled',
+    ],
+
 ];

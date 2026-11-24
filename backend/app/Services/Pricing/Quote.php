@@ -16,7 +16,8 @@ final readonly class Quote
      * @param  list<array{type: PricingFactorType, input: int, multiplier: string, factor_id: int}>  $factors
      */
     public function __construct(
-        public Vehicle $vehicle,
+        /** Null for estimates (vehicle not registered yet). */
+        public ?Vehicle $vehicle,
         public CoverageType $coverageType,
         public string $basePrice,
         public array $factors,

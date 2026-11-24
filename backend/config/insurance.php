@@ -19,6 +19,18 @@ return [
         'name_en' => env('COMPANY_NAME_EN', 'Alarabia Kobrah Insurance Company'),
         'address' => env('COMPANY_ADDRESS', 'بنغازي - ليبيا'),
         'phone' => env('COMPANY_PHONE', '0925441206'),
+        'website' => env('COMPANY_WEBSITE', 'https://akobrah.ly'),
+        // Shown in the app under "Branches & agents". Add agents here as they are appointed.
+        'branches' => [
+            [
+                'name_ar' => 'المقر الرئيسي',
+                'name_en' => 'Head office',
+                'city_ar' => 'بنغازي',
+                'city_en' => 'Benghazi',
+                'phone' => env('COMPANY_PHONE', '0925441206'),
+                'is_head_office' => true,
+            ],
+        ],
         // Absolute paths (PNG/JPG/SVG). Colour logo (company's choice); the rest of the document is black & white.
         // The stamp is still a placeholder.
         'logo_path' => env('COMPANY_LOGO_PATH', resource_path('pdf/logo.png')),

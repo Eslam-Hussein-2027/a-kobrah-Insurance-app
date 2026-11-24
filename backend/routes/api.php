@@ -4,14 +4,18 @@ use App\Enums\UserDocumentType;
 use App\Enums\UserRole;
 use App\Http\Controllers\Api\V1\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Api\V1\Admin\DashboardController;
+use App\Http\Controllers\Api\V1\Admin\InsuranceRequestController as AdminInsuranceRequestController;
 use App\Http\Controllers\Api\V1\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Api\V1\Admin\PolicyController as AdminPolicyController;
 use App\Http\Controllers\Api\V1\Admin\PolicyPaymentController;
 use App\Http\Controllers\Api\V1\Admin\PricingController;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
 use App\Http\Controllers\Api\V1\Auth\OtpController;
+use App\Http\Controllers\Api\V1\CatalogController;
 use App\Http\Controllers\Api\V1\CoverageTypeController;
 use App\Http\Controllers\Api\V1\FileController;
+use App\Http\Controllers\Api\V1\InsuranceRequestController;
+use App\Http\Controllers\Api\V1\InsuredPersonController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\PaymentWebhookController;
 use App\Http\Controllers\Api\V1\PolicyController;
@@ -40,6 +44,8 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     });
 
     Route::get('coverage-types', [CoverageTypeController::class, 'index'])->name('coverage-types.index');
+    Route::get('products', [CatalogController::class, 'products'])->name('products.index');
+    Route::get('company', [CatalogController::class, 'company'])->name('company.show');
 
     Route::get('policies/verify', PolicyVerificationController::class)
         ->middleware('throttle:policy-verification')
@@ -55,6 +61,9 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         ->whereIn('type', UserDocumentType::values())
         ->middleware('signed')
         ->name('files.user-document');
+    Route::get('files/requests/{document}', [FileController::class, 'requestDocument'])
+        ->middleware('signed')
+        ->name('files.request-document');
 
     // ------------------------------------------------------------ Authenticated
 
@@ -69,7 +78,15 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
             Route::apiResource('vehicles', VehicleController::class);
 
+            Route::apiResource('persons', InsuredPersonController::class)->parameters(['persons' => 'person']);
+
             Route::post('quotes', [QuoteController::class, 'store'])->name('quotes.store');
+            Route::post('quotes/estimate', [QuoteController::class, 'estimate'])->name('quotes.estimate');
+
+            Route::get('requests', [InsuranceRequestController::class, 'index'])->name('requests.index');
+            Route::post('requests', [InsuranceRequestController::class, 'store'])->name('requests.store');
+            Route::get('requests/{insuranceRequest}', [InsuranceRequestController::class, 'show'])->whereNumber('insuranceRequest')->name('requests.show');
+            Route::post('requests/{insuranceRequest}/cancel', [InsuranceRequestController::class, 'cancel'])->whereNumber('insuranceRequest')->name('requests.cancel');
 
             Route::get('policies', [PolicyController::class, 'index'])->name('policies.index');
             Route::post('policies', [PolicyController::class, 'store'])->name('policies.store');
@@ -94,6 +111,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
                 ->name('policies.confirm-office-payment');
 
             Route::get('payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+
+            Route::get('requests', [AdminInsuranceRequestController::class, 'index'])->name('requests.index');
+            Route::get('requests/{insuranceRequest}', [AdminInsuranceRequestController::class, 'show'])->whereNumber('insuranceRequest')->name('requests.show');
+            Route::post('requests/{insuranceRequest}/respond', [AdminInsuranceRequestController::class, 'respond'])
+                ->whereNumber('insuranceRequest')
+                ->name('requests.respond');
 
             Route::get('customers', [AdminCustomerController::class, 'index'])->name('customers.index');
             Route::get('customers/{customer}', [AdminCustomerController::class, 'show'])->whereNumber('customer')->name('customers.show');

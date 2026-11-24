@@ -53,7 +53,12 @@ class Vehicle extends Model
 
     public function ageInYears(): int
     {
-        return max(0, (int) now()->year - $this->year);
+        return self::ageForYear($this->year);
+    }
+
+    public static function ageForYear(int $manufactureYear): int
+    {
+        return max(0, (int) now()->year - $manufactureYear);
     }
 
     /** True when the vehicle has a policy that is awaiting payment or in force. */
