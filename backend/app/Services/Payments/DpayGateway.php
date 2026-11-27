@@ -105,13 +105,24 @@ class DpayGateway implements OtpPaymentGateway
         $status = strtolower((string) ($session['status'] ?? ''));
 
         return match (true) {
-            in_array($status, self::PAID, true) => GatewayResult::paid(
-                number_format((float) ($session['amount'] ?? 0), 2, '.', ''),
-                $session,
-            ),
+            in_array($status, self::PAID, true) => GatewayResult::paid($this->requestedAmount($session), $session),
             in_array($status, self::FAILED, true) => GatewayResult::failed($status, $session),
             default => GatewayResult::pending($session),
         };
+    }
+
+    /**
+     * The amount we asked DPAY to collect. When the customer pays DPAY's fee, the session `amount`
+     * includes it (1452 + 2.9 = 1454.9) and DPAY keeps our amount in `data.original_amount`.
+     *
+     * @param  array<string, mixed>  $session
+     */
+    private function requestedAmount(array $session): string
+    {
+        $data = is_array($session['data'] ?? null) ? $session['data'] : [];
+        $amount = $data['original_amount'] ?? $session['original_amount'] ?? $session['amount'] ?? 0;
+
+        return number_format(is_numeric($amount) ? (float) $amount : 0.0, 2, '.', '');
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Policy;
 use App\Services\Policy\PolicyService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class PaymentService
@@ -210,6 +211,12 @@ class PaymentService
 
             // Paid: never trust an amount we did not ask for.
             if (! self::sameAmount((string) $result->amount, (string) $locked->amount)) {
+                Log::warning('Payment: paid amount differs from the amount asked for', [
+                    'payment_id' => $locked->id,
+                    'expected' => (string) $locked->amount,
+                    'paid' => (string) $result->amount,
+                ]);
+
                 $locked->update([
                     'status' => PaymentStatus::Failed,
                     'failure_reason' => 'amount_mismatch',

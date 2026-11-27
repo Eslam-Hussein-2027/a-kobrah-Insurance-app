@@ -130,6 +130,22 @@ class DpayPaymentTest extends TestCase
         $this->assertSame(PolicyStatus::Active, $this->policy->fresh()->status);
     }
 
+    public function test_dpays_fee_on_top_of_the_premium_is_not_a_mismatch(): void
+    {
+        // What the sandbox returns when the customer pays the 0.2% fee: amount includes it.
+        $this->fakeDpay([
+            'status' => 'paid',
+            'amount' => '1454.9',
+            'data' => ['policy_no' => 'POL-X', 'fee_amount' => 2.9, 'fee_percent' => 0.2, 'original_amount' => 1452],
+        ]);
+        $paymentId = $this->start()->json('data.id');
+
+        $this->confirm($paymentId, '111111')->assertJsonPath('data.status.value', 'PAID');
+
+        $this->assertFalse(Payment::query()->find($paymentId)->requires_refund);
+        $this->assertSame(PolicyStatus::Active, $this->policy->fresh()->status);
+    }
+
     public function test_a_wrong_code_keeps_the_payment_open(): void
     {
         $this->fakeDpay(['status' => 'pending'], verifyStatus: 422);
@@ -164,6 +180,16 @@ class DpayPaymentTest extends TestCase
         $this->confirm($paymentId, '111111')->assertJsonPath('data.failure_reason', 'amount_mismatch');
 
         $this->assertTrue(Payment::query()->find($paymentId)->requires_refund);
+        $this->assertSame(PolicyStatus::PendingPayment, $this->policy->fresh()->status);
+    }
+
+    public function test_the_original_amount_dpay_reports_is_what_gets_checked(): void
+    {
+        $this->fakeDpay(['status' => 'paid', 'amount' => 1452, 'data' => ['original_amount' => 100]]);
+        $paymentId = $this->start()->json('data.id');
+
+        $this->confirm($paymentId, '111111')->assertJsonPath('data.failure_reason', 'amount_mismatch');
+
         $this->assertSame(PolicyStatus::PendingPayment, $this->policy->fresh()->status);
     }
 
