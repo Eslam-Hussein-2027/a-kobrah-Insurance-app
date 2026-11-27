@@ -15,6 +15,7 @@ class PaymentGatewayManager
     /** @var array<string, class-string<PaymentGateway>> */
     private const GATEWAYS = [
         'simulator' => SimulatorGateway::class,
+        'dpay' => DpayGateway::class,
     ];
 
     public function __construct(private readonly Container $container) {}

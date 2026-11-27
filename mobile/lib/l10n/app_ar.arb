@@ -381,5 +381,27 @@
   "website": "الموقع الإلكتروني",
   "privacy": "الخصوصية",
   "aboutCompany": "عن الشركة",
-  "appVersion": "إصدار التطبيق"
+  "appVersion": "إصدار التطبيق",
+  "payWith": "طريقة الدفع",
+  "paymentService": "خدمة الدفع",
+  "walletPhone": "رقم هاتفك المسجّل في {method}",
+  "@walletPhone": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "walletPhoneHint": "سيصلك رمز تحقق على هذا الرقم",
+  "sendPaymentCode": "إرسال رمز التحقق",
+  "enterPaymentCode": "أدخل الرمز الذي وصلك على الرقم {phone} لإتمام الدفع.",
+  "@enterPaymentCode": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmPayment": "تأكيد الدفع",
+  "changeNumberOrResend": "تغيير الرقم أو إعادة إرسال الرمز"
 }

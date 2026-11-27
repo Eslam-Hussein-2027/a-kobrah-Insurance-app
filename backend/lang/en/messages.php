@@ -33,6 +33,18 @@ return [
 
     'payment' => [
         'started' => 'Payment created. Complete it on the payment provider page.',
+        'otp_sent' => 'We sent a code to your phone. Enter it to complete the payment.',
+        'paid' => 'Payment successful. Your policy is active.',
+        'declined' => 'The payment did not go through. You can try again.',
+        'processing' => 'Confirming the payment; your policy will update in a moment.',
+        'phone_required' => 'Enter the phone number registered with the payment service.',
+        'method_unavailable' => 'The selected payment method is not available right now.',
+        'amount_out_of_range' => 'The amount is outside the limits of this payment method (:min - :max LYD).',
+        'otp_invalid' => 'Wrong code. Please try again.',
+        'otp_not_supported' => 'This payment does not use a code.',
+        'not_pending' => 'This payment is no longer pending. Start a new one.',
+        'provider_error' => 'The payment service declined the request. Check the details and try again.',
+        'provider_unavailable' => 'The payment service is not available right now. Please try again shortly.',
     ],
 
     'customer' => [

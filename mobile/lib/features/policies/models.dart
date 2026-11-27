@@ -212,7 +212,13 @@ class PolicyVerification {
 }
 
 class OnlinePayment {
-  const OnlinePayment({required this.id, required this.status, required this.statusLabel, this.checkoutUrl});
+  const OnlinePayment({
+    required this.id,
+    required this.status,
+    required this.statusLabel,
+    this.checkoutUrl,
+    this.requiresOtp = false,
+  });
 
   factory OnlinePayment.fromJson(Map<String, dynamic> json) {
     final status = json['status'] as Map<String, dynamic>;
@@ -221,8 +227,12 @@ class OnlinePayment {
       status: status['value'] as String,
       statusLabel: status['label'] as String,
       checkoutUrl: json['checkout_url'] as String?,
+      requiresOtp: json['requires_otp'] == true,
     );
   }
+
+  /// OTP flow: the customer confirms with the code the payment service sent to their phone.
+  final bool requiresOtp;
 
   final int id;
 
@@ -236,4 +246,23 @@ class OnlinePayment {
   bool get isPaid => status == 'PAID';
 
   bool get isFailed => status == 'FAILED';
+}
+
+/// How the server collects payments (GET /payments/options).
+class PaymentOptions {
+  const PaymentOptions({required this.flow, required this.methods});
+
+  factory PaymentOptions.fromJson(Map<String, dynamic> json) => PaymentOptions(
+    flow: json['flow'] as String,
+    methods: (json['methods'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((m) => (value: m['value'] as String, label: m['label'] as String))
+        .toList(),
+  );
+
+  /// "otp": phone number + code in the app (DPAY). "redirect": provider page in a browser.
+  final String flow;
+  final List<({String value, String label})> methods;
+
+  bool get usesOtp => flow == 'otp';
 }

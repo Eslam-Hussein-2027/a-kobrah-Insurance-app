@@ -14,6 +14,7 @@ class Payment extends Model
         'amount',
         'method',
         'gateway',
+        'pay_method',
         'gateway_ref',
         'checkout_url',
         'status',

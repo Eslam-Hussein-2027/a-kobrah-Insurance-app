@@ -54,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('qr-verification', fn (Request $request) => Limit::perMinute(60)->by('qr:'.$request->ip()));
 
+        // Payment codes: a few tries per payment, so a code can't be guessed.
+        RateLimiter::for('payment-otp', fn (Request $request) => Limit::perMinute(5)->by('payment-otp:'.$request->user()?->id.':'.$request->route('payment')));
+
         RateLimiter::for('policy-verification', fn (Request $request) => Limit::perMinute(10)->by('verify:'.$request->ip()));
     }
 }

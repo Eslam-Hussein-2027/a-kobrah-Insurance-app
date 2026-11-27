@@ -1543,6 +1543,54 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إصدار التطبيق'**
   String get appVersion;
+
+  /// No description provided for @payWith.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الدفع'**
+  String get payWith;
+
+  /// No description provided for @paymentService.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمة الدفع'**
+  String get paymentService;
+
+  /// No description provided for @walletPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم هاتفك المسجّل في {method}'**
+  String walletPhone(String method);
+
+  /// No description provided for @walletPhoneHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيصلك رمز تحقق على هذا الرقم'**
+  String get walletPhoneHint;
+
+  /// No description provided for @sendPaymentCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال رمز التحقق'**
+  String get sendPaymentCode;
+
+  /// No description provided for @enterPaymentCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل الرمز الذي وصلك على الرقم {phone} لإتمام الدفع.'**
+  String enterPaymentCode(String phone);
+
+  /// No description provided for @confirmPayment.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الدفع'**
+  String get confirmPayment;
+
+  /// No description provided for @changeNumberOrResend.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير الرقم أو إعادة إرسال الرمز'**
+  String get changeNumberOrResend;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

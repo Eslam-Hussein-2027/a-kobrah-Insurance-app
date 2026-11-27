@@ -9,6 +9,7 @@ import '../../core/l10n.dart';
 import '../../core/theme.dart';
 import '../../shared/widgets.dart';
 import 'models.dart';
+import 'otp_payment_sheet.dart';
 import 'pdf_saver.dart';
 import 'policies_repository.dart';
 import 'policy_tile.dart';
@@ -182,7 +183,28 @@ class _PendingPaymentState extends ConsumerState<_PendingPayment> {
     final l10n = context.l10n;
     setState(() => _paying = true);
     try {
-      final payment = await ref.read(policiesRepositoryProvider).payOnline(widget.policy.id);
+      final repository = ref.read(policiesRepositoryProvider);
+      final options = await repository.paymentOptions();
+      if (!mounted) return;
+
+      // Wallet / bank app (DPAY): phone number and code inside the app.
+      if (options.usesOtp) {
+        final paid = await showModalBottomSheet<bool>(
+          context: context,
+          isScrollControlled: true,
+          builder: (_) => OtpPaymentSheet(policy: widget.policy, options: options),
+        );
+        if (paid == true && mounted) {
+          showMessage(context, l10n.paymentSucceeded);
+          ref
+            ..invalidate(policyProvider(widget.policy.id))
+            ..invalidate(policiesProvider);
+        }
+        return;
+      }
+
+      // Hosted payment page in a browser; the result is checked when the customer comes back.
+      final payment = await repository.payOnline(widget.policy.id);
       setState(() => _paymentId = payment.id);
       final opened = await launchUrl(Uri.parse(payment.checkoutUrl!), mode: LaunchMode.inAppBrowserView);
       if (!opened && mounted) showMessage(context, l10n.unexpectedError, isError: true);

@@ -804,4 +804,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appVersion => 'App version';
+
+  @override
+  String get payWith => 'Pay with';
+
+  @override
+  String get paymentService => 'the payment service';
+
+  @override
+  String walletPhone(String method) {
+    return 'Your phone number registered with $method';
+  }
+
+  @override
+  String get walletPhoneHint => 'You\'ll receive a code on this number';
+
+  @override
+  String get sendPaymentCode => 'Send the code';
+
+  @override
+  String enterPaymentCode(String phone) {
+    return 'Enter the code sent to $phone to complete the payment.';
+  }
+
+  @override
+  String get confirmPayment => 'Confirm payment';
+
+  @override
+  String get changeNumberOrResend => 'Change number or resend the code';
 }

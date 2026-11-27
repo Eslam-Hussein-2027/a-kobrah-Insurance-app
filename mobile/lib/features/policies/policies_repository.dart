@@ -50,8 +50,20 @@ class PoliciesRepository {
   Future<Uint8List> pdf(int id) => _api.getBytes('/policies/$id/pdf');
 
   /// Starts an online payment; returns the provider checkout URL to open.
-  Future<OnlinePayment> payOnline(int policyId) async =>
-      OnlinePayment.fromJson((await _api.post('/policies/$policyId/pay-online'))['data'] as Json);
+  Future<PaymentOptions> paymentOptions() async =>
+      PaymentOptions.fromJson((await _api.get('/payments/options'))['data'] as Json);
+
+  /// Starts an online payment. OTP flow: [phone] and [payMethod] are required and the customer gets a code.
+  Future<OnlinePayment> payOnline(int policyId, {String? phone, String? payMethod}) async {
+    final body = await _api.post('/policies/$policyId/pay-online', data: {'phone': ?phone, 'pay_method': ?payMethod});
+    return OnlinePayment.fromJson(body['data'] as Json);
+  }
+
+  /// OTP flow: the code the customer received by SMS.
+  Future<({OnlinePayment payment, String? message})> confirmPayment(int paymentId, String otp) async {
+    final body = await _api.post('/payments/$paymentId/confirm', data: {'otp': otp});
+    return (payment: OnlinePayment.fromJson(body['data'] as Json), message: body['message'] as String?);
+  }
 
   /// Current status (the server re-checks with the payment provider while pending).
   Future<OnlinePayment> payment(int paymentId) async =>

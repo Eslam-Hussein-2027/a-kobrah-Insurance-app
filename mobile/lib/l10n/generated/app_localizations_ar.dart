@@ -815,4 +815,32 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get appVersion => 'إصدار التطبيق';
+
+  @override
+  String get payWith => 'طريقة الدفع';
+
+  @override
+  String get paymentService => 'خدمة الدفع';
+
+  @override
+  String walletPhone(String method) {
+    return 'رقم هاتفك المسجّل في $method';
+  }
+
+  @override
+  String get walletPhoneHint => 'سيصلك رمز تحقق على هذا الرقم';
+
+  @override
+  String get sendPaymentCode => 'إرسال رمز التحقق';
+
+  @override
+  String enterPaymentCode(String phone) {
+    return 'أدخل الرمز الذي وصلك على الرقم $phone لإتمام الدفع.';
+  }
+
+  @override
+  String get confirmPayment => 'تأكيد الدفع';
+
+  @override
+  String get changeNumberOrResend => 'تغيير الرقم أو إعادة إرسال الرمز';
 }

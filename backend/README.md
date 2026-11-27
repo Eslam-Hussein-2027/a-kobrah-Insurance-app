@@ -198,7 +198,7 @@ POST /policies → PENDING_PAYMENT ──(admin confirms office payment)──�
 
 ![Online payment flow](../docs/online-payment-flow.png)
 
-Hosted-checkout model behind `App\Services\Payments\PaymentGateway`:
+Providers implement `App\Services\Payments\PaymentGateway`. Hosted-checkout flow (simulator):
 
 ```
 app  → POST /policies/{id}/pay-online → checkout_url (provider page)
@@ -215,12 +215,37 @@ server   → fetchStatus() from the provider → PAID → policy ACTIVE → PDF 
 - **`simulator`** is a built-in fake provider: a signed Arabic page with "دفع ناجح" / "رفض الدفع" buttons, used for development and demos.
   It is disabled when `APP_ENV=production` (`PAYMENT_SIMULATOR_ENABLED`).
 
-**Adding a real Libyan provider** (Sadad, Edfa3ly, Moamalat, or an aggregator):
+### DPAY (dpay.ly) — OTP flow
 
-1. Implement `PaymentGateway` (`createCheckout`, `fetchStatus`, `referenceFromCallback`).
-2. Register it in `PaymentGatewayManager::GATEWAYS` and `config/payments.php`.
-3. Set `PAYMENT_GATEWAY=<name>` and the merchant credentials in `.env`.
-4. Give the provider the webhook URL `https://<api-host>/api/v1/payments/webhook/<name>`.
+DPAY gives one API for Libyan wallets and bank apps (Edfali, Sadad, MobiCash, Moamalat, YousrPay,
+MasrefyPay, SaharaPay, MPGS cards). There is no hosted page: the customer types their phone number and
+the code they receive **inside our app** (`App\Services\Payments\DpayGateway`, `OtpPaymentGateway`).
+
+```
+app    → GET  /payments/options                    flow=otp, methods (edfali, ...)
+app    → POST /policies/{id}/pay-online             phone, pay_method
+server → POST {dpay}/payment/sessions/open          → session_id (stored in gateway_ref); the customer gets a code
+app    → POST /payments/{id}/confirm                otp (5 tries/min per payment)
+server → POST {dpay}/payment/sessions/verify        then GET {dpay}/payment/sessions/{id} (source of truth)
+dpay   → POST /payments/webhook/dpay                 X-Dpay-Signature = hex HMAC-SHA256(raw body); unsigned → ignored
+```
+
+| `.env` | |
+|---|---|
+| `PAYMENT_GATEWAY=dpay` | use DPAY instead of the simulator |
+| `DPAY_SANDBOX=true` | test token (`sb_tk_...`) on `/api/sandbox/...`; set `false` with a live token |
+| `DPAY_API_TOKEN` | from the DPAY dashboard → API tokens (**never commit it**) |
+| `DPAY_WEBHOOK_SECRET` | from the DPAY dashboard → server notifications |
+| `DPAY_PAY_METHODS=edfali` | methods connected in the DPAY dashboard, comma separated |
+
+Sandbox codes: `111111` settles, `000000` declines. Method limits (LYD) are in `config/payments.php` → `methods`.
+Live paths are assumed to be the sandbox paths without `/sandbox` (`DPAY_API_PREFIX` overrides); session status
+names are matched case-insensitively (`paid`, `settled`, `completed`... / `failed`, `declined`, `expired`...) and the
+raw session is kept in `payments.gateway_payload`.
+
+**Adding another provider:** implement `PaymentGateway` (or `OtpPaymentGateway`), register it in
+`PaymentGatewayManager::GATEWAYS` and `config/payments.php`, then set `PAYMENT_GATEWAY` and its webhook URL
+`https://<api-host>/api/v1/payments/webhook/<name>`.
 
 ## Admin dashboard
 

@@ -100,7 +100,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             Route::get('policies/{policy}/pdf', [PolicyController::class, 'downloadPdf'])->whereNumber('policy')->name('policies.pdf');
 
             Route::post('policies/{policy}/pay-online', [PaymentController::class, 'payOnline'])->whereNumber('policy')->name('policies.pay-online');
+            Route::get('payments/options', [PaymentController::class, 'options'])->name('payments.options');
             Route::get('payments/{payment}', [PaymentController::class, 'show'])->whereNumber('payment')->name('payments.show');
+            Route::post('payments/{payment}/confirm', [PaymentController::class, 'confirm'])
+                ->whereNumber('payment')
+                ->middleware('throttle:payment-otp')
+                ->name('payments.confirm');
         });
 
         // Admin dashboard

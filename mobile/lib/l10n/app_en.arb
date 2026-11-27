@@ -241,5 +241,13 @@
   "website": "Website",
   "privacy": "Privacy",
   "aboutCompany": "About us",
-  "appVersion": "App version"
+  "appVersion": "App version",
+  "payWith": "Pay with",
+  "paymentService": "the payment service",
+  "walletPhone": "Your phone number registered with {method}",
+  "walletPhoneHint": "You'll receive a code on this number",
+  "sendPaymentCode": "Send the code",
+  "enterPaymentCode": "Enter the code sent to {phone} to complete the payment.",
+  "confirmPayment": "Confirm payment",
+  "changeNumberOrResend": "Change number or resend the code"
 }

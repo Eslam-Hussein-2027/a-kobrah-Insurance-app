@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\Policy;
 use App\Services\Policy\PolicyService;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PaymentService
 {
@@ -25,10 +26,34 @@ class PaymentService
     ) {}
 
     /**
-     * Start an online payment for a policy awaiting payment and return the payment with its checkout URL.
+     * What the app should show before paying: hosted page (redirect) or phone + code (otp),
+     * and the payment methods to choose from.
+     *
+     * @return array{gateway: string, flow: string, methods: list<array{value: string, label: string, min: int, max: int}>}
+     */
+    public function options(): array
+    {
+        $gateway = $this->gateways->default();
+        $methods = $gateway instanceof OtpPaymentGateway ? $gateway->payMethods() : [];
+
+        return [
+            'gateway' => $gateway->name(),
+            'flow' => $gateway instanceof OtpPaymentGateway ? 'otp' : 'redirect',
+            'methods' => array_map(fn (string $code) => [
+                'value' => $code,
+                'label' => __('payments.methods.'.$code),
+                'min' => (int) config("payments.methods.{$code}.min", 1),
+                'max' => (int) config("payments.methods.{$code}.max", 1000000),
+            ], $methods),
+        ];
+    }
+
+    /**
+     * Start an online payment for a policy awaiting payment.
+     * Hosted gateways return a checkout URL; OTP gateways text the customer a code to confirm with confirmOtp().
      * Any earlier unfinished online attempt for the same policy is closed first.
      */
-    public function startOnline(Policy $policy): Payment
+    public function startOnline(Policy $policy, CheckoutInput $input = new CheckoutInput): Payment
     {
         if (! $policy->isPendingPayment()) {
             throw new BusinessRuleException(__('messages.policy.not_pending'));
@@ -36,7 +61,11 @@ class PaymentService
 
         $gateway = $this->gateways->default();
 
-        $payment = DB::transaction(function () use ($policy, $gateway) {
+        if ($gateway instanceof OtpPaymentGateway) {
+            $input = $this->validatedOtpInput($gateway, $input, (string) $policy->premium);
+        }
+
+        $payment = DB::transaction(function () use ($policy, $gateway, $input) {
             $policy->payments()
                 ->where('method', PaymentMethod::Online)
                 ->where('status', PaymentStatus::Pending)
@@ -46,14 +75,67 @@ class PaymentService
                 'amount' => $policy->premium,
                 'method' => PaymentMethod::Online,
                 'gateway' => $gateway->name(),
+                'pay_method' => $input->payMethod,
                 'status' => PaymentStatus::Pending,
             ]);
         });
 
-        $session = $gateway->createCheckout($payment);
+        try {
+            $session = $gateway->createCheckout($payment, $input);
+        } catch (Throwable $exception) {
+            // Nothing was opened at the provider: this attempt can never complete.
+            $payment->update(['status' => PaymentStatus::Failed, 'failure_reason' => 'not_started']);
+
+            throw $exception;
+        }
+
         $payment->update(['gateway_ref' => $session->reference, 'checkout_url' => $session->redirectUrl]);
 
         return $payment;
+    }
+
+    /**
+     * OTP gateways: the customer typed the code they received; the result is applied like any status check.
+     */
+    public function confirmOtp(Payment $payment, string $otp): Payment
+    {
+        if ($payment->status !== PaymentStatus::Pending || $payment->gateway === null || $payment->gateway_ref === null) {
+            throw new BusinessRuleException(__('messages.payment.not_pending'));
+        }
+
+        $gateway = $this->gateways->get($payment->gateway);
+
+        if (! $gateway instanceof OtpPaymentGateway) {
+            throw new BusinessRuleException(__('messages.payment.otp_not_supported'));
+        }
+
+        return $this->apply($payment, $gateway->confirmOtp($payment, $otp));
+    }
+
+    private function validatedOtpInput(OtpPaymentGateway $gateway, CheckoutInput $input, string $amount): CheckoutInput
+    {
+        $methods = $gateway->payMethods();
+        $method = $input->payMethod ?? ($methods[0] ?? null);
+
+        if ($method === null || ! in_array($method, $methods, true)) {
+            throw new BusinessRuleException(__('messages.payment.method_unavailable'));
+        }
+
+        if (blank($input->payerPhone)) {
+            throw new BusinessRuleException(__('messages.payment.phone_required'));
+        }
+
+        $min = (float) config("payments.methods.{$method}.min", 0);
+        $max = (float) config("payments.methods.{$method}.max", PHP_FLOAT_MAX);
+
+        if ((float) $amount < $min || (float) $amount > $max) {
+            throw new BusinessRuleException(__('messages.payment.amount_out_of_range', [
+                'min' => number_format($min),
+                'max' => number_format($max),
+            ]));
+        }
+
+        return new CheckoutInput($input->payerPhone, $method);
     }
 
     /**

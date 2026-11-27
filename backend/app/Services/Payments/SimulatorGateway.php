@@ -22,7 +22,7 @@ class SimulatorGateway implements PaymentGateway
         return 'simulator';
     }
 
-    public function createCheckout(Payment $payment): CheckoutSession
+    public function createCheckout(Payment $payment, CheckoutInput $input): CheckoutSession
     {
         $reference = 'SIM-'.Str::upper(Str::random(12));
 
