@@ -236,7 +236,7 @@ Sign-up and forgotten-password codes go through an `OtpSender` chosen by `SMS_DR
 ```
 SMS_DRIVER=resala
 RESALA_API_KEY=rsl_...            # dashboard → الربط البرمجي API; never commit it
-RESALA_SENDER=AKOBRAH             # a name approved under أسماء المرسل (exact case); empty = account default
+RESALA_SENDER=Alarabia            # a name approved under أسماء المرسل (exact case); empty = account default
 RESALA_TEST=false                 # true: nothing sent or charged, the code is written to the log
 ```
 
