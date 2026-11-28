@@ -24,11 +24,13 @@ return [
         'logged_in' => 'Logged in successfully.',
         'logged_out' => 'Logged out successfully.',
         'registered' => 'Account created successfully.',
-        'complete_registration' => 'Phone verified. Please complete your registration.',
-        'registration_token_invalid' => 'Registration session is invalid or expired. Please request a new code.',
         'phone_taken' => 'This phone number is already registered.',
         'account_disabled' => 'This account is disabled. Please contact customer service.',
         'invalid_credentials' => 'Invalid phone number or password.',
+        'reset_code_sent' => 'If this number is registered, a verification code will arrive by SMS shortly.',
+        'password_reset' => 'Password changed and you are signed in.',
+        'password_changed' => 'Password changed.',
+        'current_password_wrong' => 'The current password is incorrect.',
     ],
 
     'payment' => [
@@ -60,6 +62,7 @@ return [
 
     'profile' => [
         'documents_uploaded' => 'Documents uploaded successfully.',
+        'updated' => 'Your personal information was saved.',
     ],
 
     'vehicle' => [
@@ -106,7 +109,7 @@ return [
         'not_owner' => 'This policy is not registered to you.',
         'not_active' => 'The policy document is available only after activation.',
         'not_pending' => 'This policy is not awaiting payment.',
-        'kyc_required' => 'Please upload your identity document and driving license images before issuing a policy.',
+        'kyc_required' => 'Complete your personal information (national number, identity document and driving license images) before issuing a policy.',
         'overlap' => 'This vehicle already has an active or pending policy for the same period.',
     ],
 

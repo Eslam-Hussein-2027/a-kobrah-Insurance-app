@@ -2,127 +2,149 @@
 
 namespace App\Services\Auth;
 
-use App\Enums\UserDocumentType;
 use App\Enums\UserRole;
 use App\Models\User;
-use App\Services\UserDocumentService;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 /**
- * Phone + OTP authentication.
+ * Customer accounts: phone number + password.
  *
- * 1) POST /auth/otp/send      → SMS code
- * 2) POST /auth/otp/verify    → existing user: Sanctum token
- *                               new phone:     one-time registration_token (phone ownership proven)
- * 3) POST /auth/register      → registration_token + profile → Sanctum token
+ * Register  POST /auth/register         Without "code" it sends an SMS code (when phone verification is
+ *                                        on) and answers 202; called again with the code it creates the
+ *                                        account. With verification off the account is created directly.
+ * Login     POST /auth/login
+ * Forgot    POST /auth/password/forgot  → SMS code, then POST /auth/password/reset
+ * Change    POST /auth/password/change  (signed in)
+ *
+ * Staff sign in to the dashboard with POST /auth/staff/login.
  */
 class AuthService
 {
-    private const REGISTRATION_CACHE_PREFIX = 'auth:registration:';
+    public function __construct(private readonly OtpService $otp) {}
 
-    public function __construct(
-        private readonly OtpService $otp,
-        private readonly UserDocumentService $documents,
-    ) {}
-
-    /**
-     * @return array{is_new_user: bool, token?: string, user?: User, registration_token?: string, expires_in?: int}
-     */
-    public function verifyOtp(string $phone, string $code, string $deviceName): array
+    public function phoneVerificationRequired(): bool
     {
-        if (! $this->otp->verify($phone, $code)) {
-            throw ValidationException::withMessages(['code' => __('messages.otp.invalid')]);
-        }
-
-        $user = User::query()->where('phone', $phone)->first();
-
-        if ($user !== null) {
-            $this->ensureActive($user);
-            $user->forceFill(['phone_verified_at' => now()])->save();
-
-            return [
-                'is_new_user' => false,
-                'token' => $this->issueToken($user, $deviceName),
-                'user' => $user,
-            ];
-        }
-
-        $ttl = (int) config('insurance.otp.registration_token_ttl_minutes');
-        $registrationToken = Str::random(64);
-        Cache::put(self::REGISTRATION_CACHE_PREFIX.$registrationToken, $phone, now()->addMinutes($ttl));
-
-        return [
-            'is_new_user' => true,
-            'registration_token' => $registrationToken,
-            'expires_in' => $ttl * 60,
-        ];
+        return (bool) config('insurance.auth.verify_phone_on_register');
     }
 
     /**
-     * @param  array{registration_token: string, name: string, national_id: string, device_name: string}  $data
-     * @return array{token: string, user: User}
+     * @param  array{first_name: string, last_name: string, phone: string, address: string, password: string, device_name: string}  $data
+     * @return array{verification_required: true, expires_in: int, resend_after: int}|array{verification_required: false, token: string, user: User}
      */
-    public function register(array $data, ?UploadedFile $idImage = null, ?UploadedFile $licenseImage = null): array
+    public function register(array $data, ?string $code, ?string $ipAddress): array
     {
-        // One-time use: pull() removes the token even if registration fails afterwards.
-        $phone = Cache::pull(self::REGISTRATION_CACHE_PREFIX.$data['registration_token']);
+        if ($this->phoneVerificationRequired()) {
+            if ($code === null) {
+                $this->otp->send($data['phone'], $ipAddress);
 
-        if ($phone === null) {
-            throw ValidationException::withMessages([
-                'registration_token' => __('messages.auth.registration_token_invalid'),
-            ]);
+                return [
+                    'verification_required' => true,
+                    'expires_in' => $this->otp->ttlMinutes() * 60,
+                    'resend_after' => $this->otp->resendAfterSeconds(),
+                ];
+            }
+
+            $this->verifyCode($data['phone'], $code);
         }
 
-        if (User::query()->where('phone', $phone)->exists()) {
-            throw ValidationException::withMessages(['phone' => __('messages.auth.phone_taken')]);
-        }
-
-        $user = DB::transaction(function () use ($data, $phone) {
-            $user = User::create([
-                'name' => $data['name'],
-                'phone' => $phone,
-                'national_id' => $data['national_id'],
-                'phone_verified_at' => now(),
-            ]);
-
-            return $user->assignPrimaryRole(UserRole::Customer);
-        });
-
-        if ($idImage !== null) {
-            $this->documents->store($user, UserDocumentType::IdImage, $idImage);
-        }
-
-        if ($licenseImage !== null) {
-            $this->documents->store($user, UserDocumentType::LicenseImage, $licenseImage);
-        }
+        $user = DB::transaction(fn () => User::create([
+            'name' => trim($data['first_name']).' '.trim($data['last_name']),
+            'phone' => $data['phone'],
+            'address' => $data['address'],
+            'password' => $data['password'],
+            'phone_verified_at' => $this->phoneVerificationRequired() ? now() : null,
+        ])->assignPrimaryRole(UserRole::Customer));
 
         return [
+            'verification_required' => false,
             'token' => $this->issueToken($user, $data['device_name']),
             'user' => $user->refresh(),
         ];
     }
 
     /**
+     * Customers only; staff use the dashboard login. The same message for a wrong phone or password.
+     *
+     * @return array{token: string, user: User}
+     */
+    public function login(string $phone, string $password, string $deviceName): array
+    {
+        $user = User::query()->where('phone', $phone)->where('role', UserRole::Customer)->first();
+
+        if (! $this->passwordMatches($user, $password)) {
+            throw ValidationException::withMessages(['phone' => __('messages.auth.invalid_credentials')]);
+        }
+
+        $this->ensureActive($user);
+
+        return ['token' => $this->issueToken($user, $deviceName), 'user' => $user];
+    }
+
+    /**
+     * Sends a code only to a registered, active customer; the answer is the same either way,
+     * so the endpoint does not reveal which numbers have an account.
+     */
+    public function sendPasswordResetCode(string $phone, ?string $ipAddress): void
+    {
+        $exists = User::query()
+            ->where('phone', $phone)
+            ->where('role', UserRole::Customer)
+            ->where('is_active', true)
+            ->exists();
+
+        if ($exists) {
+            $this->otp->send($phone, $ipAddress);
+        }
+    }
+
+    /**
+     * New password after proving the phone with an SMS code. Other devices are signed out.
+     *
+     * @return array{token: string, user: User}
+     */
+    public function resetPassword(string $phone, string $code, string $password, string $deviceName): array
+    {
+        $user = User::query()->where('phone', $phone)->where('role', UserRole::Customer)->first();
+
+        // Unknown numbers get the same "wrong code" answer as a wrong code.
+        if ($user === null) {
+            throw ValidationException::withMessages(['code' => __('messages.otp.invalid')]);
+        }
+
+        $this->verifyCode($phone, $code);
+        $this->ensureActive($user);
+
+        $user->forceFill(['password' => $password, 'phone_verified_at' => now()])->save();
+        $user->tokens()->delete();
+
+        return ['token' => $this->issueToken($user, $deviceName), 'user' => $user];
+    }
+
+    /** Keeps the current session and signs out the other devices. */
+    public function changePassword(User $user, string $currentPassword, string $newPassword): void
+    {
+        if (! $this->passwordMatches($user, $currentPassword)) {
+            throw ValidationException::withMessages(['current_password' => __('messages.auth.current_password_wrong')]);
+        }
+
+        $user->forceFill(['password' => $newPassword])->save();
+
+        $current = $user->currentAccessToken();
+        $user->tokens()->when($current !== null, fn ($query) => $query->whereKeyNot($current->getKey()))->delete();
+    }
+
+    /**
      * Dashboard login for staff (admin, surveyor, workshop) with phone + password.
-     * Customers always use OTP.
      *
      * @return array{token: string, user: User}
      */
     public function staffLogin(string $phone, string $password, string $deviceName): array
     {
-        $user = User::query()->where('phone', $phone)->first();
+        $user = User::query()->where('phone', $phone)->where('role', '!=', UserRole::Customer)->first();
 
-        $valid = $user !== null
-            && $user->role !== UserRole::Customer
-            && $user->getAuthPassword() !== null
-            && Hash::check($password, $user->getAuthPassword());
-
-        if (! $valid) {
+        if (! $this->passwordMatches($user, $password)) {
             throw ValidationException::withMessages(['phone' => __('messages.auth.invalid_credentials')]);
         }
 
@@ -134,6 +156,21 @@ class AuthService
     public function logout(User $user): void
     {
         $user->currentAccessToken()?->delete();
+    }
+
+    /** @phpstan-assert-if-true User $user */
+    private function passwordMatches(?User $user, string $password): bool
+    {
+        return $user !== null
+            && $user->getAuthPassword() !== null
+            && Hash::check($password, $user->getAuthPassword());
+    }
+
+    private function verifyCode(string $phone, string $code): void
+    {
+        if (! $this->otp->verify($phone, $code)) {
+            throw ValidationException::withMessages(['code' => __('messages.otp.invalid')]);
+        }
     }
 
     private function issueToken(User $user, string $deviceName): string

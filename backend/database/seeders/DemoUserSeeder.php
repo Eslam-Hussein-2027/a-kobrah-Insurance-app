@@ -26,7 +26,9 @@ class DemoUserSeeder extends Seeder
             $user = User::query()->updateOrCreate(['phone' => $account['phone']], [
                 'name' => $account['name'],
                 'national_id' => $account['national_id'],
-                'password' => $account['role'] === UserRole::Customer ? null : 'password',
+                // Demo only. Customer signs in to the app with 123456, staff to the dashboard with "password".
+                'password' => $account['role'] === UserRole::Customer ? '123456' : 'password',
+                'address' => 'بنغازي - ليبيا',
                 'phone_verified_at' => now(),
                 'is_active' => true,
             ]);
@@ -35,6 +37,13 @@ class DemoUserSeeder extends Seeder
 
             if ($account['role'] === UserRole::Customer) {
                 $user->vehicles()->updateOrCreate(['vin' => 'JTDBR32E720123456'], [
+                    'owner_name' => $account['name'],
+                    'owner_address' => 'بنغازي - ليبيا',
+                    'color' => 'white',
+                    'country_of_origin' => 'japan',
+                    'license_purpose' => 'private',
+                    'seats' => 5,
+                    'licensing_authority' => 'benghazi',
                     'plate_no' => '5-123456',
                     'make' => 'Toyota',
                     'model' => 'Corolla',

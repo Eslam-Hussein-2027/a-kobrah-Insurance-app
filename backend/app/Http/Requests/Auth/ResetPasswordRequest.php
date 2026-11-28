@@ -4,13 +4,19 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\ApiRequest;
 
-class StaffLoginRequest extends ApiRequest
+class ResetPasswordRequest extends ApiRequest
 {
+    protected function numericInputs(): array
+    {
+        return ['code'];
+    }
+
     public function rules(): array
     {
         return [
             'phone' => $this->phoneRules(),
-            'password' => ['required', 'string', 'max:100'],
+            'code' => ['required', 'digits:'.config('insurance.otp.length')],
+            'password' => PasswordRules::new(),
             'device_name' => ['required', 'string', 'max:100'],
         ];
     }

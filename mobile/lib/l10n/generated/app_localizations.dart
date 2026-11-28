@@ -98,18 +98,6 @@ abstract class AppLocalizations {
   /// **'العربية الكبرى للتأمين'**
   String get appTitle;
 
-  /// No description provided for @welcome.
-  ///
-  /// In ar, this message translates to:
-  /// **'مرحبًا بك'**
-  String get welcome;
-
-  /// No description provided for @loginSubtitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'سجّل الدخول برقم هاتفك لإدارة وثائق التأمين'**
-  String get loginSubtitle;
-
   /// No description provided for @phoneLabel.
   ///
   /// In ar, this message translates to:
@@ -170,18 +158,6 @@ abstract class AppLocalizations {
   /// **'تم إرسال رمز جديد'**
   String get codeResent;
 
-  /// No description provided for @registerTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'إكمال التسجيل'**
-  String get registerTitle;
-
-  /// No description provided for @registerSubtitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم التحقق من رقم هاتفك. أكمل بياناتك لإنشاء الحساب.'**
-  String get registerSubtitle;
-
   /// No description provided for @fullName.
   ///
   /// In ar, this message translates to:
@@ -205,36 +181,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'صورة رخصة القيادة'**
   String get licenseImage;
-
-  /// No description provided for @documentsOptionalHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'يمكنك رفع المستندات الآن أو لاحقًا من «المزيد ← المعلومات الشخصية»، وهي مطلوبة قبل إصدار وثيقة التأمين الإجباري.'**
-  String get documentsOptionalHint;
-
-  /// No description provided for @chooseImage.
-  ///
-  /// In ar, this message translates to:
-  /// **'اختيار صورة'**
-  String get chooseImage;
-
-  /// No description provided for @imageSelected.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم اختيار الصورة'**
-  String get imageSelected;
-
-  /// No description provided for @createAccount.
-  ///
-  /// In ar, this message translates to:
-  /// **'إنشاء الحساب'**
-  String get createAccount;
-
-  /// No description provided for @registrationExpired.
-  ///
-  /// In ar, this message translates to:
-  /// **'انتهت صلاحية جلسة التسجيل، يرجى طلب رمز تحقق جديد.'**
-  String get registrationExpired;
 
   /// No description provided for @camera.
   ///
@@ -1741,6 +1687,198 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إكمال البيانات'**
   String get completeDetails;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get loginTitle;
+
+  /// No description provided for @loginWelcomeBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحبًا بعودتك إلى التطبيق'**
+  String get loginWelcomeBack;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم الهاتف'**
+  String get phoneHint;
+
+  /// No description provided for @phoneHelper.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم الهاتف بدون رمز الدولة (أرقام فقط - يمكن استخدام الأرقام العربية أو الدولية)'**
+  String get phoneHelper;
+
+  /// No description provided for @password.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور'**
+  String get password;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور'**
+  String get passwordHint;
+
+  /// No description provided for @newPasswordHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور ({min} أحرف على الأقل)'**
+  String newPasswordHint(int min);
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد كلمة المرور'**
+  String get confirmPassword;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل نسيت كلمة المرور؟'**
+  String get forgotPassword;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل دخول'**
+  String get loginButton;
+
+  /// No description provided for @newUserRegister.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستخدم جديد؟ سجّل الآن'**
+  String get newUserRegister;
+
+  /// No description provided for @signUpTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التسجيل'**
+  String get signUpTitle;
+
+  /// No description provided for @signUpSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'املأ النموذج لإنشاء حساب'**
+  String get signUpSubtitle;
+
+  /// No description provided for @firstName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإسم'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللقب'**
+  String get lastName;
+
+  /// No description provided for @address.
+  ///
+  /// In ar, this message translates to:
+  /// **'العنوان'**
+  String get address;
+
+  /// No description provided for @signUpButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل'**
+  String get signUpButton;
+
+  /// No description provided for @haveAccountSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل لديك حساب؟ دخول'**
+  String get haveAccountSignIn;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور يجب أن تكون {min} أحرف على الأقل'**
+  String passwordTooShort(int min);
+
+  /// No description provided for @passwordsDontMatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمتا المرور غير متطابقتين'**
+  String get passwordsDontMatch;
+
+  /// No description provided for @verifyPhoneTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد رقم الهاتف'**
+  String get verifyPhoneTitle;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'استعادة كلمة المرور'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم هاتفك المسجّل، وسنرسل لك رمز تحقق برسالة نصية لتعيين كلمة مرور جديدة.'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @setNewPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعيين كلمة المرور'**
+  String get setNewPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الجديدة'**
+  String get newPassword;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور الحالية'**
+  String get currentPassword;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير كلمة المرور'**
+  String get changePassword;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير كلمة المرور'**
+  String get passwordChanged;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار كلمة المرور'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء كلمة المرور'**
+  String get hidePassword;
+
+  /// No description provided for @nationalNumberHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'12 رقمًا يبدأ بـ 1 أو 2'**
+  String get nationalNumberHint;
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ معلوماتك الشخصية'**
+  String get profileSaved;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

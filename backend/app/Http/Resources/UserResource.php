@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'phone' => $this->phone,
             'national_id' => $this->national_id,
+            'address' => $this->address,
             'role' => $this->role->toArray(),
             'phone_verified_at' => $this->phone_verified_at?->toIso8601String(),
             'documents' => collect(UserDocumentType::cases())->mapWithKeys(fn (UserDocumentType $type) => [
@@ -29,7 +30,7 @@ class UserResource extends JsonResource
                     'url' => $documents->temporaryUrl($this->resource, $type),
                 ],
             ])->all(),
-            'kyc_completed' => $this->hasKycDocuments(),
+            'kyc_completed' => $this->hasCompleteProfile(),
             'created_at' => $this->created_at?->toIso8601String(),
         ];
     }

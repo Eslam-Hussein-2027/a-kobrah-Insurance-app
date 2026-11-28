@@ -4,7 +4,7 @@ namespace App\Support;
 
 /**
  * Normalizes phone input to the local format used for storage and login:
- * "+218 91-123 4567", "00218911234567", "218911234567", "٠٩١١٢٣٤٥٦٧" → "0911234567".
+ * "+218 91-123 4567", "00218911234567", "218911234567", "911234567", "٠٩١١٢٣٤٥٦٧" → "0911234567".
  */
 final class PhoneNumber
 {
@@ -26,6 +26,11 @@ final class PhoneNumber
         // Country code without "+" (e.g. 218911234567): local number is 9 digits after it.
         if (str_starts_with($phone, $countryCode) && strlen($phone) === strlen($countryCode) + 9) {
             return '0'.substr($phone, strlen($countryCode));
+        }
+
+        // Typed after a "+218" prefix shown in the app: the 9-digit number without the leading 0.
+        if (preg_match('/^9\d{8}$/', $phone) === 1) {
+            return '0'.$phone;
         }
 
         return $phone;

@@ -149,7 +149,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
               SectionTitle(l10n.insuredDetails),
               _Section(
                 children: [
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.ownerName,
                     child: TextFormField(
                       controller: _ownerName,
@@ -158,7 +159,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       validator: _requiredText,
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.ownerAddress,
                     child: TextFormField(
                       controller: _ownerAddress,
@@ -173,7 +175,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
               SectionTitle(l10n.vehicleDetails),
               _Section(
                 children: [
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.make,
                     child: ChoiceField(
                       key: const ValueKey('make'),
@@ -186,7 +189,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       onChanged: (v) => setState(() => _make = v),
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.model,
                     child: TextFormField(
                       controller: _model,
@@ -195,7 +199,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       validator: _requiredText,
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.vehicleColor,
                     child: ChoiceField(
                       key: const ValueKey('color'),
@@ -207,7 +212,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       onChanged: (v) => setState(() => _color = v),
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.engineCc,
                     child: _NumberField(
                       controller: _engine,
@@ -218,7 +224,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       validator: _requiredText,
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.countryOfOrigin,
                     child: ChoiceField(
                       key: const ValueKey('country_of_origin'),
@@ -230,7 +237,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       onChanged: (v) => setState(() => _country = v),
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.year,
                     child: ChoiceField(
                       key: const ValueKey('year'),
@@ -244,7 +252,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       onChanged: (v) => setState(() => _year = v),
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.licensePurpose,
                     child: ChoiceField(
                       key: const ValueKey('license_purpose'),
@@ -256,7 +265,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       onChanged: (v) => setState(() => _purpose = v),
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.seats,
                     child: _NumberField(
                       controller: _seats,
@@ -273,7 +283,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       },
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.metalPlate,
                     child: TextFormField(
                       controller: _plate,
@@ -282,7 +293,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       validator: _requiredText,
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.vin,
                     child: TextFormField(
                       controller: _vin,
@@ -298,7 +310,8 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
                       validator: _requiredText,
                     ),
                   ),
-                  _Labeled(
+                  LabeledField(
+                    required: true,
                     label: l10n.licensingAuthority,
                     child: ChoiceField(
                       key: const ValueKey('licensing_authority'),
@@ -336,40 +349,6 @@ class _Section extends StatelessWidget {
         border: Border.all(color: AppColors.border),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
-    );
-  }
-}
-
-/// Field with its label above and a red asterisk (every field here is required).
-class _Labeled extends StatelessWidget {
-  const _Labeled({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text.rich(
-            TextSpan(
-              text: label,
-              children: const [
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(color: AppColors.danger),
-                ),
-              ],
-            ),
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 6),
-          child,
-        ],
-      ),
     );
   }
 }

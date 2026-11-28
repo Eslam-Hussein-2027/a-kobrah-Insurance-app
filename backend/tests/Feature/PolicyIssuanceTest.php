@@ -78,13 +78,15 @@ class PolicyIssuanceTest extends TestCase
         $this->createPolicy(['vehicle_id' => $thirdVehicle->id])->assertJsonPath('data.policy_no', 'POL-2027-000001');
     }
 
-    public function test_kyc_documents_are_required_before_issuing(): void
+    public function test_national_number_and_documents_are_required_before_issuing(): void
     {
-        $this->customer->forceFill(['license_image' => null])->save();
+        $message = 'أكمل معلوماتك الشخصية (الرقم الوطني وصورة إثبات الهوية ورخصة القيادة) قبل إصدار الوثيقة.';
 
-        $this->createPolicy()
-            ->assertUnprocessable()
-            ->assertJsonPath('message', 'يرجى رفع صورة إثبات الهوية ورخصة القيادة قبل إصدار الوثيقة.');
+        $this->customer->forceFill(['license_image' => null])->save();
+        $this->createPolicy()->assertUnprocessable()->assertJsonPath('message', $message);
+
+        $this->customer->forceFill(['license_image' => 'documents/x.jpg', 'national_id' => null])->save();
+        $this->createPolicy()->assertUnprocessable()->assertJsonPath('message', $message);
     }
 
     public function test_vehicles_added_before_the_registration_details_must_be_completed_first(): void

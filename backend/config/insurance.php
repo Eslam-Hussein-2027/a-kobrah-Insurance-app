@@ -72,10 +72,15 @@ return [
         'ttl_minutes' => (int) env('OTP_TTL_MINUTES', 5),
         'max_attempts' => (int) env('OTP_MAX_ATTEMPTS', 5),
         'resend_after_seconds' => 60,
-        // Registration token issued after a new phone number is verified.
-        'registration_token_ttl_minutes' => 30,
         // Fixed code for local development ONLY. Ignored outside local/testing environments.
         'fixed_code' => env('OTP_FIXED_CODE'),
+    ],
+
+    'auth' => [
+        // Send an SMS code to confirm the phone before creating an account. Needs a working SMS
+        // driver in production; set to false only until one is connected.
+        'verify_phone_on_register' => (bool) env('AUTH_VERIFY_PHONE', true),
+        'password_min_length' => 6,
     ],
 
     'sms' => [

@@ -24,6 +24,7 @@ class AppUser {
     required this.idImage,
     required this.licenseImage,
     this.nationalId,
+    this.address,
   });
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -33,6 +34,7 @@ class AppUser {
       name: json['name'] as String,
       phone: json['phone'] as String,
       nationalId: json['national_id'] as String?,
+      address: json['address'] as String?,
       role: ((json['role'] as Map?)?['value'] as String?) ?? 'customer',
       kycCompleted: json['kyc_completed'] == true,
       idImage: DocumentStatus.fromJson(documents['id_image']),
@@ -44,6 +46,7 @@ class AppUser {
   final String name;
   final String phone;
   final String? nationalId;
+  final String? address;
   final String role;
   final bool kycCompleted;
   final DocumentStatus idImage;
@@ -52,20 +55,55 @@ class AppUser {
   bool get isCustomer => role == 'customer';
 }
 
-/// Result of verifying an OTP code.
-sealed class OtpVerification {
-  const OtpVerification();
-}
-
-class LoggedIn extends OtpVerification {
+/// A signed-in session returned by login, registration and password reset.
+class LoggedIn {
   const LoggedIn({required this.token, required this.user});
 
   final String token;
   final AppUser user;
 }
 
-class NeedsRegistration extends OtpVerification {
-  const NeedsRegistration(this.registrationToken);
+/// The sign-up form.
+class RegistrationInput {
+  const RegistrationInput({
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
+    required this.address,
+    required this.password,
+  });
 
-  final String registrationToken;
+  final String firstName;
+  final String lastName;
+
+  /// Local format, e.g. 0911234567.
+  final String phone;
+  final String address;
+  final String password;
+
+  Map<String, dynamic> toJson() => {
+    'first_name': firstName,
+    'last_name': lastName,
+    'phone': phone,
+    'address': address,
+    'password': password,
+    'password_confirmation': password,
+  };
+}
+
+/// What happened after sending the sign-up form.
+sealed class RegistrationStep {
+  const RegistrationStep();
+}
+
+/// An SMS code was sent: send the form again with it.
+class PhoneCodeSent extends RegistrationStep {
+  const PhoneCodeSent({required this.resendAfterSeconds});
+
+  final int resendAfterSeconds;
+}
+
+/// The account exists and the user is signed in.
+class Registered extends RegistrationStep {
+  const Registered();
 }

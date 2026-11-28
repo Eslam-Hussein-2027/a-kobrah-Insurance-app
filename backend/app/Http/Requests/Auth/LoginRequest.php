@@ -4,18 +4,14 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\ApiRequest;
 
-class VerifyOtpRequest extends ApiRequest
+/** Phone + password, for customers (app) and staff (dashboard). */
+class LoginRequest extends ApiRequest
 {
-    protected function numericInputs(): array
-    {
-        return ['phone', 'code'];
-    }
-
     public function rules(): array
     {
         return [
             'phone' => $this->phoneRules(),
-            'code' => ['required', 'string', 'digits:'.config('insurance.otp.length')],
+            'password' => ['required', 'string', 'max:100'],
             'device_name' => ['required', 'string', 'max:100'],
         ];
     }

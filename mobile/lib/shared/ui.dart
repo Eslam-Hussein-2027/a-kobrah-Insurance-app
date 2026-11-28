@@ -83,6 +83,42 @@ class IconBox extends StatelessWidget {
   }
 }
 
+/// A form field with its label above it; [required] adds a red asterisk.
+class LabeledField extends StatelessWidget {
+  const LabeledField({super.key, required this.label, required this.child, this.required = false});
+
+  final String label;
+  final Widget child;
+  final bool required;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text.rich(
+            TextSpan(
+              text: label,
+              children: [
+                if (required)
+                  const TextSpan(
+                    text: ' *',
+                    style: TextStyle(color: AppColors.danger),
+                  ),
+              ],
+            ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 6),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
 /// White rounded group whose children are separated by hairlines.
 class ListGroup extends StatelessWidget {
   const ListGroup({super.key, required this.children});

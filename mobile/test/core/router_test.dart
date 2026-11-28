@@ -26,8 +26,9 @@ void main() {
     expect(authRedirect(signedOut, '/'), '/login');
     expect(authRedirect(signedOut, '/policies/5'), '/login');
     expect(authRedirect(signedOut, '/login'), isNull);
-    expect(authRedirect(signedOut, '/login/otp'), isNull);
     expect(authRedirect(signedOut, '/register'), isNull);
+    expect(authRedirect(signedOut, '/register/verify'), isNull);
+    expect(authRedirect(signedOut, '/forgot-password'), isNull);
     expect(authRedirect(signedOut, '/verify'), isNull);
   });
 
@@ -35,8 +36,9 @@ void main() {
     const signedIn = AsyncData<AppUser?>(_user);
     expect(authRedirect(signedIn, '/splash'), '/');
     expect(authRedirect(signedIn, '/login'), '/');
-    expect(authRedirect(signedIn, '/login/otp'), '/');
     expect(authRedirect(signedIn, '/register'), '/');
+    expect(authRedirect(signedIn, '/register/verify'), '/');
+    expect(authRedirect(signedIn, '/forgot-password'), '/');
     expect(authRedirect(signedIn, '/verify'), isNull);
     expect(authRedirect(signedIn, '/policies/5'), isNull);
   });

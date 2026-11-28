@@ -31,6 +31,7 @@ class User extends Authenticatable
         'name',
         'phone',
         'national_id',
+        'address',
         'password',
         'phone_verified_at',
         'is_active',
@@ -117,8 +118,9 @@ class User extends Authenticatable
         return $this->getAttribute($type->value);
     }
 
-    public function hasKycDocuments(): bool
+    /** National number and both document photos: required before a policy is issued. */
+    public function hasCompleteProfile(): bool
     {
-        return filled($this->id_image) && filled($this->license_image);
+        return filled($this->national_id) && filled($this->id_image) && filled($this->license_image);
     }
 }

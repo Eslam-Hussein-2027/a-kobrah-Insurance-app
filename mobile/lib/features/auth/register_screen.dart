@@ -1,198 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 
 import '../../core/api/api_exception.dart';
 import '../../core/l10n.dart';
 import '../../core/text_input.dart';
-import '../../core/theme.dart';
-import '../../shared/image_picking.dart';
 import '../../shared/widgets.dart';
 import 'auth_controller.dart';
+import 'auth_widgets.dart';
+import 'models.dart';
 
+/// Sign-up form. When the server texts a code to confirm the phone, the next screen asks for it.
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({super.key, required this.registrationToken});
-
-  final String registrationToken;
+  const RegisterScreen({super.key});
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  static const _fields = ['first_name', 'last_name', 'phone', 'address', 'password'];
+
   final _formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _nationalId = TextEditingController();
-  XFile? _idImage;
-  XFile? _licenseImage;
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
+  final _phone = TextEditingController();
+  final _address = TextEditingController();
+  final _password = TextEditingController();
+  final _confirmation = TextEditingController();
   bool _loading = false;
   Map<String, String?> _errors = const {};
 
   @override
   void dispose() {
-    _name.dispose();
-    _nationalId.dispose();
+    for (final c in [_firstName, _lastName, _phone, _address, _password, _confirmation]) {
+      c.dispose();
+    }
     super.dispose();
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
+
+    final input = RegistrationInput(
+      firstName: _firstName.text.trim(),
+      lastName: _lastName.text.trim(),
+      phone: normalizeLibyanPhone(_phone.text),
+      address: _address.text.trim(),
+      password: _password.text,
+    );
 
     setState(() {
       _loading = true;
       _errors = const {};
     });
-
     try {
-      await ref
-          .read(authControllerProvider.notifier)
-          .register(
-            registrationToken: widget.registrationToken,
-            name: _name.text.trim(),
-            nationalId: toWesternDigits(_nationalId.text.trim()),
-            idImage: _idImage,
-            licenseImage: _licenseImage,
-          );
-      // Signed in: the router redirects to the home screen.
+      final step = await ref.read(authControllerProvider.notifier).register(input);
+      if (!mounted) return;
+      if (step is PhoneCodeSent) {
+        await context.push('/register/verify', extra: input);
+      }
+      // Registered: the router moves to the home screen.
     } on ApiException catch (e) {
       if (!mounted) return;
-      if (e.fieldError('registration_token') != null) {
-        showMessage(context, context.l10n.registrationExpired, isError: true);
-        context.go('/login');
-        return;
-      }
-      setState(
-        () => _errors = {
-          'name': e.fieldError('name'),
-          'national_id': e.fieldError('national_id'),
-          'id_image': e.fieldError('id_image'),
-          'license_image': e.fieldError('license_image'),
-        },
-      );
-      if (e.fieldErrors.isEmpty) {
-        showMessage(context, errorMessage(context, e), isError: true);
-      }
+      setState(() => _errors = {for (final f in _fields) f: e.fieldError(f)});
+      if (e.fieldErrors.isEmpty) showMessage(context, errorMessage(context, e), isError: true);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  String? _required(String? value) => (value == null || value.trim().isEmpty) ? context.l10n.requiredField : null;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
-
-    if (widget.registrationToken.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: ErrorView(message: l10n.registrationExpired, onRetry: () => context.go('/login')),
-      );
-    }
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.registerTitle)),
+      appBar: AppBar(),
+      bottomNavigationBar: BottomActionBar(
+        button: PrimaryButton(label: l10n.signUpButton, loading: _loading, onPressed: _submit),
+      ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 520),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(l10n.registerSubtitle, style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.muted)),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _name,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: InputDecoration(
-                        labelText: l10n.fullName,
-                        prefixIcon: const Icon(Icons.person_outline),
-                        errorText: _errors['name'],
-                      ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? l10n.requiredField : null,
-                    ),
-                    const SizedBox(height: 14),
-                    TextFormField(
-                      controller: _nationalId,
-                      keyboardType: TextInputType.number,
-                      textDirection: TextDirection.ltr,
-                      maxLength: 12,
-                      decoration: InputDecoration(
-                        labelText: l10n.nationalNumber,
-                        prefixIcon: const Icon(Icons.badge_outlined),
-                        errorText: _errors['national_id'],
-                        errorMaxLines: 3,
-                      ),
-                      validator: (v) => (v == null || v.trim().isEmpty) ? l10n.requiredField : null,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.documentsOptionalHint,
-                      style: theme.textTheme.bodyMedium?.copyWith(color: AppColors.muted),
-                    ),
-                    const SizedBox(height: 12),
-                    _ImageField(
-                      label: l10n.idImage,
-                      file: _idImage,
-                      error: _errors['id_image'],
-                      onPick: () async {
-                        final file = await pickDocumentImage(context);
-                        if (file != null) setState(() => _idImage = file);
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    _ImageField(
-                      label: l10n.licenseImage,
-                      file: _licenseImage,
-                      error: _errors['license_image'],
-                      onPick: () async {
-                        final file = await pickDocumentImage(context);
-                        if (file != null) setState(() => _licenseImage = file);
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    PrimaryButton(label: l10n.createAccount, loading: _loading, onPressed: _submit),
-                  ],
+        child: AutofillGroup(
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+              children: [
+                AuthHeader(title: l10n.signUpTitle, subtitle: l10n.signUpSubtitle),
+                const SizedBox(height: 24),
+                LabeledField(
+                  label: l10n.firstName,
+                  required: true,
+                  child: TextFormField(
+                    controller: _firstName,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.givenName],
+                    decoration: InputDecoration(hintText: l10n.firstName, errorText: _errors['first_name']),
+                    validator: _required,
+                  ),
                 ),
-              ),
+                LabeledField(
+                  label: l10n.lastName,
+                  required: true,
+                  child: TextFormField(
+                    controller: _lastName,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.familyName],
+                    decoration: InputDecoration(hintText: l10n.lastName, errorText: _errors['last_name']),
+                    validator: _required,
+                  ),
+                ),
+                LabeledField(
+                  label: l10n.phoneLabel,
+                  required: true,
+                  child: PhoneField(controller: _phone, errorText: _errors['phone']),
+                ),
+                LabeledField(
+                  label: l10n.address,
+                  required: true,
+                  child: TextFormField(
+                    controller: _address,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.fullStreetAddress],
+                    decoration: InputDecoration(hintText: l10n.address, errorText: _errors['address']),
+                    validator: _required,
+                  ),
+                ),
+                LabeledField(
+                  label: l10n.password,
+                  required: true,
+                  child: PasswordField(
+                    controller: _password,
+                    hint: l10n.newPasswordHint(PasswordRules.minLength),
+                    errorText: _errors['password'],
+                    validator: PasswordRules.newPassword(context),
+                    newPassword: true,
+                  ),
+                ),
+                LabeledField(
+                  label: l10n.confirmPassword,
+                  required: true,
+                  child: PasswordField(
+                    controller: _confirmation,
+                    hint: l10n.confirmPassword,
+                    validator: PasswordRules.confirmation(context, _password),
+                    newPassword: true,
+                    onSubmitted: (_) => _submit(),
+                  ),
+                ),
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: TextButton(
+                    onPressed: () => context.canPop() ? context.pop() : context.go('/login'),
+                    child: Text(l10n.haveAccountSignIn),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ImageField extends StatelessWidget {
-  const _ImageField({required this.label, required this.file, required this.onPick, this.error});
-
-  final String label;
-  final XFile? file;
-  final VoidCallback onPick;
-  final String? error;
-
-  @override
-  Widget build(BuildContext context) {
-    final selected = file != null;
-    return Card(
-      child: ListTile(
-        leading: Icon(
-          selected ? Icons.check_circle : Icons.image_outlined,
-          color: selected ? AppColors.success : AppColors.muted,
-        ),
-        title: Text(label),
-        subtitle: error != null
-            ? Text(error!, style: const TextStyle(color: AppColors.danger))
-            : selected
-            ? Text(context.l10n.imageSelected)
-            : null,
-        trailing: TextButton(onPressed: onPick, child: Text(context.l10n.chooseImage)),
       ),
     );
   }

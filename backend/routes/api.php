@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\V1\Admin\PolicyController as AdminPolicyController;
 use App\Http\Controllers\Api\V1\Admin\PolicyPaymentController;
 use App\Http\Controllers\Api\V1\Admin\PricingController;
 use App\Http\Controllers\Api\V1\Auth\AuthController;
-use App\Http\Controllers\Api\V1\Auth\OtpController;
 use App\Http\Controllers\Api\V1\CatalogController;
 use App\Http\Controllers\Api\V1\CoverageTypeController;
 use App\Http\Controllers\Api\V1\FileController;
@@ -37,9 +36,11 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     // ------------------------------------------------------------ Public
 
     Route::prefix('auth')->name('auth.')->group(function () {
-        Route::post('otp/send', [OtpController::class, 'send'])->middleware('throttle:otp')->name('otp.send');
-        Route::post('otp/verify', [AuthController::class, 'verifyOtp'])->middleware('throttle:auth')->name('otp.verify');
+        // Customer app: phone + password. SMS codes confirm the phone at sign-up and for a forgotten password.
         Route::post('register', [AuthController::class, 'register'])->middleware('throttle:auth')->name('register');
+        Route::post('login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login');
+        Route::post('password/forgot', [AuthController::class, 'forgotPassword'])->middleware('throttle:auth')->name('password.forgot');
+        Route::post('password/reset', [AuthController::class, 'resetPassword'])->middleware('throttle:auth')->name('password.reset');
         // Dashboard login (admin / surveyor / workshop).
         Route::post('staff/login', [AuthController::class, 'staffLogin'])->middleware('throttle:auth')->name('staff.login');
     });
@@ -72,9 +73,11 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
 
         Route::get('auth/me', [AuthController::class, 'me'])->name('auth.me');
         Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+        Route::post('auth/password/change', [AuthController::class, 'changePassword'])->middleware('throttle:auth')->name('auth.password.change');
 
         // Customer app
         Route::middleware('role:'.UserRole::Customer->value)->group(function () {
+            Route::patch('me', [ProfileController::class, 'update'])->name('me.update');
             Route::post('me/documents', [ProfileController::class, 'uploadDocuments'])->name('me.documents');
 
             Route::get('vehicles/options', [VehicleController::class, 'options'])->name('vehicles.options');

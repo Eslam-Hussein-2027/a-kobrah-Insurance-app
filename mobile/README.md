@@ -14,8 +14,9 @@ Travel insurance and the People screens stay in the code but are reached only wh
 
 | Screen | What it does |
 |---|---|
-| Login | Phone number → SMS code. `+218…`, spaces and Arabic digits are accepted |
-| Registration | Name and national number, plus optional ID and license photos (camera or gallery) |
+| Sign in | First screen when signed out: phone (after a fixed +218 box; Arabic digits accepted) + password, "forgot password", "new here? sign up" |
+| Sign up | First name, last name, phone, address, password + confirmation → SMS code to confirm the phone → signed in |
+| Forgot password | Phone → SMS code + new password → signed in |
 | Home | Current policy card (expiry, days left, QR), reminder for uninsured vehicles, all products, quick tools |
 | Product | What it covers, required documents, and two actions: **issue a policy / know the price** (request products: **request a policy / request a price offer**) |
 | Compulsory (motor) | Step 1 vehicle + start date → step 2 policy data + server price breakdown → policy created, step 3 payment on the policy page. Price calculator by manufacture year and engine size |
@@ -25,7 +26,7 @@ Travel insurance and the People screens stay in the code but are reached only wh
 | Policy details | **Pay online** (provider page, status re-checked when the customer returns) or at the office; cancel; PDF download; **verification QR code** |
 | Vehicles | Vehicles with their insurance status, "Insure it now", edit / delete. Vehicles added before the registration details were asked show "complete details" instead |
 | Add / edit vehicle | Notice, then **insured details** (owner name prefilled, address) and **vehicle details**: make (list with search, or type another brand), model, colour, engine, country of manufacture, year, licence purpose, seats, plate, VIN, licensing authority. Lists come from `GET /vehicles/options` |
-| My account | Profile card, shortcuts (privacy, contact, about us), branches and agents, personal information and documents, version, about the app, language, policy verification, logout |
+| My account | Profile card, change password, shortcuts (privacy, contact, about us), branches and agents, personal information and documents, version, about the app, language, policy verification, logout |
 | Verify a policy | Public check by policy number and plate number. No login needed |
 
 ## Run
@@ -68,7 +69,7 @@ flutter analyze
 flutter test
 ```
 
-The tests cover phone normalization, API error mapping, the router auth redirects, JSON models (policies, products, requests, people), date and money formatting, and widget tests with fake repositories (login flow, travel form totals and the passport rule).
+The tests cover phone normalization, API error mapping, the router auth redirects, JSON models (policies, products, requests, people), date and money formatting, and widget tests with fake repositories (sign in, sign up with SMS code, forgotten password, vehicle form, travel form totals and the passport rule).
 
 ## Structure
 
@@ -88,7 +89,7 @@ lib/
     widgets.dart              AsyncView, Error/Empty views, InfoRow, SectionCard, dialogs
     formatters.dart           dates ("14 نوفمبر 2027"), money ("1,452.00 د.ل"), masking
   features/
-    auth/                     OTP login, registration, AuthController (AsyncNotifier)
+    auth/                     sign in, sign up + SMS code, forgotten password, AuthController (AsyncNotifier)
     home/                     tab shell + bottom navigation, dashboard
     catalog/                  products and company info from the API, product page
     motor/                    compulsory insurance: issue (vehicle), review, price calculator
@@ -97,7 +98,7 @@ lib/
     policies/                 My insurance tab, policy tile, details (payment, QR, PDF)
     vehicles/                 list with insurance status, form, repository
     persons/                  traveller form (used by travel only)
-    account/                  My account tab, personal info and documents, branches, contact, about, privacy
+    account/                  My account tab, personal info (national number, address, documents), change password, branches, contact, about, privacy
     verify/                   public policy verification
   l10n/                       app_ar.arb (template), app_en.arb, generated/
 ```

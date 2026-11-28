@@ -38,7 +38,7 @@ class PolicyService
         CoverageType $coverageType,
         ?CarbonImmutable $startDate = null,
     ): Policy {
-        if (! $customer->hasKycDocuments()) {
+        if (! $customer->hasCompleteProfile()) {
             throw new BusinessRuleException(__('messages.policy.kyc_required'));
         }
 

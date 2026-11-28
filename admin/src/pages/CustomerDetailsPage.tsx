@@ -59,6 +59,7 @@ export function CustomerDetailsPage() {
           <Field label="الرقم الوطني">
             <span className="ltr">{c.national_id ?? '—'}</span>
           </Field>
+          <Field label="العنوان">{c.address ?? '—'}</Field>
           <Field label="الحساب">{c.is_active ? <Badge tone="ok">نشط</Badge> : <Badge tone="bad">موقوف</Badge>}</Field>
           <Field label="تاريخ التسجيل">
             <span className="ltr">{formatDate(c.created_at)}</span>

@@ -1,8 +1,6 @@
 {
   "@@locale": "ar",
   "appTitle": "العربية الكبرى للتأمين",
-  "welcome": "مرحبًا بك",
-  "loginSubtitle": "سجّل الدخول برقم هاتفك لإدارة وثائق التأمين",
   "phoneLabel": "رقم الهاتف",
   "sendCode": "إرسال رمز التحقق",
   "verifyPolicyLink": "التحقق من وثيقة تأمين",
@@ -27,17 +25,10 @@
     }
   },
   "codeResent": "تم إرسال رمز جديد",
-  "registerTitle": "إكمال التسجيل",
-  "registerSubtitle": "تم التحقق من رقم هاتفك. أكمل بياناتك لإنشاء الحساب.",
   "fullName": "الاسم الكامل",
   "nationalNumber": "الرقم الوطني",
   "idImage": "صورة إثبات الهوية",
   "licenseImage": "صورة رخصة القيادة",
-  "documentsOptionalHint": "يمكنك رفع المستندات الآن أو لاحقًا من «المزيد ← المعلومات الشخصية»، وهي مطلوبة قبل إصدار وثيقة التأمين الإجباري.",
-  "chooseImage": "اختيار صورة",
-  "imageSelected": "تم اختيار الصورة",
-  "createAccount": "إنشاء الحساب",
-  "registrationExpired": "انتهت صلاحية جلسة التسجيل، يرجى طلب رمز تحقق جديد.",
   "camera": "الكاميرا",
   "gallery": "معرض الصور",
   "tabVehicles": "المركبات",
@@ -452,5 +443,51 @@
   },
   "vehicleDetailsMissing": "بيانات المركبة غير مكتملة",
   "vehicleDetailsMissingHint": "أكمل بيانات المالك والترخيص قبل إصدار الوثيقة، فهي تُطبع عليها.",
-  "completeDetails": "إكمال البيانات"
+  "completeDetails": "إكمال البيانات",
+  "loginTitle": "تسجيل الدخول",
+  "loginWelcomeBack": "مرحبًا بعودتك إلى التطبيق",
+  "phoneHint": "أدخل رقم الهاتف",
+  "phoneHelper": "أدخل رقم الهاتف بدون رمز الدولة (أرقام فقط - يمكن استخدام الأرقام العربية أو الدولية)",
+  "password": "كلمة المرور",
+  "passwordHint": "أدخل كلمة المرور",
+  "newPasswordHint": "أدخل كلمة المرور ({min} أحرف على الأقل)",
+  "@newPasswordHint": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "confirmPassword": "تأكيد كلمة المرور",
+  "forgotPassword": "هل نسيت كلمة المرور؟",
+  "loginButton": "تسجيل دخول",
+  "newUserRegister": "مستخدم جديد؟ سجّل الآن",
+  "signUpTitle": "التسجيل",
+  "signUpSubtitle": "املأ النموذج لإنشاء حساب",
+  "firstName": "الإسم",
+  "lastName": "اللقب",
+  "address": "العنوان",
+  "signUpButton": "تسجيل",
+  "haveAccountSignIn": "هل لديك حساب؟ دخول",
+  "passwordTooShort": "كلمة المرور يجب أن تكون {min} أحرف على الأقل",
+  "@passwordTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordsDontMatch": "كلمتا المرور غير متطابقتين",
+  "verifyPhoneTitle": "تأكيد رقم الهاتف",
+  "resetPasswordTitle": "استعادة كلمة المرور",
+  "resetPasswordSubtitle": "أدخل رقم هاتفك المسجّل، وسنرسل لك رمز تحقق برسالة نصية لتعيين كلمة مرور جديدة.",
+  "setNewPassword": "تعيين كلمة المرور",
+  "newPassword": "كلمة المرور الجديدة",
+  "currentPassword": "كلمة المرور الحالية",
+  "changePassword": "تغيير كلمة المرور",
+  "passwordChanged": "تم تغيير كلمة المرور",
+  "showPassword": "إظهار كلمة المرور",
+  "hidePassword": "إخفاء كلمة المرور",
+  "nationalNumberHint": "12 رقمًا يبدأ بـ 1 أو 2",
+  "profileSaved": "تم حفظ معلوماتك الشخصية"
 }

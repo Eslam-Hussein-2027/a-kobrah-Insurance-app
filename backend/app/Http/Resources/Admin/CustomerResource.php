@@ -21,8 +21,9 @@ class CustomerResource extends JsonResource
             'name' => $this->name,
             'phone' => $this->phone,
             'national_id' => $this->national_id,
+            'address' => $this->address,
             'is_active' => $this->is_active,
-            'kyc_completed' => $this->hasKycDocuments(),
+            'kyc_completed' => $this->hasCompleteProfile(),
             'vehicles_count' => $this->whenCounted('vehicles'),
             'policies_count' => $this->whenCounted('policies'),
             'documents' => collect(UserDocumentType::cases())->mapWithKeys(fn (UserDocumentType $type) => [

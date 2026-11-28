@@ -30,31 +30,30 @@ class AuthController extends AsyncNotifier<AppUser?> {
     }
   }
 
-  Future<void> sendOtp(String phone) => _repository.sendOtp(phone);
+  Future<void> login(String phone, String password) async => _signIn(await _repository.login(phone, password));
 
-  Future<OtpVerification> verifyOtp(String phone, String code) async {
-    final result = await _repository.verifyOtp(phone, code);
-    if (result is LoggedIn) {
-      await _signIn(result);
+  /// Sends the sign-up form; without [code] the server may first text a code to confirm the phone.
+  Future<RegistrationStep> register(RegistrationInput input, {String? code}) async {
+    final result = await _repository.register(input, code: code);
+    final session = result.session;
+    if (session == null) {
+      return PhoneCodeSent(resendAfterSeconds: result.resendAfter);
     }
-    return result;
+    await _signIn(session);
+    return const Registered();
   }
 
-  Future<void> register({
-    required String registrationToken,
-    required String name,
-    required String nationalId,
-    XFile? idImage,
-    XFile? licenseImage,
-  }) async {
-    final result = await _repository.register(
-      registrationToken: registrationToken,
-      name: name,
-      nationalId: nationalId,
-      idImage: idImage,
-      licenseImage: licenseImage,
-    );
-    await _signIn(result);
+  /// Returns the seconds to wait before asking for another code.
+  Future<int> forgotPassword(String phone) => _repository.forgotPassword(phone);
+
+  Future<void> resetPassword({required String phone, required String code, required String password}) async =>
+      _signIn(await _repository.resetPassword(phone: phone, code: code, password: password));
+
+  Future<void> changePassword({required String current, required String password}) =>
+      _repository.changePassword(current: current, password: password);
+
+  Future<void> updateProfile({String? nationalId, String? address}) async {
+    state = AsyncData(await _repository.updateProfile(nationalId: nationalId, address: address));
   }
 
   Future<void> uploadDocuments({XFile? idImage, XFile? licenseImage}) async {

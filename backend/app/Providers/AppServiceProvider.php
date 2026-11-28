@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Services\Sms\LogSmsSender;
 use App\Services\Sms\SmsSender;
+use App\Support\PhoneNumber;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -37,18 +38,13 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
 
-        // OTP SMS cost money and can be abused: per phone and per IP.
-        RateLimiter::for('otp', function (Request $request) {
-            $phone = (string) $request->input('phone');
-
-            return [
-                Limit::perMinute(1)->by('otp:phone:min:'.$phone),
-                Limit::perHour(5)->by('otp:phone:hour:'.$phone),
-                Limit::perHour(20)->by('otp:ip:'.$request->ip()),
-            ];
-        });
-
         RateLimiter::for('auth', fn (Request $request) => Limit::perMinute(10)->by('auth:'.$request->ip()));
+
+        // Password guessing: per phone and per IP. (SMS codes are limited inside OtpService.)
+        RateLimiter::for('login', fn (Request $request) => [
+            Limit::perMinute(5)->by('login:phone:'.PhoneNumber::normalize((string) $request->input('phone'))),
+            Limit::perMinute(20)->by('login:ip:'.$request->ip()),
+        ]);
 
         RateLimiter::for('webhooks', fn (Request $request) => Limit::perMinute(120)->by('webhook:'.$request->ip()));
 

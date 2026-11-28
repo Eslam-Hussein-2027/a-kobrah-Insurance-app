@@ -13,12 +13,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'العربية الكبرى للتأمين';
 
   @override
-  String get welcome => 'مرحبًا بك';
-
-  @override
-  String get loginSubtitle => 'سجّل الدخول برقم هاتفك لإدارة وثائق التأمين';
-
-  @override
   String get phoneLabel => 'رقم الهاتف';
 
   @override
@@ -53,12 +47,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get codeResent => 'تم إرسال رمز جديد';
 
   @override
-  String get registerTitle => 'إكمال التسجيل';
-
-  @override
-  String get registerSubtitle => 'تم التحقق من رقم هاتفك. أكمل بياناتك لإنشاء الحساب.';
-
-  @override
   String get fullName => 'الاسم الكامل';
 
   @override
@@ -69,22 +57,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get licenseImage => 'صورة رخصة القيادة';
-
-  @override
-  String get documentsOptionalHint =>
-      'يمكنك رفع المستندات الآن أو لاحقًا من «المزيد ← المعلومات الشخصية»، وهي مطلوبة قبل إصدار وثيقة التأمين الإجباري.';
-
-  @override
-  String get chooseImage => 'اختيار صورة';
-
-  @override
-  String get imageSelected => 'تم اختيار الصورة';
-
-  @override
-  String get createAccount => 'إنشاء الحساب';
-
-  @override
-  String get registrationExpired => 'انتهت صلاحية جلسة التسجيل، يرجى طلب رمز تحقق جديد.';
 
   @override
   String get camera => 'الكاميرا';
@@ -925,4 +897,104 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get completeDetails => 'إكمال البيانات';
+
+  @override
+  String get loginTitle => 'تسجيل الدخول';
+
+  @override
+  String get loginWelcomeBack => 'مرحبًا بعودتك إلى التطبيق';
+
+  @override
+  String get phoneHint => 'أدخل رقم الهاتف';
+
+  @override
+  String get phoneHelper => 'أدخل رقم الهاتف بدون رمز الدولة (أرقام فقط - يمكن استخدام الأرقام العربية أو الدولية)';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get passwordHint => 'أدخل كلمة المرور';
+
+  @override
+  String newPasswordHint(int min) {
+    return 'أدخل كلمة المرور ($min أحرف على الأقل)';
+  }
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get forgotPassword => 'هل نسيت كلمة المرور؟';
+
+  @override
+  String get loginButton => 'تسجيل دخول';
+
+  @override
+  String get newUserRegister => 'مستخدم جديد؟ سجّل الآن';
+
+  @override
+  String get signUpTitle => 'التسجيل';
+
+  @override
+  String get signUpSubtitle => 'املأ النموذج لإنشاء حساب';
+
+  @override
+  String get firstName => 'الإسم';
+
+  @override
+  String get lastName => 'اللقب';
+
+  @override
+  String get address => 'العنوان';
+
+  @override
+  String get signUpButton => 'تسجيل';
+
+  @override
+  String get haveAccountSignIn => 'هل لديك حساب؟ دخول';
+
+  @override
+  String passwordTooShort(int min) {
+    return 'كلمة المرور يجب أن تكون $min أحرف على الأقل';
+  }
+
+  @override
+  String get passwordsDontMatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get verifyPhoneTitle => 'تأكيد رقم الهاتف';
+
+  @override
+  String get resetPasswordTitle => 'استعادة كلمة المرور';
+
+  @override
+  String get resetPasswordSubtitle => 'أدخل رقم هاتفك المسجّل، وسنرسل لك رمز تحقق برسالة نصية لتعيين كلمة مرور جديدة.';
+
+  @override
+  String get setNewPassword => 'تعيين كلمة المرور';
+
+  @override
+  String get newPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get currentPassword => 'كلمة المرور الحالية';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get passwordChanged => 'تم تغيير كلمة المرور';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get nationalNumberHint => '12 رقمًا يبدأ بـ 1 أو 2';
+
+  @override
+  String get profileSaved => 'تم حفظ معلوماتك الشخصية';
 }

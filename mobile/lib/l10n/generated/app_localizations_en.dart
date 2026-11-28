@@ -13,12 +13,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Alarabia Kobrah Insurance';
 
   @override
-  String get welcome => 'Welcome';
-
-  @override
-  String get loginSubtitle => 'Sign in with your phone number to manage your insurance';
-
-  @override
   String get phoneLabel => 'Phone number';
 
   @override
@@ -53,12 +47,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get codeResent => 'A new code has been sent';
 
   @override
-  String get registerTitle => 'Complete registration';
-
-  @override
-  String get registerSubtitle => 'Your phone number is verified. Complete your details to create the account.';
-
-  @override
   String get fullName => 'Full name';
 
   @override
@@ -69,22 +57,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get licenseImage => 'Driving license image';
-
-  @override
-  String get documentsOptionalHint =>
-      'You can upload the documents now or later from More → Personal information. They are required before issuing a compulsory policy.';
-
-  @override
-  String get chooseImage => 'Choose image';
-
-  @override
-  String get imageSelected => 'Image selected';
-
-  @override
-  String get createAccount => 'Create account';
-
-  @override
-  String get registrationExpired => 'Registration session expired. Please request a new code.';
 
   @override
   String get camera => 'Camera';
@@ -915,4 +887,105 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completeDetails => 'Complete details';
+
+  @override
+  String get loginTitle => 'Sign in';
+
+  @override
+  String get loginWelcomeBack => 'Welcome back to the app';
+
+  @override
+  String get phoneHint => 'Enter your phone number';
+
+  @override
+  String get phoneHelper => 'Enter the number without the country code (digits only; Arabic or Western digits)';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get passwordHint => 'Enter your password';
+
+  @override
+  String newPasswordHint(int min) {
+    return 'Enter a password (at least $min characters)';
+  }
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get forgotPassword => 'Forgot your password?';
+
+  @override
+  String get loginButton => 'Sign in';
+
+  @override
+  String get newUserRegister => 'New here? Create an account';
+
+  @override
+  String get signUpTitle => 'Sign up';
+
+  @override
+  String get signUpSubtitle => 'Fill in the form to create an account';
+
+  @override
+  String get firstName => 'First name';
+
+  @override
+  String get lastName => 'Last name';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get signUpButton => 'Sign up';
+
+  @override
+  String get haveAccountSignIn => 'Already have an account? Sign in';
+
+  @override
+  String passwordTooShort(int min) {
+    return 'The password must be at least $min characters';
+  }
+
+  @override
+  String get passwordsDontMatch => 'The passwords do not match';
+
+  @override
+  String get verifyPhoneTitle => 'Confirm your phone number';
+
+  @override
+  String get resetPasswordTitle => 'Reset password';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Enter your registered phone number and we will text you a code to set a new password.';
+
+  @override
+  String get setNewPassword => 'Set password';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get currentPassword => 'Current password';
+
+  @override
+  String get changePassword => 'Change password';
+
+  @override
+  String get passwordChanged => 'Password changed';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get nationalNumberHint => '12 digits starting with 1 or 2';
+
+  @override
+  String get profileSaved => 'Your personal information was saved';
 }

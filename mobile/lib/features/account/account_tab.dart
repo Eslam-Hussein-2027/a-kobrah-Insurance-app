@@ -103,6 +103,12 @@ class AccountTab extends ConsumerWidget {
                     title: l10n.aboutApp,
                     onTap: () => context.push('/account/about-app'),
                   ),
+                  NavRow(
+                    icon: Icons.lock_outline,
+                    roundIcon: true,
+                    title: l10n.changePassword,
+                    onTap: () => context.push('/account/password'),
+                  ),
                   const _LanguageRow(),
                   NavRow(
                     icon: Icons.qr_code_scanner,

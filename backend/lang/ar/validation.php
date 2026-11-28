@@ -202,6 +202,10 @@ return [
 
     'attributes' => [
         'name' => 'الاسم',
+        'first_name' => 'الإسم',
+        'last_name' => 'اللقب',
+        'address' => 'العنوان',
+        'current_password' => 'كلمة المرور الحالية',
         'phone' => 'رقم الهاتف',
         'national_id' => 'الرقم الوطني',
         'password' => 'كلمة المرور',

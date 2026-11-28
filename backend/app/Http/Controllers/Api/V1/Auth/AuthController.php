@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\Auth\StaffLoginRequest;
-use App\Http\Requests\Auth\VerifyOtpRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Responses\ApiResponse;
+use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Services\Auth\OtpService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,48 +21,73 @@ class AuthController extends Controller
     public function __construct(private readonly AuthService $auth) {}
 
     /**
-     * Existing user → logged in. New phone → registration_token for /auth/register.
+     * 202 + verification_required when an SMS code was sent (call again with "code"),
+     * 201 + token once the account exists.
      */
-    public function verifyOtp(VerifyOtpRequest $request): JsonResponse
-    {
-        $result = $this->auth->verifyOtp(
-            $request->validated('phone'),
-            $request->validated('code'),
-            $request->validated('device_name'),
-        );
-
-        if ($result['is_new_user']) {
-            return ApiResponse::success([
-                'is_new_user' => true,
-                'registration_token' => $result['registration_token'],
-                'expires_in' => $result['expires_in'],
-            ], __('messages.auth.complete_registration'));
-        }
-
-        return ApiResponse::success([
-            'is_new_user' => false,
-            'token' => $result['token'],
-            'token_type' => 'Bearer',
-            'user' => new UserResource($result['user']),
-        ], __('messages.auth.logged_in'));
-    }
-
     public function register(RegisterRequest $request): JsonResponse
     {
         $result = $this->auth->register(
-            $request->safe()->only(['registration_token', 'name', 'national_id', 'device_name']),
-            $request->file('id_image'),
-            $request->file('license_image'),
+            $request->safe()->only(['first_name', 'last_name', 'phone', 'address', 'password', 'device_name']),
+            $request->validated('code'),
+            $request->ip(),
         );
 
-        return ApiResponse::created([
-            'token' => $result['token'],
-            'token_type' => 'Bearer',
-            'user' => new UserResource($result['user']),
-        ], __('messages.auth.registered'));
+        if ($result['verification_required']) {
+            return ApiResponse::success([
+                'verification_required' => true,
+                'expires_in' => $result['expires_in'],
+                'resend_after' => $result['resend_after'],
+            ], __('messages.otp.sent'), 202);
+        }
+
+        return ApiResponse::created($this->session($result['token'], $result['user']), __('messages.auth.registered'));
     }
 
-    public function staffLogin(StaffLoginRequest $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
+    {
+        $result = $this->auth->login(
+            $request->validated('phone'),
+            $request->validated('password'),
+            $request->validated('device_name'),
+        );
+
+        return ApiResponse::success($this->session($result['token'], $result['user']), __('messages.auth.logged_in'));
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request, OtpService $otp): JsonResponse
+    {
+        $this->auth->sendPasswordResetCode($request->validated('phone'), $request->ip());
+
+        return ApiResponse::success([
+            'expires_in' => $otp->ttlMinutes() * 60,
+            'resend_after' => $otp->resendAfterSeconds(),
+        ], __('messages.auth.reset_code_sent'));
+    }
+
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $result = $this->auth->resetPassword(
+            $request->validated('phone'),
+            $request->validated('code'),
+            $request->validated('password'),
+            $request->validated('device_name'),
+        );
+
+        return ApiResponse::success($this->session($result['token'], $result['user']), __('messages.auth.password_reset'));
+    }
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $this->auth->changePassword(
+            $request->user(),
+            $request->validated('current_password'),
+            $request->validated('password'),
+        );
+
+        return ApiResponse::success(message: __('messages.auth.password_changed'));
+    }
+
+    public function staffLogin(LoginRequest $request): JsonResponse
     {
         $result = $this->auth->staffLogin(
             $request->validated('phone'),
@@ -66,11 +95,7 @@ class AuthController extends Controller
             $request->validated('device_name'),
         );
 
-        return ApiResponse::success([
-            'token' => $result['token'],
-            'token_type' => 'Bearer',
-            'user' => new UserResource($result['user']),
-        ], __('messages.auth.logged_in'));
+        return ApiResponse::success($this->session($result['token'], $result['user']), __('messages.auth.logged_in'));
     }
 
     public function me(Request $request): JsonResponse
@@ -83,5 +108,13 @@ class AuthController extends Controller
         $this->auth->logout($request->user());
 
         return ApiResponse::success(message: __('messages.auth.logged_out'));
+    }
+
+    /**
+     * @return array{token: string, token_type: string, user: UserResource}
+     */
+    private function session(string $token, User $user): array
+    {
+        return ['token' => $token, 'token_type' => 'Bearer', 'user' => new UserResource($user)];
     }
 }

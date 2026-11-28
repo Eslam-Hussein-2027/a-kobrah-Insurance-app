@@ -4,7 +4,7 @@ REST API for the insurance platform: customers buy compulsory motor insurance in
 (quote → pay → printable Arabic PDF with a QR code), and send requests for products that staff price
 manually (marine cargo; see Products for the ones switched off).
 
-**Status: Phase 1 complete** — auth (phone + OTP), roles, vehicles, quote engine, policy issuance,
+**Status: Phase 1 complete** — customer accounts (phone + password, SMS code at sign-up), roles, vehicles, quote engine, policy issuance,
 office-payment confirmation, PDF download, public policy verification (QR code on every policy).
 
 ## Stack
@@ -12,7 +12,7 @@ office-payment confirmation, PDF download, public policy verification (QR code o
 | Concern | Choice |
 |---|---|
 | Framework | Laravel 12 (same structure as Laravel 11 — see note below) |
-| Auth | Laravel Sanctum personal access tokens, phone + OTP |
+| Auth | Laravel Sanctum personal access tokens, phone + password; SMS codes confirm the phone and reset passwords |
 | Roles | spatie/laravel-permission (`customer`, `surveyor`, `admin`, `workshop`) |
 | PDF | mPDF via `carlos-meneses/laravel-mpdf`, Amiri font (OFL), RTL |
 | DB | MySQL in production, SQLite in-memory for tests |
@@ -49,8 +49,9 @@ php artisan queue:work   # generates policy PDFs after activation
 
 ### Demo accounts (seeded outside production)
 
-All accounts log in with OTP. With `OTP_FIXED_CODE=123456` in a **local** `.env`, the code is always `123456`;
-otherwise the code is written to `storage/logs/laravel.log` (the `log` SMS driver).
+The customer signs in to the app with password `123456`; staff sign in to the dashboard with `password`.
+SMS codes (sign-up, forgotten password): with `OTP_FIXED_CODE=123456` in a **local** `.env` the code is always
+`123456`; otherwise it is written to `storage/logs/laravel.log` (the `log` SMS driver).
 
 | Role | Phone |
 |---|---|
@@ -92,9 +93,12 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 
 | Method | Path | Auth | Description |
 |---|---|---|---|
-| POST | `/auth/otp/send` | public, 1/min/phone | Send OTP SMS |
-| POST | `/auth/otp/verify` | public | Existing user → `token`; new phone → `registration_token` |
-| POST | `/auth/register` | public | `registration_token`, `name`, `national_id`, `device_name`, optional `id_image`, `license_image` |
+| POST | `/auth/register` | public | `first_name`, `last_name`, `phone`, `address`, `password` (+ `_confirmation`), `device_name`; 202 + SMS code first, then again with `code` → 201 + `token` |
+| POST | `/auth/login` | public, 5/min/phone | Customer `phone` + `password` → `token` |
+| POST | `/auth/password/forgot` | public | `phone` → SMS code (same answer whether or not the number is registered) |
+| POST | `/auth/password/reset` | public | `phone`, `code`, new `password` → `token`; other devices signed out |
+| POST | `/auth/password/change` | any role | `current_password`, new `password`; other devices signed out |
+| PATCH | `/me` | customer | `national_id`, `address` (national number + both documents are needed before a policy) |
 | GET | `/auth/me` | any role | Current user (document URLs are temporary signed links) |
 | POST | `/auth/logout` | any role | Revoke current token |
 | GET | `/coverage-types` | public | Active coverage types |
@@ -141,23 +145,27 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET | `/admin/requests[/{id}]` | admin | `?status=&product=&search=`; details include signed links to attachments |
 | POST | `/admin/requests/{id}/respond` | admin | `status` (IN_REVIEW / QUOTED / COMPLETED / REJECTED), `reply`, `quoted_amount` |
 
-### Login / registration flow
+### Sign-up / sign-in flow
 
 ```
-POST /auth/otp/send     {phone}
-POST /auth/otp/verify   {phone, code, device_name}
-   ├─ existing user → { is_new_user: false, token, user }
-   └─ new phone     → { is_new_user: true, registration_token (30 min, single use) }
-POST /auth/register     {registration_token, name, national_id, device_name, id_image?, license_image?}
-   → { token, user }
+POST /auth/register  {first_name, last_name, phone, address, password, password_confirmation, device_name}
+   → 202 { verification_required: true, expires_in, resend_after }   (SMS code sent)
+POST /auth/register  {... same fields ..., code}
+   → 201 { token, user }
+POST /auth/login     {phone, password, device_name}  → { token, user }
 ```
 
-OTP codes are stored as HMAC hashes, expire after 5 minutes, and lock after 5 wrong attempts.
+Set `AUTH_VERIFY_PHONE=false` to create accounts without the SMS step (only until an SMS provider is
+connected: without it anyone could sign up with someone else's number). Accounts created before passwords
+existed have none; they use "forgot password" once.
+
+SMS codes are stored as HMAC hashes, expire after 5 minutes, lock after 5 wrong attempts, and are limited
+to one a minute and five an hour per phone (20 an hour per IP). Logins are limited to 5 a minute per phone.
 Localized for **Libya** (all values in `config/insurance.php` / `.env`):
 
 | Input | Rule |
 |---|---|
-| Phone | `09[1-5]XXXXXXX` (10 digits); `+218…`, `00218…`, spaces and dashes are converted to the local format |
+| Phone | `09[1-5]XXXXXXX` (10 digits); `+218…`, `00218…`, `9XXXXXXXX` (typed after the app's +218 box), spaces and dashes are converted to the local format |
 | National number | 12 digits, starts with 1 or 2 |
 | Plate | free format, e.g. `5-123456`; spaces/dashes ignored when comparing |
 | Currency | LYD (دينار ليبي) |

@@ -3,14 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_controller.dart';
+import '../features/auth/login_screen.dart';
 import '../features/auth/models.dart';
-import '../features/auth/otp_screen.dart';
-import '../features/auth/phone_screen.dart';
+import '../features/auth/phone_code_screen.dart';
 import '../features/auth/register_screen.dart';
+import '../features/auth/reset_password_screen.dart';
 import '../features/auth/splash_screen.dart';
 import '../features/catalog/product_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/account/about_app_screen.dart';
+import '../features/account/change_password_screen.dart';
 import '../features/account/company_pages.dart';
 import '../features/account/personal_info_screen.dart';
 import '../features/motor/motor_estimate_screen.dart';
@@ -30,7 +32,7 @@ import '../features/vehicles/vehicle.dart';
 import '../features/vehicles/vehicle_form_screen.dart';
 import '../features/verify/verify_policy_screen.dart';
 
-const _publicPaths = {'/login', '/login/otp', '/register', '/verify'};
+const _publicPaths = {'/login', '/register', '/register/verify', '/forgot-password', '/verify'};
 
 /// Pure redirect rule (unit-tested):
 /// - auth not resolved yet (or failed on startup) → splash
@@ -64,20 +66,20 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) => authRedirect(ref.read(authControllerProvider), state.matchedLocation),
     routes: [
       GoRoute(path: '/splash', builder: (_, _) => const SplashScreen()),
+      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
       GoRoute(
-        path: '/login',
-        builder: (_, _) => const PhoneScreen(),
+        path: '/register',
+        builder: (_, _) => const RegisterScreen(),
         routes: [
           GoRoute(
-            path: 'otp',
-            builder: (_, state) => OtpScreen(phone: state.uri.queryParameters['phone'] ?? ''),
+            path: 'verify',
+            // The form travels in memory only; after a reload start the sign-up again.
+            redirect: (_, state) => state.extra is RegistrationInput ? null : '/register',
+            builder: (_, state) => PhoneCodeScreen(input: state.extra! as RegistrationInput),
           ),
         ],
       ),
-      GoRoute(
-        path: '/register',
-        builder: (_, state) => RegisterScreen(registrationToken: state.extra as String? ?? ''),
-      ),
+      GoRoute(path: '/forgot-password', builder: (_, _) => const ResetPasswordScreen()),
       GoRoute(path: '/verify', builder: (_, _) => const VerifyPolicyScreen()),
       GoRoute(
         path: '/',
@@ -156,6 +158,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: 'account/about', builder: (_, _) => const CompanyTextScreen.about()),
           GoRoute(path: 'account/privacy', builder: (_, _) => const CompanyTextScreen.privacy()),
           GoRoute(path: 'account/about-app', builder: (_, _) => const AboutAppScreen()),
+          GoRoute(path: 'account/password', builder: (_, _) => const ChangePasswordScreen()),
         ],
       ),
     ],

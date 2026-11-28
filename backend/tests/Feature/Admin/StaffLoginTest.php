@@ -46,7 +46,7 @@ class StaffLoginTest extends TestCase
             ->assertJsonPath('errors.phone.0', 'رقم الهاتف أو كلمة المرور غير صحيحة.');
     }
 
-    public function test_customers_cannot_use_password_login(): void
+    public function test_customers_cannot_use_the_dashboard_login(): void
     {
         User::factory()->create(['phone' => '0911234567', 'password' => 'secret-123']);
 

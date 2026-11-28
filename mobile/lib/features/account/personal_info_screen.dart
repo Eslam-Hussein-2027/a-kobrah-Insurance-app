@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api/api_exception.dart';
 import '../../core/l10n.dart';
+import '../../core/text_input.dart';
 import '../../core/theme.dart';
 import '../../shared/image_picking.dart';
 import '../../shared/widgets.dart';
@@ -27,6 +29,8 @@ class PersonalInfoScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _UserCard(user: user),
+                  const SizedBox(height: 12),
+                  _DetailsForm(user: user),
                   const SizedBox(height: 12),
                   _DocumentsCard(user: user),
                 ],
@@ -66,8 +70,111 @@ class _UserCard extends StatelessWidget {
           ),
           const Divider(height: 24),
           InfoRow(label: l10n.phoneLabel, value: user.phone, ltr: true),
-          if (user.nationalId != null) InfoRow(label: l10n.nationalNumber, value: user.nationalId!, ltr: true),
         ],
+      ),
+    );
+  }
+}
+
+/// National number (printed on the policy) and address.
+class _DetailsForm extends ConsumerStatefulWidget {
+  const _DetailsForm({required this.user});
+
+  final AppUser user;
+
+  @override
+  ConsumerState<_DetailsForm> createState() => _DetailsFormState();
+}
+
+class _DetailsFormState extends ConsumerState<_DetailsForm> {
+  final _formKey = GlobalKey<FormState>();
+  late final _nationalId = TextEditingController(text: widget.user.nationalId);
+  late final _address = TextEditingController(text: widget.user.address);
+  bool _saving = false;
+  Map<String, String?> _errors = const {};
+
+  @override
+  void dispose() {
+    _nationalId.dispose();
+    _address.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final l10n = context.l10n;
+    setState(() {
+      _saving = true;
+      _errors = const {};
+    });
+    try {
+      await ref
+          .read(authControllerProvider.notifier)
+          .updateProfile(nationalId: toWesternDigits(_nationalId.text.trim()), address: _address.text.trim());
+      if (mounted) showMessage(context, l10n.profileSaved);
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(
+        () => _errors = {
+          for (final f in ['national_id', 'address']) f: e.fieldError(f),
+        },
+      );
+      if (e.fieldErrors.isEmpty) showMessage(context, errorMessage(context, e), isError: true);
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    String? required(String? value) => (value == null || value.trim().isEmpty) ? l10n.requiredField : null;
+
+    return SectionCard(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            LabeledField(
+              label: l10n.nationalNumber,
+              required: true,
+              child: TextFormField(
+                controller: _nationalId,
+                keyboardType: TextInputType.number,
+                textDirection: TextDirection.ltr,
+                maxLength: 12,
+                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9٠-٩۰-۹]'))],
+                decoration: InputDecoration(
+                  hintText: l10n.nationalNumberHint,
+                  counterText: '',
+                  errorText: _errors['national_id'],
+                  errorMaxLines: 3,
+                ),
+                validator: required,
+              ),
+            ),
+            LabeledField(
+              label: l10n.address,
+              required: true,
+              child: TextFormField(
+                controller: _address,
+                decoration: InputDecoration(hintText: l10n.address, errorText: _errors['address']),
+                validator: required,
+              ),
+            ),
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: FilledButton(
+                onPressed: _saving ? null : _save,
+                child: _saving
+                    ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                    : Text(l10n.save),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

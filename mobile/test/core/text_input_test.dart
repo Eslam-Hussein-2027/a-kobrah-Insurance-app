@@ -11,6 +11,8 @@ void main() {
         '+218 91-123 4567',
         '٠٩١١٢٣٤٥٦٧',
         '091 123 4567',
+        '911234567', // typed after the +218 box
+        '٩١١٢٣٤٥٦٧',
       ]) {
         expect(normalizeLibyanPhone(input), '0911234567', reason: input);
       }

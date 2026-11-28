@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\UserDocumentType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Profile\UpdateProfileRequest;
 use App\Http\Requests\Profile\UploadDocumentsRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Responses\ApiResponse;
@@ -12,6 +13,14 @@ use Illuminate\Http\JsonResponse;
 
 class ProfileController extends Controller
 {
+    public function update(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $user->update($request->validated());
+
+        return ApiResponse::success(new UserResource($user->refresh()), __('messages.profile.updated'));
+    }
+
     public function uploadDocuments(UploadDocumentsRequest $request, UserDocumentService $documents): JsonResponse
     {
         $user = $request->user();

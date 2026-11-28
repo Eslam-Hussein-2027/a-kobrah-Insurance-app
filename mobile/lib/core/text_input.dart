@@ -47,5 +47,10 @@ String normalizeLibyanPhone(String input) {
     phone = '0${phone.substring(3)}';
   }
 
+  // Typed after the "+218" box: 9 digits without the leading 0.
+  if (RegExp(r'^9\d{8}$').hasMatch(phone)) {
+    phone = '0$phone';
+  }
+
   return phone;
 }

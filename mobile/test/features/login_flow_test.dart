@@ -26,36 +26,66 @@ const _user = AppUser(
 );
 
 class FakeAuthRepository extends AuthRepository {
-  FakeAuthRepository({this.isNewUser = false}) : super(ApiClient(Dio()));
+  FakeAuthRepository() : super(ApiClient(Dio()));
 
-  final bool isNewUser;
-  final List<String> sentTo = [];
+  static const password = 'secret12';
+  static const code = '123456';
+
+  final List<String> logins = [];
+  final List<RegistrationInput> registrations = [];
+  final List<String> resets = [];
+
+  static const _wrongCode = ApiException(
+    ApiErrorKind.validation,
+    fieldErrors: {
+      'code': ['رمز التحقق غير صحيح أو منتهي الصلاحية.'],
+    },
+  );
 
   @override
-  Future<void> sendOtp(String phone) async {
-    if (phone.length != 10) {
+  Future<LoggedIn> login(String phone, String password) async {
+    logins.add(phone);
+    if (password != FakeAuthRepository.password) {
       throw const ApiException(
         ApiErrorKind.validation,
-        message: 'البيانات المدخلة غير صحيحة.',
         fieldErrors: {
-          'phone': ['رقم الهاتف غير صحيح'],
+          'phone': ['رقم الهاتف أو كلمة المرور غير صحيحة.'],
         },
       );
     }
-    sentTo.add(phone);
+    return const LoggedIn(token: 't', user: _user);
   }
 
   @override
-  Future<OtpVerification> verifyOtp(String phone, String code) async {
-    if (code != '123456') {
-      throw const ApiException(
-        ApiErrorKind.validation,
-        fieldErrors: {
-          'code': ['رمز التحقق غير صحيح أو منتهي الصلاحية.'],
-        },
-      );
-    }
-    return isNewUser ? const NeedsRegistration('reg-token') : const LoggedIn(token: 't', user: _user);
+  Future<({LoggedIn? session, int resendAfter})> register(RegistrationInput input, {String? code}) async {
+    registrations.add(input);
+    if (code == null) return (session: null, resendAfter: 60);
+    if (code != FakeAuthRepository.code) throw _wrongCode;
+    return (
+      session: LoggedIn(
+        token: 't',
+        user: AppUser(
+          id: 9,
+          name: '${input.firstName} ${input.lastName}',
+          phone: input.phone,
+          role: 'customer',
+          kycCompleted: false,
+          idImage: const DocumentStatus(uploaded: false),
+          licenseImage: const DocumentStatus(uploaded: false),
+        ),
+      ),
+      resendAfter: 0,
+    );
+  }
+
+  @override
+  Future<int> forgotPassword(String phone) async => 60;
+
+  @override
+  Future<LoggedIn> resetPassword({required String phone, required String code, required String password}) async {
+    if (code != FakeAuthRepository.code) throw _wrongCode;
+    resets.add('$phone:$password');
+    return const LoggedIn(token: 't', user: _user);
   }
 
   @override
@@ -116,9 +146,10 @@ class FakeCatalogRepository extends CatalogRepository {
   ];
 }
 
-Future<FakeAuthRepository> _pumpApp(WidgetTester tester, {bool isNewUser = false}) async {
-  final auth = FakeAuthRepository(isNewUser: isNewUser);
-  await tester.binding.setSurfaceSize(const Size(420, 900));
+Future<FakeAuthRepository> _pumpApp(WidgetTester tester) async {
+  final auth = FakeAuthRepository();
+  // Tall enough for the whole sign-up form without scrolling.
+  await tester.binding.setSurfaceSize(const Size(420, 1400));
   await tester.pumpWidget(
     ProviderScope(
       retry: (_, _) => null,
@@ -136,38 +167,46 @@ Future<FakeAuthRepository> _pumpApp(WidgetTester tester, {bool isNewUser = false
   return auth;
 }
 
+Finder _field(String hint) => find.widgetWithText(TextFormField, hint);
+
+Future<void> _signIn(
+  WidgetTester tester, {
+  String phone = '911234567',
+  String password = FakeAuthRepository.password,
+}) async {
+  await tester.enterText(find.byKey(const Key('phone-field')), phone);
+  await tester.enterText(find.byKey(const Key('password-field')), password);
+  await tester.tap(find.text('تسجيل دخول'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
-  testWidgets('signed-out user lands on the Arabic login screen (RTL)', (tester) async {
+  testWidgets('signed-out user lands on the Arabic sign-in screen (RTL)', (tester) async {
     await _pumpApp(tester);
 
-    expect(find.text('مرحبًا بك'), findsOneWidget);
-    expect(find.text('إرسال رمز التحقق'), findsOneWidget);
-    expect(Directionality.of(tester.element(find.text('مرحبًا بك'))), TextDirection.rtl);
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
+    expect(find.text('مرحبًا بعودتك إلى التطبيق'), findsOneWidget);
+    expect(find.text('+218'), findsOneWidget);
+    expect(find.text('هل نسيت كلمة المرور؟'), findsOneWidget);
+    expect(find.text('مستخدم جديد؟ سجّل الآن'), findsOneWidget);
+    expect(Directionality.of(tester.element(find.text('تسجيل الدخول'))), TextDirection.rtl);
   });
 
-  testWidgets('server field errors are shown under the phone field', (tester) async {
+  testWidgets('a wrong password shows the server message', (tester) async {
     await _pumpApp(tester);
 
-    await tester.enterText(find.byKey(const Key('phone-field')), '123');
-    await tester.tap(find.text('إرسال رمز التحقق'));
-    await tester.pumpAndSettle();
+    await _signIn(tester, password: 'nope');
 
-    expect(find.text('رقم الهاتف غير صحيح'), findsOneWidget);
+    expect(find.text('رقم الهاتف أو كلمة المرور غير صحيحة.'), findsOneWidget);
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
   });
 
-  testWidgets('existing customer: phone → OTP → home with products and uninsured vehicle', (tester) async {
+  testWidgets('existing customer: phone + password → home with products and uninsured vehicle', (tester) async {
     final auth = await _pumpApp(tester);
 
-    await tester.enterText(find.byKey(const Key('phone-field')), '+218 91 123 4567');
-    await tester.tap(find.text('إرسال رمز التحقق'));
-    await tester.pumpAndSettle();
+    await _signIn(tester, phone: '٩١١٢٣٤٥٦٧'); // after the +218 box, Arabic digits
 
-    expect(auth.sentTo, ['0911234567']);
-    expect(find.text('رمز التحقق'), findsOneWidget);
-
-    await tester.enterText(find.byKey(const Key('otp-field')), '123456');
-    await tester.pumpAndSettle();
-
+    expect(auth.logins, ['0911234567']);
     expect(find.text('محمد العميل'), findsOneWidget);
     expect(find.text('لا توجد وثيقة سارية'), findsOneWidget);
     expect(find.text('مركبة بدون تأمين'), findsOneWidget);
@@ -179,11 +218,7 @@ void main() {
 
   testWidgets('bottom bar has four tabs and opens "My account"', (tester) async {
     await _pumpApp(tester);
-    await tester.enterText(find.byKey(const Key('phone-field')), '0911234567');
-    await tester.tap(find.text('إرسال رمز التحقق'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('otp-field')), '123456');
-    await tester.pumpAndSettle();
+    await _signIn(tester);
 
     // Right to left: my insurance, vehicles, home, my account. No persons tab.
     final xs = [
@@ -210,29 +245,71 @@ void main() {
     expect(find.text('إصدار الوثيقة خلال دقائق بدون زيارة المكتب'), findsOneWidget);
   });
 
-  testWidgets('wrong OTP shows the server message', (tester) async {
-    await _pumpApp(tester);
+  testWidgets('sign-up: form → SMS code → signed in', (tester) async {
+    final auth = await _pumpApp(tester);
 
-    await tester.enterText(find.byKey(const Key('phone-field')), '0911234567');
-    await tester.tap(find.text('إرسال رمز التحقق'));
+    await tester.tap(find.text('مستخدم جديد؟ سجّل الآن'));
     await tester.pumpAndSettle();
+    expect(find.text('التسجيل'), findsOneWidget);
+    expect(find.text('املأ النموذج لإنشاء حساب'), findsOneWidget);
+
+    await tester.enterText(_field('الإسم'), 'سارة');
+    await tester.enterText(_field('اللقب'), 'المصراتي');
+    await tester.enterText(_field('أدخل رقم الهاتف'), '0921234567');
+    await tester.enterText(_field('العنوان'), 'مصراتة');
+    await tester.enterText(_field('أدخل كلمة المرور (6 أحرف على الأقل)'), 'abc');
+    await tester.enterText(_field('تأكيد كلمة المرور'), 'abd');
+    await tester.tap(find.text('تسجيل'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('كلمة المرور يجب أن تكون 6 أحرف على الأقل'), findsOneWidget);
+    expect(find.text('كلمتا المرور غير متطابقتين'), findsOneWidget);
+    expect(auth.registrations, isEmpty);
+
+    await tester.enterText(_field('أدخل كلمة المرور (6 أحرف على الأقل)'), 'secret12');
+    await tester.enterText(_field('تأكيد كلمة المرور'), 'secret12');
+    await tester.tap(find.text('تسجيل'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تأكيد رقم الهاتف'), findsOneWidget);
+    expect(auth.registrations.single.toJson(), {
+      'first_name': 'سارة',
+      'last_name': 'المصراتي',
+      'phone': '0921234567',
+      'address': 'مصراتة',
+      'password': 'secret12',
+      'password_confirmation': 'secret12',
+    });
 
     await tester.enterText(find.byKey(const Key('otp-field')), '000000');
     await tester.pumpAndSettle();
-
     expect(find.text('رمز التحقق غير صحيح أو منتهي الصلاحية.'), findsOneWidget);
-  });
 
-  testWidgets('new phone number is sent to registration', (tester) async {
-    await _pumpApp(tester, isNewUser: true);
-
-    await tester.enterText(find.byKey(const Key('phone-field')), '0911234567');
-    await tester.tap(find.text('إرسال رمز التحقق'));
-    await tester.pumpAndSettle();
     await tester.enterText(find.byKey(const Key('otp-field')), '123456');
     await tester.pumpAndSettle();
 
-    expect(find.text('إكمال التسجيل'), findsOneWidget);
-    expect(find.text('الرقم الوطني'), findsOneWidget);
+    expect(find.text('سارة المصراتي'), findsOneWidget); // greeting on the home screen
+    expect(find.text('الرئيسية'), findsOneWidget);
+  });
+
+  testWidgets('forgotten password: phone → code + new password → signed in', (tester) async {
+    final auth = await _pumpApp(tester);
+
+    await tester.tap(find.text('هل نسيت كلمة المرور؟'));
+    await tester.pumpAndSettle();
+    expect(find.text('استعادة كلمة المرور'), findsOneWidget);
+
+    await tester.enterText(_field('أدخل رقم الهاتف'), '0911234567');
+    await tester.tap(find.text('إرسال رمز التحقق'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('otp-field')), '123456');
+    await tester.enterText(_field('أدخل كلمة المرور (6 أحرف على الأقل)'), 'new-pass1');
+    await tester.enterText(_field('تأكيد كلمة المرور'), 'new-pass1');
+    await tester.tap(find.text('تعيين كلمة المرور'));
+    await tester.pumpAndSettle();
+
+    expect(auth.resets, ['0911234567:new-pass1']);
+    expect(find.text('محمد العميل'), findsOneWidget);
   });
 }

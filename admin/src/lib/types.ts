@@ -124,6 +124,7 @@ export interface Customer {
   name: string;
   phone: string;
   national_id: string | null;
+  address: string | null;
   is_active: boolean;
   kyc_completed: boolean;
   vehicles_count?: number;
