@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/l10n.dart';
 import '../core/theme.dart';
 
+export 'choice_field.dart';
 export 'formatters.dart';
 export 'ui.dart';
 

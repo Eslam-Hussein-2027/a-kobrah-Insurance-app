@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\LicensePurpose;
+use App\Enums\LicensingAuthority;
+use App\Enums\ManufactureCountry;
+use App\Enums\VehicleColor;
 use App\Exceptions\BusinessRuleException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Vehicle\StoreVehicleRequest;
@@ -11,6 +15,7 @@ use App\Http\Responses\ApiResponse;
 use App\Models\Vehicle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Lang;
 
 class VehicleController extends Controller
 {
@@ -19,6 +24,25 @@ class VehicleController extends Controller
         $vehicles = $request->user()->vehicles()->latest('id')->paginate(15);
 
         return ApiResponse::paginated($vehicles, VehicleResource::class);
+    }
+
+    /** Choices for the add / edit vehicle form. */
+    public function options(): JsonResponse
+    {
+        $labels = fn (array $cases) => array_map(fn ($case) => $case->toArray(), $cases);
+
+        return ApiResponse::success([
+            'makes' => array_map(fn (string $make) => [
+                'value' => $make,
+                'label' => Lang::has("vehicles.makes.{$make}") ? __("vehicles.makes.{$make}") : $make,
+            ], (array) config('vehicles.makes')),
+            'colors' => $labels(VehicleColor::cases()),
+            'countries' => $labels(ManufactureCountry::cases()),
+            'license_purposes' => $labels(LicensePurpose::cases()),
+            'licensing_authorities' => $labels(LicensingAuthority::cases()),
+            'years' => ['min' => (int) config('insurance.validation.min_vehicle_year'), 'max' => (int) now()->year + 1],
+            'seats' => ['min' => (int) config('vehicles.seats.min'), 'max' => (int) config('vehicles.seats.max')],
+        ]);
     }
 
     public function store(StoreVehicleRequest $request): JsonResponse

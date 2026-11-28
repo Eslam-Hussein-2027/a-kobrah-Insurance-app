@@ -42,6 +42,11 @@ class PolicyService
             throw new BusinessRuleException(__('messages.policy.kyc_required'));
         }
 
+        // The policy document prints the owner and registration details.
+        if (! $vehicle->hasRegistrationDetails()) {
+            throw new BusinessRuleException(__('messages.vehicle.details_missing'));
+        }
+
         $start = ($startDate ?? CarbonImmutable::today())->startOfDay();
         $end = $this->motorEndDate($start);
 

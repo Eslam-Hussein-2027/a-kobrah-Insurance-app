@@ -47,12 +47,12 @@
   "noVehiclesHint": "أضف مركبتك لتتمكن من تأمينها",
   "plateNo": "رقم اللوحة",
   "plateHint": "مثال: 5-123456",
-  "vin": "رقم الهيكل (الشاسيه)",
+  "vin": "رقم الهيكل",
   "vinHint": "17 حرفًا ورقمًا",
-  "make": "الماركة",
-  "model": "الموديل",
+  "make": "نوع المركبة",
+  "model": "الطراز",
   "year": "سنة الصنع",
-  "engineCc": "سعة المحرك",
+  "engineCc": "قوة المحرك",
   "ccUnit": "سي سي",
   "save": "حفظ",
   "delete": "حذف",
@@ -413,5 +413,44 @@
     }
   },
   "confirmPayment": "تأكيد الدفع",
-  "changeNumberOrResend": "تغيير الرقم أو إعادة إرسال الرمز"
+  "changeNumberOrResend": "تغيير الرقم أو إعادة إرسال الرمز",
+  "checkBeforeSending": "يرجى التأكد من صحة البيانات قبل إرسالها.",
+  "insuredDetails": "بيانات المؤمن",
+  "vehicleDetails": "بيانات المركبة",
+  "ownerName": "اسم المالك",
+  "ownerNameHint": "اسم مالك السيارة",
+  "ownerAddress": "عنوان المالك",
+  "ownerAddressHint": "عنوان مالك السيارة",
+  "vehicleColor": "لون المركبة",
+  "countryOfOrigin": "بلد الصنع",
+  "licensePurpose": "الغرض من الترخيص",
+  "seats": "عدد الركاب",
+  "metalPlate": "لوحة معدنية",
+  "licensingAuthority": "جهة الترخيص",
+  "tapToChoose": "انقر للاختيار",
+  "tapToChooseYear": "انقر لاختيار سنة الصنع",
+  "search": "بحث",
+  "useTypedValue": "استخدام «{value}»",
+  "@useTypedValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "noResults": "لا توجد نتائج",
+  "numberBetween": "أدخل رقمًا من {min} إلى {max}",
+  "@numberBetween": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "vehicleDetailsMissing": "بيانات المركبة غير مكتملة",
+  "vehicleDetailsMissingHint": "أكمل بيانات المالك والترخيص قبل إصدار الوثيقة، فهي تُطبع عليها.",
+  "completeDetails": "إكمال البيانات"
 }

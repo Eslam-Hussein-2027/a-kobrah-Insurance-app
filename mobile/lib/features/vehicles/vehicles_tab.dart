@@ -110,6 +110,8 @@ class _VehicleCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final policy = this.policy;
+    // Vehicles added before the registration details were asked: complete them before insuring.
+    final needsDetails = policy == null && !vehicle.detailsComplete;
     final (status, color) = switch (policy?.status) {
       PolicyStatus.active => (l10n.insuredUntil(formatDate(context, policy!.endDate)), AppColors.success),
       PolicyStatus.pendingPayment => (l10n.awaitingPayment, AppColors.warning),
@@ -134,9 +136,17 @@ class _VehicleCard extends ConsumerWidget {
                         style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        '${vehicle.engineCc} ${l10n.ccUnit}',
+                        ['${vehicle.engineCc} ${l10n.ccUnit}', ?vehicle.licensePurpose?.label].join(' · '),
                         style: const TextStyle(fontSize: 13, color: AppColors.muted),
                       ),
+                      if (needsDetails)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            l10n.vehicleDetailsMissing,
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.warning),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -176,8 +186,10 @@ class _VehicleCard extends ConsumerWidget {
                   policy == null
                       ? FilledButton(
                           style: FilledButton.styleFrom(minimumSize: const Size(0, 38)),
-                          onPressed: () => context.push('/motor/issue?vehicle=${vehicle.id}'),
-                          child: Text(l10n.insureItNow),
+                          onPressed: () => needsDetails
+                              ? context.push('/vehicles/${vehicle.id}/edit', extra: vehicle)
+                              : context.push('/motor/issue?vehicle=${vehicle.id}'),
+                          child: Text(needsDetails ? l10n.completeDetails : l10n.insureItNow),
                         )
                       : OutlinedButton(
                           style: OutlinedButton.styleFrom(minimumSize: const Size(0, 38)),

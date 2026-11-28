@@ -87,7 +87,7 @@ export function CustomerDetailsPage() {
             <EmptyState message="لا توجد مركبات" />
           ) : (
             <div className="-m-5">
-              <Table head={['رقم اللوحة', 'الماركة والموديل', 'سنة الصنع', 'المحرك']}>
+              <Table head={['رقم اللوحة', 'نوع المركبة والطراز', 'سنة الصنع', 'المالك', 'الترخيص']}>
                 {c.vehicles.map((v) => (
                   <tr key={v.id}>
                     <Td ltr>{v.plate_no}</Td>
@@ -95,7 +95,10 @@ export function CustomerDetailsPage() {
                       {v.make} {v.model}
                     </Td>
                     <Td ltr>{v.year}</Td>
-                    <Td ltr>{v.engine_cc}</Td>
+                    <Td>{v.owner_name ?? '—'}</Td>
+                    <Td>
+                      {v.license_purpose ? `${v.license_purpose.label} · ${v.licensing_authority?.label ?? ''}` : 'غير مكتملة'}
+                    </Td>
                   </tr>
                 ))}
               </Table>

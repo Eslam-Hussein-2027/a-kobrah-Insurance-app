@@ -77,6 +77,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         Route::middleware('role:'.UserRole::Customer->value)->group(function () {
             Route::post('me/documents', [ProfileController::class, 'uploadDocuments'])->name('me.documents');
 
+            Route::get('vehicles/options', [VehicleController::class, 'options'])->name('vehicles.options');
             Route::apiResource('vehicles', VehicleController::class);
 
             Route::post('quotes', [QuoteController::class, 'store'])->name('quotes.store');

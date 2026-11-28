@@ -16,12 +16,19 @@ class VehicleManagementTest extends TestCase
     private function payload(array $overrides = []): array
     {
         return [
+            'owner_name' => 'أحمد الشريف',
+            'owner_address' => 'بنغازي - الفويهات',
             'plate_no' => ' ٥ - ١٢٣٤٥٦ ',
             'vin' => 'jtdbr32e720123456',
             'make' => 'Toyota',
             'model' => 'Corolla',
             'year' => 2019,
             'engine_cc' => 1600,
+            'color' => 'white',
+            'country_of_origin' => 'japan',
+            'license_purpose' => 'private',
+            'seats' => '٥',
+            'licensing_authority' => 'benghazi',
             ...$overrides,
         ];
     }
@@ -35,9 +42,45 @@ class VehicleManagementTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('data.plate_no', '5-123456')
             ->assertJsonPath('data.vin', 'JTDBR32E720123456')
+            ->assertJsonPath('data.owner_name', 'أحمد الشريف')
+            ->assertJsonPath('data.color', ['value' => 'white', 'label' => 'أبيض'])
+            ->assertJsonPath('data.country_of_origin.label', 'اليابان')
+            ->assertJsonPath('data.license_purpose.label', 'خاصة')
+            ->assertJsonPath('data.seats', 5)
+            ->assertJsonPath('data.licensing_authority.label', 'مرور بنغازي')
+            ->assertJsonPath('data.details_complete', true)
             ->assertJsonPath('message', 'تمت إضافة المركبة بنجاح.');
 
-        $this->assertDatabaseHas('vehicles', ['user_id' => $user->id, 'vin' => 'JTDBR32E720123456']);
+        $this->assertDatabaseHas('vehicles', ['user_id' => $user->id, 'vin' => 'JTDBR32E720123456', 'seats' => 5]);
+    }
+
+    public function test_form_options_list_brands_and_registration_choices_in_arabic(): void
+    {
+        $this->actingAsUser($this->customer())
+            ->getJson('/api/v1/vehicles/options')
+            ->assertOk()
+            ->assertJsonPath('data.makes.0', ['value' => 'Toyota', 'label' => 'تويوتا'])
+            ->assertJsonPath('data.colors.0', ['value' => 'white', 'label' => 'أبيض'])
+            ->assertJsonPath('data.countries.0.label', 'اليابان')
+            ->assertJsonPath('data.license_purposes.1.label', 'أجرة (تاكسي)')
+            ->assertJsonPath('data.licensing_authorities.1.label', 'مرور بنغازي')
+            ->assertJsonPath('data.seats', ['min' => 1, 'max' => 60]);
+    }
+
+    public function test_registration_choices_must_be_from_the_lists(): void
+    {
+        $this->actingAsUser($this->customer())
+            ->postJson('/api/v1/vehicles', $this->payload(['color' => 'purple', 'seats' => 0, 'licensing_authority' => 'cairo']))
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['color', 'seats', 'licensing_authority']);
+    }
+
+    public function test_a_brand_that_is_not_listed_can_still_be_typed(): void
+    {
+        $this->actingAsUser($this->customer())
+            ->postJson('/api/v1/vehicles', $this->payload(['make' => 'Lada']))
+            ->assertCreated()
+            ->assertJsonPath('data.make', 'Lada');
     }
 
     public function test_vin_must_be_unique_and_valid(): void
@@ -47,7 +90,7 @@ class VehicleManagementTest extends TestCase
         $this->actingAsUser($this->customer())
             ->postJson('/api/v1/vehicles', $this->payload())
             ->assertUnprocessable()
-            ->assertJsonPath('errors.vin.0', 'رقم الشاسيه مسجل لمركبة أخرى.');
+            ->assertJsonPath('errors.vin.0', 'رقم الهيكل مسجل لمركبة أخرى.');
 
         $this->postJson('/api/v1/vehicles', $this->payload(['vin' => 'IOQ123']))
             ->assertUnprocessable()
@@ -60,7 +103,9 @@ class VehicleManagementTest extends TestCase
             ->postJson('/api/v1/vehicles', [])
             ->assertUnprocessable()
             ->assertJsonPath('errors.plate_no.0', 'حقل رقم اللوحة مطلوب.')
-            ->assertJsonPath('errors.engine_cc.0', 'حقل سعة المحرك مطلوب.');
+            ->assertJsonPath('errors.engine_cc.0', 'حقل قوة المحرك مطلوب.')
+            ->assertJsonPath('errors.owner_name.0', 'حقل اسم المالك مطلوب.')
+            ->assertJsonPath('errors.licensing_authority.0', 'حقل جهة الترخيص مطلوب.');
     }
 
     public function test_customer_lists_only_own_vehicles(): void

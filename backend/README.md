@@ -104,7 +104,8 @@ Base URL: `/api/v1`. Send `Authorization: Bearer <token>` for protected routes a
 | GET | `/verify` (web) | public | Verification page (form): policy number + plate number |
 | GET | `/verify/{policy_no}/{token}` (web) | public, 60/min/IP | Page opened by the **QR code** printed on the policy |
 | POST | `/me/documents` | customer | Upload `id_image` and/or `license_image` (multipart) |
-| GET/POST | `/vehicles` | customer | List (paginated) / create |
+| GET | `/vehicles/options` | customer | Form lists: brands (Arabic names), colours, countries of manufacture, licence purposes, licensing authorities, year and seat limits |
+| GET/POST | `/vehicles` | customer | List (paginated) / create: owner name and address, plate, VIN, make, model, year, engine, colour, country, licence purpose, seats, licensing authority |
 | GET/PATCH/DELETE | `/vehicles/{id}` | owner | Show / update / delete |
 | POST | `/quotes` | owner | `vehicle_id`, `coverage_type_id` → premium + factor breakdown (not saved) |
 | POST | `/quotes/estimate` | customer | "Know the price": `manufacture_year`, `engine_cc` (compulsory coverage by default) |

@@ -99,13 +99,15 @@ export function PolicyDetailsPage() {
           <Card title="المركبة">
             {p.vehicle && (
               <>
+                <Field label="اسم المالك">{p.vehicle.owner_name ?? '—'}</Field>
+                <Field label="عنوان المالك">{p.vehicle.owner_address ?? '—'}</Field>
                 <Field label="رقم اللوحة">
                   <span className="ltr">{p.vehicle.plate_no}</span>
                 </Field>
                 <Field label="رقم الهيكل">
                   <span className="ltr">{p.vehicle.vin}</span>
                 </Field>
-                <Field label="الماركة والموديل">
+                <Field label="نوع المركبة والطراز">
                   <span className="ltr">
                     {p.vehicle.make} {p.vehicle.model}
                   </span>
@@ -113,9 +115,14 @@ export function PolicyDetailsPage() {
                 <Field label="سنة الصنع">
                   <span className="ltr">{p.vehicle.year}</span>
                 </Field>
-                <Field label="سعة المحرك">
+                <Field label="قوة المحرك">
                   <span className="ltr">{p.vehicle.engine_cc}</span> سي سي
                 </Field>
+                <Field label="اللون">{p.vehicle.color?.label ?? '—'}</Field>
+                <Field label="بلد الصنع">{p.vehicle.country_of_origin?.label ?? '—'}</Field>
+                <Field label="الغرض من الترخيص">{p.vehicle.license_purpose?.label ?? '—'}</Field>
+                <Field label="عدد الركاب">{p.vehicle.seats ?? '—'}</Field>
+                <Field label="جهة الترخيص">{p.vehicle.licensing_authority?.label ?? '—'}</Field>
               </>
             )}
           </Card>

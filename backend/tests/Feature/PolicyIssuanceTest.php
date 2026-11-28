@@ -87,6 +87,22 @@ class PolicyIssuanceTest extends TestCase
             ->assertJsonPath('message', 'يرجى رفع صورة إثبات الهوية ورخصة القيادة قبل إصدار الوثيقة.');
     }
 
+    public function test_vehicles_added_before_the_registration_details_must_be_completed_first(): void
+    {
+        $this->vehicle->forceFill(['owner_name' => null, 'licensing_authority' => null])->save();
+
+        $this->createPolicy()
+            ->assertUnprocessable()
+            ->assertJsonPath('message', 'بيانات المركبة غير مكتملة. أكمل بيانات المالك والترخيص من «المركبات» ثم حاول مرة أخرى.');
+
+        $this->actingAsUser($this->customer)
+            ->patchJson("/api/v1/vehicles/{$this->vehicle->id}", ['owner_name' => 'محمد العميل', 'licensing_authority' => 'tripoli'])
+            ->assertOk()
+            ->assertJsonPath('data.details_complete', true);
+
+        $this->createPolicy()->assertCreated();
+    }
+
     public function test_overlapping_policies_for_the_same_vehicle_are_rejected(): void
     {
         $this->createPolicy()->assertCreated();

@@ -18,6 +18,9 @@ class VehiclesRepository {
       Vehicle.fromJson((await _api.patch('/vehicles/$id', data: input.toJson()))['data'] as Json);
 
   Future<void> delete(int id) => _api.delete('/vehicles/$id');
+
+  Future<VehicleOptions> options() async =>
+      VehicleOptions.fromJson((await _api.get('/vehicles/options'))['data'] as Json);
 }
 
 final vehiclesRepositoryProvider = Provider<VehiclesRepository>(
@@ -28,3 +31,6 @@ final vehiclesProvider = FutureProvider<List<Vehicle>>((ref) {
   ref.watch(currentUserIdProvider);
   return ref.watch(vehiclesRepositoryProvider).list();
 });
+
+/// Brands, colours, countries, licence purposes and authorities for the vehicle form.
+final vehicleOptionsProvider = FutureProvider<VehicleOptions>((ref) => ref.watch(vehiclesRepositoryProvider).options());

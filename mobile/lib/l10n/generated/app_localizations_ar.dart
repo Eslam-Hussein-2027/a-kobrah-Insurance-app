@@ -114,22 +114,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get plateHint => 'مثال: 5-123456';
 
   @override
-  String get vin => 'رقم الهيكل (الشاسيه)';
+  String get vin => 'رقم الهيكل';
 
   @override
   String get vinHint => '17 حرفًا ورقمًا';
 
   @override
-  String get make => 'الماركة';
+  String get make => 'نوع المركبة';
 
   @override
-  String get model => 'الموديل';
+  String get model => 'الطراز';
 
   @override
   String get year => 'سنة الصنع';
 
   @override
-  String get engineCc => 'سعة المحرك';
+  String get engineCc => 'قوة المحرك';
 
   @override
   String get ccUnit => 'سي سي';
@@ -855,4 +855,74 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get changeNumberOrResend => 'تغيير الرقم أو إعادة إرسال الرمز';
+
+  @override
+  String get checkBeforeSending => 'يرجى التأكد من صحة البيانات قبل إرسالها.';
+
+  @override
+  String get insuredDetails => 'بيانات المؤمن';
+
+  @override
+  String get vehicleDetails => 'بيانات المركبة';
+
+  @override
+  String get ownerName => 'اسم المالك';
+
+  @override
+  String get ownerNameHint => 'اسم مالك السيارة';
+
+  @override
+  String get ownerAddress => 'عنوان المالك';
+
+  @override
+  String get ownerAddressHint => 'عنوان مالك السيارة';
+
+  @override
+  String get vehicleColor => 'لون المركبة';
+
+  @override
+  String get countryOfOrigin => 'بلد الصنع';
+
+  @override
+  String get licensePurpose => 'الغرض من الترخيص';
+
+  @override
+  String get seats => 'عدد الركاب';
+
+  @override
+  String get metalPlate => 'لوحة معدنية';
+
+  @override
+  String get licensingAuthority => 'جهة الترخيص';
+
+  @override
+  String get tapToChoose => 'انقر للاختيار';
+
+  @override
+  String get tapToChooseYear => 'انقر لاختيار سنة الصنع';
+
+  @override
+  String get search => 'بحث';
+
+  @override
+  String useTypedValue(String value) {
+    return 'استخدام «$value»';
+  }
+
+  @override
+  String get noResults => 'لا توجد نتائج';
+
+  @override
+  String numberBetween(int min, int max) {
+    return 'أدخل رقمًا من $min إلى $max';
+  }
+
+  @override
+  String get vehicleDetailsMissing => 'بيانات المركبة غير مكتملة';
+
+  @override
+  String get vehicleDetailsMissingHint => 'أكمل بيانات المالك والترخيص قبل إصدار الوثيقة، فهي تُطبع عليها.';
+
+  @override
+  String get completeDetails => 'إكمال البيانات';
 }

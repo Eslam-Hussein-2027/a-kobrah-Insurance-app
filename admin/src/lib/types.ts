@@ -25,6 +25,15 @@ export interface Vehicle {
   model: string;
   year: number;
   engine_cc: number;
+  /** Registration details: null for vehicles added before they were asked. */
+  owner_name: string | null;
+  owner_address: string | null;
+  color: EnumValue | null;
+  country_of_origin: EnumValue | null;
+  license_purpose: EnumValue | null;
+  seats: number | null;
+  licensing_authority: EnumValue | null;
+  details_complete: boolean;
 }
 
 export interface CoverageType {

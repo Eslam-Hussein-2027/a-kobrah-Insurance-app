@@ -21,7 +21,23 @@ describe('policySubject', () => {
     const policy: AdminPolicy = {
       ...base,
       product: { value: 'motor', label: 'التأمين الإجباري' },
-      vehicle: { id: 1, plate_no: '5-123456', vin: 'X', make: 'Toyota', model: 'Corolla', year: 2019, engine_cc: 1600 },
+      vehicle: {
+        id: 1,
+        plate_no: '5-123456',
+        vin: 'X',
+        make: 'Toyota',
+        model: 'Corolla',
+        year: 2019,
+        engine_cc: 1600,
+        owner_name: 'أحمد الشريف',
+        owner_address: 'بنغازي',
+        color: { value: 'white', label: 'أبيض' },
+        country_of_origin: { value: 'japan', label: 'اليابان' },
+        license_purpose: { value: 'private', label: 'خاصة' },
+        seats: 5,
+        licensing_authority: { value: 'benghazi', label: 'مرور بنغازي' },
+        details_complete: true,
+      },
     };
     expect(policySubject(policy)).toBe('5-123456 · Toyota Corolla');
   });

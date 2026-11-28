@@ -69,6 +69,7 @@ return [
         'not_owner' => 'This vehicle is not registered to you.',
         'locked_by_policy' => 'A vehicle with an active or pending policy cannot be modified.',
         'has_policies' => 'A vehicle with insurance policies cannot be deleted.',
+        'details_missing' => 'Vehicle details are incomplete. Complete the owner and registration details in Vehicles, then try again.',
     ],
 
     'quote' => [

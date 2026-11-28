@@ -129,7 +129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get year => 'Year';
 
   @override
-  String get engineCc => 'Engine (cc)';
+  String get engineCc => 'Engine size';
 
   @override
   String get ccUnit => 'cc';
@@ -844,4 +844,75 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeNumberOrResend => 'Change number or resend the code';
+
+  @override
+  String get checkBeforeSending => 'Please check the details before sending them.';
+
+  @override
+  String get insuredDetails => 'Insured details';
+
+  @override
+  String get vehicleDetails => 'Vehicle details';
+
+  @override
+  String get ownerName => 'Owner name';
+
+  @override
+  String get ownerNameHint => 'Vehicle owner\'s name';
+
+  @override
+  String get ownerAddress => 'Owner address';
+
+  @override
+  String get ownerAddressHint => 'Vehicle owner\'s address';
+
+  @override
+  String get vehicleColor => 'Colour';
+
+  @override
+  String get countryOfOrigin => 'Country of manufacture';
+
+  @override
+  String get licensePurpose => 'Licensed for';
+
+  @override
+  String get seats => 'Seats';
+
+  @override
+  String get metalPlate => 'Plate number';
+
+  @override
+  String get licensingAuthority => 'Licensing authority';
+
+  @override
+  String get tapToChoose => 'Tap to choose';
+
+  @override
+  String get tapToChooseYear => 'Tap to choose the year';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String useTypedValue(String value) {
+    return 'Use “$value”';
+  }
+
+  @override
+  String get noResults => 'No results';
+
+  @override
+  String numberBetween(int min, int max) {
+    return 'Enter a number from $min to $max';
+  }
+
+  @override
+  String get vehicleDetailsMissing => 'Vehicle details are incomplete';
+
+  @override
+  String get vehicleDetailsMissingHint =>
+      'Complete the owner and registration details before issuing; they are printed on the policy.';
+
+  @override
+  String get completeDetails => 'Complete details';
 }

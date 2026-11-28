@@ -23,7 +23,8 @@ Travel insurance and the People screens stay in the code but are reached only wh
 | Request form | Built from the product's fields sent by the API (text, number, date, vehicle), notes and photo attachments |
 | My insurance | Policies (all / active) and requests with their status; request details show the company's reply and price offer |
 | Policy details | **Pay online** (provider page, status re-checked when the customer returns) or at the office; cancel; PDF download; **verification QR code** |
-| Vehicles | Vehicles with their insurance status, "Insure it now", edit / delete |
+| Vehicles | Vehicles with their insurance status, "Insure it now", edit / delete. Vehicles added before the registration details were asked show "complete details" instead |
+| Add / edit vehicle | Notice, then **insured details** (owner name prefilled, address) and **vehicle details**: make (list with search, or type another brand), model, colour, engine, country of manufacture, year, licence purpose, seats, plate, VIN, licensing authority. Lists come from `GET /vehicles/options` |
 | My account | Profile card, shortcuts (privacy, contact, about us), branches and agents, personal information and documents, version, about the app, language, policy verification, logout |
 | Verify a policy | Public check by policy number and plate number. No login needed |
 

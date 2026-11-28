@@ -52,7 +52,9 @@ class _MotorIssueScreenState extends ConsumerState<MotorIssueScreen> {
     };
     final available = (vehicles.asData?.value ?? const <Vehicle>[]).where((v) => !blocking.containsKey(v.id));
     final selectedId = _vehicleId ?? available.firstOrNull?.id;
-    final canContinue = selectedId != null && !blocking.containsKey(selectedId);
+    final selected = vehicles.asData?.value.where((v) => v.id == selectedId).firstOrNull;
+    final needsDetails = selected != null && !selected.detailsComplete;
+    final canContinue = selectedId != null && !blocking.containsKey(selectedId) && !needsDetails;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.motorIssueTitle)),
@@ -91,6 +93,19 @@ class _MotorIssueScreenState extends ConsumerState<MotorIssueScreen> {
                     ],
                   ),
                 ),
+                if (needsDetails) ...[
+                  NoticeBanner(
+                    icon: Icons.edit_note,
+                    title: l10n.vehicleDetailsMissing,
+                    message: l10n.vehicleDetailsMissingHint,
+                    action: FilledButton(
+                      style: FilledButton.styleFrom(minimumSize: const Size(0, 38)),
+                      onPressed: () => context.push('/vehicles/${selected.id}/edit', extra: selected),
+                      child: Text(l10n.completeDetails),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
                 OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(foregroundColor: AppColors.navy),
                   onPressed: () => context.push('/vehicles/new'),
@@ -107,7 +122,7 @@ class _MotorIssueScreenState extends ConsumerState<MotorIssueScreen> {
                 const SizedBox(height: 8),
                 FieldBox(label: l10n.policyDuration, value: l10n.oneYear),
                 const SizedBox(height: 8),
-                FieldBox(label: l10n.insuredPerson, value: user?.name ?? ''),
+                FieldBox(label: l10n.insuredPerson, value: selected?.ownerName ?? user?.name ?? ''),
               ],
             ),
           ),

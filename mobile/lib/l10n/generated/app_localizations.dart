@@ -293,7 +293,7 @@ abstract class AppLocalizations {
   /// No description provided for @vin.
   ///
   /// In ar, this message translates to:
-  /// **'رقم الهيكل (الشاسيه)'**
+  /// **'رقم الهيكل'**
   String get vin;
 
   /// No description provided for @vinHint.
@@ -305,13 +305,13 @@ abstract class AppLocalizations {
   /// No description provided for @make.
   ///
   /// In ar, this message translates to:
-  /// **'الماركة'**
+  /// **'نوع المركبة'**
   String get make;
 
   /// No description provided for @model.
   ///
   /// In ar, this message translates to:
-  /// **'الموديل'**
+  /// **'الطراز'**
   String get model;
 
   /// No description provided for @year.
@@ -323,7 +323,7 @@ abstract class AppLocalizations {
   /// No description provided for @engineCc.
   ///
   /// In ar, this message translates to:
-  /// **'سعة المحرك'**
+  /// **'قوة المحرك'**
   String get engineCc;
 
   /// No description provided for @ccUnit.
@@ -1609,6 +1609,138 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تغيير الرقم أو إعادة إرسال الرمز'**
   String get changeNumberOrResend;
+
+  /// No description provided for @checkBeforeSending.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى التأكد من صحة البيانات قبل إرسالها.'**
+  String get checkBeforeSending;
+
+  /// No description provided for @insuredDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات المؤمن'**
+  String get insuredDetails;
+
+  /// No description provided for @vehicleDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات المركبة'**
+  String get vehicleDetails;
+
+  /// No description provided for @ownerName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المالك'**
+  String get ownerName;
+
+  /// No description provided for @ownerNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم مالك السيارة'**
+  String get ownerNameHint;
+
+  /// No description provided for @ownerAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان المالك'**
+  String get ownerAddress;
+
+  /// No description provided for @ownerAddressHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان مالك السيارة'**
+  String get ownerAddressHint;
+
+  /// No description provided for @vehicleColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'لون المركبة'**
+  String get vehicleColor;
+
+  /// No description provided for @countryOfOrigin.
+  ///
+  /// In ar, this message translates to:
+  /// **'بلد الصنع'**
+  String get countryOfOrigin;
+
+  /// No description provided for @licensePurpose.
+  ///
+  /// In ar, this message translates to:
+  /// **'الغرض من الترخيص'**
+  String get licensePurpose;
+
+  /// No description provided for @seats.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد الركاب'**
+  String get seats;
+
+  /// No description provided for @metalPlate.
+  ///
+  /// In ar, this message translates to:
+  /// **'لوحة معدنية'**
+  String get metalPlate;
+
+  /// No description provided for @licensingAuthority.
+  ///
+  /// In ar, this message translates to:
+  /// **'جهة الترخيص'**
+  String get licensingAuthority;
+
+  /// No description provided for @tapToChoose.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقر للاختيار'**
+  String get tapToChoose;
+
+  /// No description provided for @tapToChooseYear.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقر لاختيار سنة الصنع'**
+  String get tapToChooseYear;
+
+  /// No description provided for @search.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحث'**
+  String get search;
+
+  /// No description provided for @useTypedValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدام «{value}»'**
+  String useTypedValue(String value);
+
+  /// No description provided for @noResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد نتائج'**
+  String get noResults;
+
+  /// No description provided for @numberBetween.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقمًا من {min} إلى {max}'**
+  String numberBetween(int min, int max);
+
+  /// No description provided for @vehicleDetailsMissing.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات المركبة غير مكتملة'**
+  String get vehicleDetailsMissing;
+
+  /// No description provided for @vehicleDetailsMissingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل بيانات المالك والترخيص قبل إصدار الوثيقة، فهي تُطبع عليها.'**
+  String get vehicleDetailsMissingHint;
+
+  /// No description provided for @completeDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'إكمال البيانات'**
+  String get completeDetails;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
