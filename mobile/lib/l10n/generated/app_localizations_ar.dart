@@ -322,9 +322,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tabMyInsurance => 'تأميناتي';
 
   @override
-  String get tabPersons => 'الأشخاص';
-
-  @override
   String get tabAccount => 'حسابي';
 
   @override
@@ -624,15 +621,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get addPassport => 'إضافة رقم الجواز';
-
-  @override
-  String get personsHint => 'تختارهم مباشرة عند إصدار تأمين السفر بدون إعادة إدخال البيانات.';
-
-  @override
-  String get noPersons => 'لم تضف أي شخص بعد';
-
-  @override
-  String get noPersonsHint => 'أضف نفسك وأفراد عائلتك لتأمين سفرهم.';
 
   @override
   String get addPerson => 'إضافة شخص';

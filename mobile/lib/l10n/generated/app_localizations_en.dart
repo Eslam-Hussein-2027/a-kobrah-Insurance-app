@@ -322,9 +322,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabMyInsurance => 'My insurance';
 
   @override
-  String get tabPersons => 'People';
-
-  @override
   String get tabAccount => 'My account';
 
   @override
@@ -613,15 +610,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addPassport => 'Add passport number';
-
-  @override
-  String get personsHint => 'Pick them when issuing travel insurance, without typing their details again.';
-
-  @override
-  String get noPersons => 'No people added yet';
-
-  @override
-  String get noPersonsHint => 'Add yourself and your family to insure their trips.';
 
   @override
   String get addPerson => 'Add person';

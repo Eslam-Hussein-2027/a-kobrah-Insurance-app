@@ -14,10 +14,7 @@ class ProductCatalog
      */
     public function all(): array
     {
-        return array_map(
-            fn (string $code) => $this->describe(InsuranceProduct::from($code)),
-            (array) config('products.order'),
-        );
+        return array_map(fn (InsuranceProduct $product) => $this->describe($product), InsuranceProduct::offered());
     }
 
     /**

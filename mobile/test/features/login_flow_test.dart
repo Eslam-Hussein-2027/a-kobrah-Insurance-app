@@ -177,7 +177,7 @@ void main() {
     expect(find.text('بطلب عرض سعر'), findsOneWidget);
   });
 
-  testWidgets('bottom bar puts home in the middle and opens "My account"', (tester) async {
+  testWidgets('bottom bar has four tabs and opens "My account"', (tester) async {
     await _pumpApp(tester);
     await tester.enterText(find.byKey(const Key('phone-field')), '0911234567');
     await tester.tap(find.text('إرسال رمز التحقق'));
@@ -185,15 +185,15 @@ void main() {
     await tester.enterText(find.byKey(const Key('otp-field')), '123456');
     await tester.pumpAndSettle();
 
-    // Right to left: my insurance, vehicles, home, persons, my account.
+    // Right to left: my insurance, vehicles, home, my account. No persons tab.
     final xs = [
       'تأميناتي',
       'المركبات',
       'الرئيسية',
-      'الأشخاص',
       'حسابي',
     ].map((label) => tester.getCenter(find.text(label).last).dx).toList();
     expect(xs, [...xs]..sort((a, b) => b.compareTo(a)));
+    expect(find.text('الأشخاص'), findsNothing);
 
     await tester.tap(find.text('حسابي'));
     await tester.pumpAndSettle();

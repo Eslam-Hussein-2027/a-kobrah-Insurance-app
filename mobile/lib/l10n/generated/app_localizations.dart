@@ -698,12 +698,6 @@ abstract class AppLocalizations {
   /// **'تأميناتي'**
   String get tabMyInsurance;
 
-  /// No description provided for @tabPersons.
-  ///
-  /// In ar, this message translates to:
-  /// **'الأشخاص'**
-  String get tabPersons;
-
   /// No description provided for @tabAccount.
   ///
   /// In ar, this message translates to:
@@ -1189,24 +1183,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إضافة رقم الجواز'**
   String get addPassport;
-
-  /// No description provided for @personsHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'تختارهم مباشرة عند إصدار تأمين السفر بدون إعادة إدخال البيانات.'**
-  String get personsHint;
-
-  /// No description provided for @noPersons.
-  ///
-  /// In ar, this message translates to:
-  /// **'لم تضف أي شخص بعد'**
-  String get noPersons;
-
-  /// No description provided for @noPersonsHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'أضف نفسك وأفراد عائلتك لتأمين سفرهم.'**
-  String get noPersonsHint;
 
   /// No description provided for @addPerson.
   ///

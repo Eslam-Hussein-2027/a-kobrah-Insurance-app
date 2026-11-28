@@ -7,6 +7,10 @@
 | Structure only. Names and descriptions are translated in lang/{locale}/products.php
 | (product names in lang/{locale}/enums.php → insurance_product).
 |
+| offered   products the app shows, in display order. The others below stay defined but are
+|           switched off: hidden from the catalog and refused by the API (their routes answer 404).
+|           To bring one back, add its code here.
+|
 | instant   true  → issued and paid in the app (motor, travel).
 |           false → the customer sends a request; staff reply with a price or issue it.
 | icon      key the mobile app maps to an icon.
@@ -17,7 +21,7 @@
 
 return [
 
-    'order' => ['motor', 'travel', 'orange_card', 'foreign_workers', 'medical_liability', 'marine_cargo'],
+    'offered' => ['motor', 'marine_cargo'],
 
     'items' => [
 

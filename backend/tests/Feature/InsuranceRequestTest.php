@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\InsuranceRequestStatus;
 use App\Models\InsuranceRequest;
 use App\Models\User;
@@ -21,6 +22,9 @@ class InsuranceRequestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // These tests exercise switched-off products too.
+        config(['products.offered' => array_column(InsuranceProduct::cases(), 'value')]);
 
         $this->travelTo(CarbonImmutable::parse('2026-11-24 10:00:00'));
         Storage::fake((string) config('insurance.uploads.disk'));

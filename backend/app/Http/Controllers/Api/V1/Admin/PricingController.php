@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Admin;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PricingFactorType;
 use App\Enums\TravelZone;
 use App\Http\Controllers\Controller;
@@ -35,10 +36,13 @@ class PricingController extends Controller
             ),
             'factor_types' => array_map(fn (PricingFactorType $t) => $t->toArray(), PricingFactorType::cases()),
             'gaps' => $this->factors->gaps(),
-            'travel_rates' => TravelRateResource::collection(
-                TravelRate::query()->orderBy('zone')->orderBy('days')->get(),
-            ),
-            'travel_zones' => array_map(fn (TravelZone $zone) => $zone->toArray(), TravelZone::cases()),
+            // Only while travel insurance is offered; the dashboard hides the section otherwise.
+            ...(InsuranceProduct::Travel->isOffered() ? [
+                'travel_rates' => TravelRateResource::collection(
+                    TravelRate::query()->orderBy('zone')->orderBy('days')->get(),
+                ),
+                'travel_zones' => array_map(fn (TravelZone $zone) => $zone->toArray(), TravelZone::cases()),
+            ] : []),
         ]);
     }
 

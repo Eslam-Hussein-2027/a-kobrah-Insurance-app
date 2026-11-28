@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InsuranceProduct;
 use App\Enums\PersonRelationship;
 use App\Enums\TravelZone;
 use App\Models\InsuredPerson;
@@ -33,6 +34,9 @@ class TravelInsuranceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // These tests exercise switched-off products too.
+        config(['products.offered' => array_column(InsuranceProduct::cases(), 'value')]);
 
         $this->travelTo(CarbonImmutable::parse('2026-11-24 10:00:00'));
         $this->seed(TravelRateSeeder::class);

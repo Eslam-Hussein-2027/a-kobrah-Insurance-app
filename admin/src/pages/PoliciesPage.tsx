@@ -6,13 +6,8 @@ import { api } from '../lib/api';
 import { formatDate, formatMoney } from '../lib/format';
 import { useDebounced, useUrlFilters } from '../lib/hooks';
 import { policySubject } from '../lib/policy';
+import { useOfferedProducts } from '../lib/products';
 import type { AdminPolicy } from '../lib/types';
-
-const PRODUCTS = [
-  { value: '', label: 'كل المنتجات' },
-  { value: 'motor', label: 'التأمين الإجباري' },
-  { value: 'travel', label: 'تأمين السفر' },
-];
 
 const TABS = [
   { value: '', label: 'الكل' },
@@ -26,6 +21,8 @@ export function PoliciesPage() {
   const { values, page, set } = useUrlFilters(['status', 'product', 'search'] as const);
   const [search, setSearch] = useState(values.search);
   const debounced = useDebounced(search);
+  // Policies exist only for instant products; a product filter is useful when there are several.
+  const { instant } = useOfferedProducts();
 
   useEffect(() => {
     if (debounced !== values.search) set('search', debounced.trim());
@@ -60,18 +57,21 @@ export function PoliciesPage() {
               ))}
             </div>
             <div className="flex w-full flex-wrap gap-2 sm:w-auto">
-              <select
-                aria-label="المنتج"
-                value={values.product}
-                onChange={(e) => set('product', e.target.value)}
-                className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm"
-              >
-                {PRODUCTS.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+              {instant.length > 1 && (
+                <select
+                  aria-label="المنتج"
+                  value={values.product}
+                  onChange={(e) => set('product', e.target.value)}
+                  className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm"
+                >
+                  <option value="">كل المنتجات</option>
+                  {instant.map((p) => (
+                    <option key={p.code} value={p.code}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              )}
               <Input
                 className="w-full sm:w-80"
                 placeholder="رقم الوثيقة، اللوحة، الجواز، اسم أو هاتف العميل"

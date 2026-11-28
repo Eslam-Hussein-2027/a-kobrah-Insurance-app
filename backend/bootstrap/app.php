@@ -2,6 +2,7 @@
 
 use App\Exceptions\ApiExceptionRenderer;
 use App\Exceptions\BusinessRuleException;
+use App\Http\Middleware\EnsureProductOffered;
 use App\Http\Middleware\ForceJsonResponse;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -29,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+            'offered' => EnsureProductOffered::class,
         ]);
 
         // Pure token API: never redirect unauthenticated API calls to a login page.

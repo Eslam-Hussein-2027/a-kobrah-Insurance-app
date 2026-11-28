@@ -4,6 +4,7 @@ import { ConfirmPaymentButton } from '../components/policy-actions';
 import { Card, EmptyState, ErrorState, Loading, PageHeader, Table, Td } from '../components/ui';
 import { api } from '../lib/api';
 import { formatDate, formatMoney, monthName } from '../lib/format';
+import { useOfferedProducts } from '../lib/products';
 import type { AdminPolicy, Stats } from '../lib/types';
 
 function StatCard({ label, value, hint, tone = 'navy' }: { label: string; value: string | number; hint?: string; tone?: 'navy' | 'warn' | 'ok' | 'bad' }) {
@@ -46,6 +47,7 @@ export function OverviewPage() {
     queryKey: ['policies', { status: 'PENDING_PAYMENT', page: 1, search: '' }],
     queryFn: () => api<AdminPolicy[]>('/admin/policies', { query: { status: 'PENDING_PAYMENT' } }),
   });
+  const { instant, onRequest } = useOfferedProducts();
 
   if (stats.isPending) return <Loading />;
   if (stats.isError) return <ErrorState message={stats.error.message} onRetry={() => stats.refetch()} />;
@@ -66,15 +68,17 @@ export function OverviewPage() {
           <StatCard
             label="طلبات تحتاج رد"
             value={s.open_requests}
-            hint="البطاقة البرتقالية، العمالة، المسؤولية الطبية، البحري"
+            hint={onRequest.map((p) => p.name).join('، ')}
             tone={s.open_requests > 0 ? 'warn' : 'navy'}
           />
         </Link>
-        <StatCard
-          label="سارية حسب المنتج"
-          value={`${s.active_by_product.motor ?? 0} / ${s.active_by_product.travel ?? 0}`}
-          hint="التأمين الإجباري / تأمين السفر"
-        />
+        {instant.length > 1 && (
+          <StatCard
+            label="سارية حسب المنتج"
+            value={instant.map((p) => s.active_by_product[p.code] ?? 0).join(' / ')}
+            hint={instant.map((p) => p.name).join(' / ')}
+          />
+        )}
         <StatCard label="مبالغ تحتاج استرداد" value={s.refunds_required} tone={s.refunds_required > 0 ? 'bad' : 'navy'} />
       </div>
 

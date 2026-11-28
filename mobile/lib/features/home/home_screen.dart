@@ -4,15 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/l10n.dart';
 import '../../core/theme.dart';
 import '../account/account_tab.dart';
-import '../persons/persons_tab.dart';
 import '../policies/my_insurance_tab.dart';
 import '../policies/policies_repository.dart';
 import '../requests/requests_repository.dart';
 import '../vehicles/vehicles_tab.dart';
 import 'dashboard_tab.dart';
 
-/// In bar order (first item sits on the right in Arabic); home is in the middle.
-enum HomeTab { insurance, vehicles, home, persons, account }
+/// In bar order (first item sits on the right in Arabic).
+enum HomeTab { insurance, vehicles, home, account }
 
 class HomeTabController extends Notifier<HomeTab> {
   @override
@@ -23,7 +22,7 @@ class HomeTabController extends Notifier<HomeTab> {
 
 final homeTabProvider = NotifierProvider<HomeTabController, HomeTab>(HomeTabController.new);
 
-/// Signed-in shell: five tabs kept alive in an [IndexedStack].
+/// Signed-in shell: four tabs kept alive in an [IndexedStack].
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -34,7 +33,7 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       body: IndexedStack(
         index: tab.index,
-        children: const [MyInsuranceTab(), VehiclesTab(), DashboardTab(), PersonsTab(), AccountTab()],
+        children: const [MyInsuranceTab(), VehiclesTab(), DashboardTab(), AccountTab()],
       ),
       bottomNavigationBar: _BottomNav(
         selected: tab,
@@ -64,7 +63,6 @@ class _BottomNav extends StatelessWidget {
       HomeTab.insurance: (Icons.task_outlined, l10n.tabMyInsurance),
       HomeTab.vehicles: (Icons.directions_car_outlined, l10n.tabVehicles),
       HomeTab.home: (Icons.home_outlined, l10n.tabHome),
-      HomeTab.persons: (Icons.group_outlined, l10n.tabPersons),
       HomeTab.account: (Icons.person_outline, l10n.tabAccount),
     };
 

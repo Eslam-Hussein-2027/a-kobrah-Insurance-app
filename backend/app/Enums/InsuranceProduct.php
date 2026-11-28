@@ -31,13 +31,29 @@ enum InsuranceProduct: string
         return (bool) config("products.items.{$this->value}.instant", false);
     }
 
+    /** Switched on in config/products.php (offered). */
+    public function isOffered(): bool
+    {
+        return in_array($this->value, (array) config('products.offered'), true);
+    }
+
     /**
-     * Products that are handled through a request reviewed by staff.
+     * Products the app offers, in display order.
+     *
+     * @return list<self>
+     */
+    public static function offered(): array
+    {
+        return array_map(fn (string $code) => self::from($code), array_values((array) config('products.offered')));
+    }
+
+    /**
+     * Offered products that are handled through a request reviewed by staff.
      *
      * @return list<self>
      */
     public static function onRequest(): array
     {
-        return array_values(array_filter(self::cases(), fn (self $product) => ! $product->isInstant()));
+        return array_values(array_filter(self::offered(), fn (self $product) => ! $product->isInstant()));
     }
 }

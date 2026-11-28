@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InsuranceProduct;
 use App\Models\InsuredPerson;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,6 +17,9 @@ class InsuredPersonTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        // These tests exercise switched-off products too.
+        config(['products.offered' => array_column(InsuranceProduct::cases(), 'value')]);
 
         $this->customer = $this->customer();
     }

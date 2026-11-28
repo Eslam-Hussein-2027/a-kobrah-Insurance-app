@@ -1,8 +1,8 @@
 # Car Insurance API (Laravel)
 
-REST API for the insurance platform: customers buy compulsory motor and travel insurance in the app
+REST API for the insurance platform: customers buy compulsory motor insurance in the app
 (quote → pay → printable Arabic PDF with a QR code), and send requests for products that staff price
-manually (orange card, foreign workers, medical liability, marine cargo).
+manually (marine cargo; see Products for the ones switched off).
 
 **Status: Phase 1 complete** — auth (phone + OTP), roles, vehicles, quote engine, policy issuance,
 office-payment confirmation, PDF download, public policy verification (QR code on every policy).
@@ -292,13 +292,18 @@ The QR code is drawn by mPDF (`mpdf/qrcode`, error correction M). It is tested t
 
 ## Products
 
-Defined in `config/products.php` (structure) and `lang/{ar,en}/products.php` (text):
+Defined in `config/products.php` (structure) and `lang/{ar,en}/products.php` (text).
+Only the products listed in `offered` are shown and accepted; currently **motor** and **marine cargo**.
+The others stay in the code but are switched off: hidden from `/products`, request submissions for
+them fail validation, and their routes (`/persons`, `/travel/*`, `/admin/travel-rates`) answer 404.
+Adding a code back to `offered` switches it on again (the app and dashboard follow the catalog).
 
-| Product | Issuance | Flow |
-|---|---|---|
-| `motor` | instant | vehicle → quote → policy → payment → PDF + QR |
-| `travel` | instant | zone + trip length + saved persons → policy → payment → PDF + QR |
-| `orange_card`, `foreign_workers`, `medical_liability`, `marine_cargo` | request | form + attachments → staff reply (price offer / completed / rejected) |
+| Product | Offered | Issuance | Flow |
+|---|---|---|---|
+| `motor` | yes | instant | vehicle → quote → policy → payment → PDF + QR |
+| `marine_cargo` | yes | request | form + attachments → staff reply (price offer / completed / rejected) |
+| `travel` | no | instant | zone + trip length + saved persons → policy → payment → PDF + QR |
+| `orange_card`, `foreign_workers`, `medical_liability` | no | request | same as marine cargo |
 
 Policies belong to the customer (`policies.user_id`); `vehicle_id` / `coverage_type_id` are set for motor,
 `travel_zone` / `travel_days` and `policy_travellers` (snapshot of names and passports) for travel.

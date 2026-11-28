@@ -347,7 +347,7 @@ export function PricingPage() {
         ))}
       </div>
 
-      <TravelRatesSection rates={pricing.travel_rates} zones={pricing.travel_zones} />
+      {pricing.travel_rates && pricing.travel_zones && <TravelRatesSection rates={pricing.travel_rates} zones={pricing.travel_zones} />}
     </>
   );
 }

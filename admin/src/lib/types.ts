@@ -159,8 +159,9 @@ export interface Pricing {
   factors: PricingFactor[];
   factor_types: EnumValue<FactorType>[];
   gaps: Record<FactorType, string[]>;
-  travel_rates: TravelRate[];
-  travel_zones: EnumValue[];
+  /** Present only while travel insurance is offered. */
+  travel_rates?: TravelRate[];
+  travel_zones?: EnumValue[];
 }
 
 export type RequestStatus = 'SUBMITTED' | 'IN_REVIEW' | 'QUOTED' | 'COMPLETED' | 'REJECTED' | 'CANCELLED';

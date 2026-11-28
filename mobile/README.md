@@ -7,7 +7,10 @@ It talks to the Laravel API in [`../backend`](../backend/README.md).
 
 ## Screens
 
-Five tabs: **Home · My insurance · Vehicles · People · More**.
+Four tabs (right to left): **My insurance · Vehicles · Home · My account**.
+
+Products come from the API catalog: today **compulsory motor** (instant) and **marine cargo** (request).
+Travel insurance and the People screens stay in the code but are reached only when the API offers travel.
 
 | Screen | What it does |
 |---|---|
@@ -16,13 +19,12 @@ Five tabs: **Home · My insurance · Vehicles · People · More**.
 | Home | Current policy card (expiry, days left, QR), reminder for uninsured vehicles, all products, quick tools |
 | Product | What it covers, required documents, and two actions: **issue a policy / know the price** (request products: **request a policy / request a price offer**) |
 | Compulsory (motor) | Step 1 vehicle + start date → step 2 policy data + server price breakdown → policy created, step 3 payment on the policy page. Price calculator by manufacture year and engine size |
-| Travel | Destination zone, trip length, travel date and travellers (from People) → review → policy created → payment. Calculator by zone, trip length and number of travellers |
+| Travel (switched off) | Destination zone, trip length, travel date and travellers → review → policy created → payment. Calculator by zone, trip length and number of travellers |
 | Request form | Built from the product's fields sent by the API (text, number, date, vehicle), notes and photo attachments |
 | My insurance | Policies (all / active) and requests with their status; request details show the company's reply and price offer |
 | Policy details | **Pay online** (provider page, status re-checked when the customer returns) or at the office; cancel; PDF download; **verification QR code** |
 | Vehicles | Vehicles with their insurance status, "Insure it now", edit / delete |
-| People | The customer and family members (passport needed for travel) |
-| More | Personal information and documents, branches and agents, contact, about, privacy, language, policy verification, logout |
+| My account | Profile card, shortcuts (privacy, contact, about us), branches and agents, personal information and documents, version, about the app, language, policy verification, logout |
 | Verify a policy | Public check by policy number and plate number. No login needed |
 
 ## Run
@@ -93,7 +95,7 @@ lib/
     requests/                 dynamic request form, details, list tile
     policies/                 My insurance tab, policy tile, details (payment, QR, PDF)
     vehicles/                 list with insurance status, form, repository
-    persons/                  people list and form
+    persons/                  traveller form (used by travel only)
     account/                  My account tab, personal info and documents, branches, contact, about, privacy
     verify/                   public policy verification
   l10n/                       app_ar.arb (template), app_en.arb, generated/
