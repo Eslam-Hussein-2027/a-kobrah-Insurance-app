@@ -93,7 +93,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gallery => 'معرض الصور';
 
   @override
-  String get tabVehicles => 'مركباتي';
+  String get tabVehicles => 'المركبات';
 
   @override
   String get addVehicle => 'إضافة مركبة';
@@ -325,7 +325,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tabPersons => 'الأشخاص';
 
   @override
-  String get tabMore => 'المزيد';
+  String get tabAccount => 'حسابي';
 
   @override
   String get hello => 'مرحبًا،';
@@ -710,7 +710,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get documentsLaterHint => 'يمكنك إرسال الطلب الآن وإرفاق المستندات لاحقًا عند تواصل الموظف معك.';
 
   @override
-  String get addVehicleFirst => 'أضف مركبتك أولًا من «مركباتي».';
+  String get addVehicleFirst => 'أضف مركبتك أولًا من «المركبات».';
 
   @override
   String requestContactHint(String phone) {
@@ -814,7 +814,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aboutCompany => 'عن الشركة';
 
   @override
-  String get appVersion => 'إصدار التطبيق';
+  String get appVersion => 'الإصدار';
+
+  @override
+  String get aboutApp => 'عن التطبيق';
+
+  @override
+  String get aboutAppBody =>
+      'تطبيق العربية الكبرى للتأمين يتيح لك إصدار وثيقة التأمين من هاتفك ودفع قيمتها إلكترونيًا، وتبقى وثائقك معك في أي وقت مع رمز تحقق يثبت صحتها.';
+
+  @override
+  String get aboutAppFeatureIssue => 'إصدار الوثيقة خلال دقائق بدون زيارة المكتب';
+
+  @override
+  String get aboutAppFeaturePay => 'الدفع الإلكتروني عبر المحافظ وتطبيقات المصارف الليبية';
+
+  @override
+  String get aboutAppFeatureVerify => 'رمز QR على كل وثيقة يتحقق منه رجال المرور والجهات الرسمية';
+
+  @override
+  String get aboutAppFeatureSupport => 'متابعة طلباتك والتواصل مع خدمة العملاء من التطبيق';
+
+  @override
+  String aboutAppCopyright(int year) {
+    return '© $year العربية الكبرى للتأمين المساهمة';
+  }
 
   @override
   String get payWith => 'طريقة الدفع';

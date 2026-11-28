@@ -251,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @tabVehicles.
   ///
   /// In ar, this message translates to:
-  /// **'مركباتي'**
+  /// **'المركبات'**
   String get tabVehicles;
 
   /// No description provided for @addVehicle.
@@ -704,11 +704,11 @@ abstract class AppLocalizations {
   /// **'الأشخاص'**
   String get tabPersons;
 
-  /// No description provided for @tabMore.
+  /// No description provided for @tabAccount.
   ///
   /// In ar, this message translates to:
-  /// **'المزيد'**
-  String get tabMore;
+  /// **'حسابي'**
+  String get tabAccount;
 
   /// No description provided for @hello.
   ///
@@ -1349,7 +1349,7 @@ abstract class AppLocalizations {
   /// No description provided for @addVehicleFirst.
   ///
   /// In ar, this message translates to:
-  /// **'أضف مركبتك أولًا من «مركباتي».'**
+  /// **'أضف مركبتك أولًا من «المركبات».'**
   String get addVehicleFirst;
 
   /// No description provided for @requestContactHint.
@@ -1541,8 +1541,50 @@ abstract class AppLocalizations {
   /// No description provided for @appVersion.
   ///
   /// In ar, this message translates to:
-  /// **'إصدار التطبيق'**
+  /// **'الإصدار'**
   String get appVersion;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get aboutApp;
+
+  /// No description provided for @aboutAppBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطبيق العربية الكبرى للتأمين يتيح لك إصدار وثيقة التأمين من هاتفك ودفع قيمتها إلكترونيًا، وتبقى وثائقك معك في أي وقت مع رمز تحقق يثبت صحتها.'**
+  String get aboutAppBody;
+
+  /// No description provided for @aboutAppFeatureIssue.
+  ///
+  /// In ar, this message translates to:
+  /// **'إصدار الوثيقة خلال دقائق بدون زيارة المكتب'**
+  String get aboutAppFeatureIssue;
+
+  /// No description provided for @aboutAppFeaturePay.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدفع الإلكتروني عبر المحافظ وتطبيقات المصارف الليبية'**
+  String get aboutAppFeaturePay;
+
+  /// No description provided for @aboutAppFeatureVerify.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز QR على كل وثيقة يتحقق منه رجال المرور والجهات الرسمية'**
+  String get aboutAppFeatureVerify;
+
+  /// No description provided for @aboutAppFeatureSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة طلباتك والتواصل مع خدمة العملاء من التطبيق'**
+  String get aboutAppFeatureSupport;
+
+  /// No description provided for @aboutAppCopyright.
+  ///
+  /// In ar, this message translates to:
+  /// **'© {year} العربية الكبرى للتأمين المساهمة'**
+  String aboutAppCopyright(int year);
 
   /// No description provided for @payWith.
   ///

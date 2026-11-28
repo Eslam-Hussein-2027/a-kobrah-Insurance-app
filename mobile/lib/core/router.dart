@@ -10,8 +10,9 @@ import '../features/auth/register_screen.dart';
 import '../features/auth/splash_screen.dart';
 import '../features/catalog/product_screen.dart';
 import '../features/home/home_screen.dart';
-import '../features/more/company_pages.dart';
-import '../features/more/personal_info_screen.dart';
+import '../features/account/about_app_screen.dart';
+import '../features/account/company_pages.dart';
+import '../features/account/personal_info_screen.dart';
 import '../features/motor/motor_estimate_screen.dart';
 import '../features/motor/motor_issue_screen.dart';
 import '../features/motor/motor_review_screen.dart';
@@ -149,11 +150,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
 
           // More
-          GoRoute(path: 'more/profile', builder: (_, _) => const PersonalInfoScreen()),
-          GoRoute(path: 'more/branches', builder: (_, _) => const BranchesScreen()),
-          GoRoute(path: 'more/contact', builder: (_, _) => const ContactScreen()),
-          GoRoute(path: 'more/about', builder: (_, _) => const CompanyTextScreen.about()),
-          GoRoute(path: 'more/privacy', builder: (_, _) => const CompanyTextScreen.privacy()),
+          GoRoute(path: 'account/profile', builder: (_, _) => const PersonalInfoScreen()),
+          GoRoute(path: 'account/branches', builder: (_, _) => const BranchesScreen()),
+          GoRoute(path: 'account/contact', builder: (_, _) => const ContactScreen()),
+          GoRoute(path: 'account/about', builder: (_, _) => const CompanyTextScreen.about()),
+          GoRoute(path: 'account/privacy', builder: (_, _) => const CompanyTextScreen.privacy()),
+          GoRoute(path: 'account/about-app', builder: (_, _) => const AboutAppScreen()),
         ],
       ),
     ],

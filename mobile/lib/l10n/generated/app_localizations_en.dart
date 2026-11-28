@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gallery => 'Gallery';
 
   @override
-  String get tabVehicles => 'My vehicles';
+  String get tabVehicles => 'Vehicles';
 
   @override
   String get addVehicle => 'Add vehicle';
@@ -325,7 +325,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabPersons => 'People';
 
   @override
-  String get tabMore => 'More';
+  String get tabAccount => 'My account';
 
   @override
   String get hello => 'Hello,';
@@ -803,7 +803,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutCompany => 'About us';
 
   @override
-  String get appVersion => 'App version';
+  String get appVersion => 'Version';
+
+  @override
+  String get aboutApp => 'About the app';
+
+  @override
+  String get aboutAppBody =>
+      'The Alarabia Kobrah Insurance app lets you issue your insurance policy from your phone and pay for it online. Your policies stay with you at all times, each with a verification code that proves it is genuine.';
+
+  @override
+  String get aboutAppFeatureIssue => 'Get your policy in minutes without visiting an office';
+
+  @override
+  String get aboutAppFeaturePay => 'Pay online with Libyan wallets and banking apps';
+
+  @override
+  String get aboutAppFeatureVerify => 'A QR code on every policy for traffic police and official checks';
+
+  @override
+  String get aboutAppFeatureSupport => 'Follow your requests and reach customer service from the app';
+
+  @override
+  String aboutAppCopyright(int year) {
+    return '© $year Alarabia Kobrah Insurance Co.';
+  }
 
   @override
   String get payWith => 'Pay with';

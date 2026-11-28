@@ -40,7 +40,7 @@
   "registrationExpired": "انتهت صلاحية جلسة التسجيل، يرجى طلب رمز تحقق جديد.",
   "camera": "الكاميرا",
   "gallery": "معرض الصور",
-  "tabVehicles": "مركباتي",
+  "tabVehicles": "المركبات",
   "addVehicle": "إضافة مركبة",
   "editVehicle": "تعديل المركبة",
   "noVehicles": "لم تضف أي مركبة بعد",
@@ -123,7 +123,7 @@
   "tabHome": "الرئيسية",
   "tabMyInsurance": "تأميناتي",
   "tabPersons": "الأشخاص",
-  "tabMore": "المزيد",
+  "tabAccount": "حسابي",
   "hello": "مرحبًا،",
   "contactUs": "تواصل معنا",
   "insuranceProducts": "منتجات التأمين",
@@ -321,7 +321,7 @@
   "requestSent": "تم إرسال طلبك، وسيتواصل معك أحد موظفي الشركة.",
   "attach": "إرفاق",
   "documentsLaterHint": "يمكنك إرسال الطلب الآن وإرفاق المستندات لاحقًا عند تواصل الموظف معك.",
-  "addVehicleFirst": "أضف مركبتك أولًا من «مركباتي».",
+  "addVehicleFirst": "أضف مركبتك أولًا من «المركبات».",
   "requestContactHint": "سيتواصل معك موظف من الشركة على الرقم {phone} خلال يوم عمل.",
   "@requestContactHint": {
     "placeholders": {
@@ -381,7 +381,21 @@
   "website": "الموقع الإلكتروني",
   "privacy": "الخصوصية",
   "aboutCompany": "عن الشركة",
-  "appVersion": "إصدار التطبيق",
+  "appVersion": "الإصدار",
+  "aboutApp": "عن التطبيق",
+  "aboutAppBody": "تطبيق العربية الكبرى للتأمين يتيح لك إصدار وثيقة التأمين من هاتفك ودفع قيمتها إلكترونيًا، وتبقى وثائقك معك في أي وقت مع رمز تحقق يثبت صحتها.",
+  "aboutAppFeatureIssue": "إصدار الوثيقة خلال دقائق بدون زيارة المكتب",
+  "aboutAppFeaturePay": "الدفع الإلكتروني عبر المحافظ وتطبيقات المصارف الليبية",
+  "aboutAppFeatureVerify": "رمز QR على كل وثيقة يتحقق منه رجال المرور والجهات الرسمية",
+  "aboutAppFeatureSupport": "متابعة طلباتك والتواصل مع خدمة العملاء من التطبيق",
+  "aboutAppCopyright": "© {year} العربية الكبرى للتأمين المساهمة",
+  "@aboutAppCopyright": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "payWith": "طريقة الدفع",
   "paymentService": "خدمة الدفع",
   "walletPhone": "رقم هاتفك المسجّل في {method}",

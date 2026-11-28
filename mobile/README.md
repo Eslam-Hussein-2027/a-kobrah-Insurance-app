@@ -94,7 +94,7 @@ lib/
     policies/                 My insurance tab, policy tile, details (payment, QR, PDF)
     vehicles/                 list with insurance status, form, repository
     persons/                  people list and form
-    more/                     More tab, personal info and documents, branches, contact, about, privacy
+    account/                  My account tab, personal info and documents, branches, contact, about, privacy
     verify/                   public policy verification
   l10n/                       app_ar.arb (template), app_en.arb, generated/
 ```

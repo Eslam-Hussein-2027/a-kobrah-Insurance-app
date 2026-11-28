@@ -177,6 +177,39 @@ void main() {
     expect(find.text('بطلب عرض سعر'), findsOneWidget);
   });
 
+  testWidgets('bottom bar puts home in the middle and opens "My account"', (tester) async {
+    await _pumpApp(tester);
+    await tester.enterText(find.byKey(const Key('phone-field')), '0911234567');
+    await tester.tap(find.text('إرسال رمز التحقق'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('otp-field')), '123456');
+    await tester.pumpAndSettle();
+
+    // Right to left: my insurance, vehicles, home, persons, my account.
+    final xs = [
+      'تأميناتي',
+      'المركبات',
+      'الرئيسية',
+      'الأشخاص',
+      'حسابي',
+    ].map((label) => tester.getCenter(find.text(label).last).dx).toList();
+    expect(xs, [...xs]..sort((a, b) => b.compareTo(a)));
+
+    await tester.tap(find.text('حسابي'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('حسابي'), findsNWidgets(2)); // page title + tab label
+    expect(find.text('محمد العميل'), findsOneWidget);
+    for (final label in ['الخصوصية', 'تواصل معنا', 'عن الشركة', 'الفروع والوكلاء', 'المعلومات الشخصية', 'الإصدار']) {
+      expect(find.text(label), findsOneWidget, reason: label);
+    }
+
+    await tester.tap(find.text('عن التطبيق'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('إصدار الوثيقة خلال دقائق بدون زيارة المكتب'), findsOneWidget);
+  });
+
   testWidgets('wrong OTP shows the server message', (tester) async {
     await _pumpApp(tester);
 

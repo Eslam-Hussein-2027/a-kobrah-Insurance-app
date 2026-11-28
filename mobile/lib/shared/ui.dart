@@ -112,6 +112,8 @@ class NavRow extends StatelessWidget {
     this.onTap,
     this.destructive = false,
     this.valueLtr = false,
+    this.valueColor = AppColors.muted,
+    this.roundIcon = false,
   });
 
   final IconData? icon;
@@ -121,6 +123,10 @@ class NavRow extends StatelessWidget {
   final VoidCallback? onTap;
   final bool destructive;
   final bool valueLtr;
+  final Color valueColor;
+
+  /// Shows the icon inside a soft grey circle (account / settings lists).
+  final bool roundIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +138,15 @@ class NavRow extends StatelessWidget {
         child: Row(
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 22, color: destructive ? AppColors.danger : AppColors.navy),
+              if (roundIcon)
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(color: AppColors.neutralTint, shape: BoxShape.circle),
+                  child: Icon(icon, size: 21, color: destructive ? AppColors.danger : AppColors.ink),
+                )
+              else
+                Icon(icon, size: 22, color: destructive ? AppColors.danger : AppColors.navy),
               const SizedBox(width: 12),
             ],
             Expanded(
@@ -148,7 +162,7 @@ class NavRow extends StatelessWidget {
               Text(
                 value!,
                 textDirection: valueLtr ? TextDirection.ltr : null,
-                style: const TextStyle(fontSize: 14, color: AppColors.muted, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 14, color: valueColor, fontWeight: FontWeight.w500),
               ),
             if (onTap != null && !destructive) ...[
               const SizedBox(width: 4),

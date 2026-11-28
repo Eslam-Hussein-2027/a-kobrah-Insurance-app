@@ -45,7 +45,7 @@ class _MotorReviewScreenState extends ConsumerState<MotorReviewScreen> {
         message: l10n.kycMissingBody,
         confirmLabel: l10n.goToProfile,
       );
-      if (upload && mounted) await context.push('/more/profile');
+      if (upload && mounted) await context.push('/account/profile');
       return;
     }
 

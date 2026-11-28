@@ -53,7 +53,7 @@ class DashboardTab extends ConsumerWidget {
                 _SquareButton(
                   icon: Icons.headset_mic_outlined,
                   tooltip: l10n.contactUs,
-                  onTap: () => context.push('/more/contact'),
+                  onTap: () => context.push('/account/contact'),
                 ),
               ],
             ),
@@ -395,7 +395,7 @@ class _QuickTools extends StatelessWidget {
     final tools = [
       (Icons.calculate_outlined, l10n.calculatePrice, '/motor/estimate'),
       (Icons.verified_user_outlined, l10n.verifyPolicyShort, '/verify'),
-      (Icons.place_outlined, l10n.branches, '/more/branches'),
+      (Icons.place_outlined, l10n.branches, '/account/branches'),
     ];
 
     return Card(
