@@ -3,24 +3,24 @@
 namespace App\Services\Auth;
 
 use App\Models\OtpCode;
-use App\Services\Sms\SmsSender;
+use App\Services\Auth\Otp\OtpSender;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 
 class OtpService
 {
-    public function __construct(private readonly SmsSender $sms) {}
+    public function __construct(private readonly OtpSender $sender) {}
 
     /**
-     * Issue a new code for the phone (invalidating previous unused codes) and send it by SMS.
+     * Send a new code by SMS, then keep only its hash (previous unused codes stop working).
      * SMS cost money and can be abused, so sends are limited per phone and per IP (429).
      */
     public function send(string $phone, ?string $ipAddress = null): void
     {
         $this->throttle($phone, $ipAddress);
 
-        $code = $this->generateCode();
+        $code = $this->sender->send($phone, (int) config('insurance.otp.length'), $this->ttlMinutes());
 
         DB::transaction(function () use ($phone, $code, $ipAddress) {
             OtpCode::query()->where('phone', $phone)->whereNull('consumed_at')->delete();
@@ -32,11 +32,6 @@ class OtpService
                 'ip_address' => $ipAddress,
             ]);
         });
-
-        $this->sms->send($phone, __('messages.otp.sms', [
-            'code' => $code,
-            'minutes' => $this->ttlMinutes(),
-        ]));
     }
 
     /**
@@ -94,19 +89,6 @@ class OtpService
     public function ttlMinutes(): int
     {
         return (int) config('insurance.otp.ttl_minutes');
-    }
-
-    private function generateCode(): string
-    {
-        $length = (int) config('insurance.otp.length');
-        $fixed = config('insurance.otp.fixed_code');
-
-        // Convenience for local development / mobile devs. Never honored in production.
-        if (filled($fixed) && app()->environment(['local', 'testing'])) {
-            return (string) $fixed;
-        }
-
-        return str_pad((string) random_int(0, (10 ** $length) - 1), $length, '0', STR_PAD_LEFT);
     }
 
     /**

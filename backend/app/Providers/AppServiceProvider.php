@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Services\Auth\Otp\OtpSender;
+use App\Services\Auth\Otp\ResalaOtpSender;
+use App\Services\Auth\Otp\TextMessageOtpSender;
 use App\Services\Sms\LogSmsSender;
+use App\Services\Sms\Resala\ResalaClient;
 use App\Services\Sms\SmsSender;
 use App\Support\PhoneNumber;
 use Carbon\CarbonImmutable;
@@ -18,8 +22,22 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(SmsSender::class, fn () => match (config('insurance.sms.driver')) {
-            'log' => new LogSmsSender,
+        // Plain texts are only logged for now (Resala sends free text through approved templates).
+        $this->app->bind(SmsSender::class, LogSmsSender::class);
+
+        $this->app->bind(ResalaClient::class, fn () => new ResalaClient(
+            baseUrl: (string) config('insurance.sms.resala.base_url'),
+            apiKey: config('insurance.sms.resala.api_key'),
+            sender: config('insurance.sms.resala.sender') ?: null,
+            serviceName: config('insurance.sms.resala.service_name') ?: null,
+            test: (bool) config('insurance.sms.resala.test'),
+            timeoutSeconds: (int) config('insurance.sms.resala.timeout_seconds'),
+        ));
+
+        // Sign-up and password-reset codes.
+        $this->app->bind(OtpSender::class, fn ($app) => match (config('insurance.sms.driver')) {
+            'log' => new TextMessageOtpSender($app->make(SmsSender::class)),
+            'resala' => new ResalaOtpSender($app->make(ResalaClient::class)),
             default => throw new InvalidArgumentException('Unsupported SMS driver: '.config('insurance.sms.driver')),
         });
     }

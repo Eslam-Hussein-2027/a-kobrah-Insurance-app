@@ -18,6 +18,8 @@ return [
         'sms' => 'Your verification code is :code. It is valid for :minutes minutes. Do not share it.',
         'sent' => 'A verification code has been sent to your phone.',
         'invalid' => 'The verification code is invalid or has expired.',
+        'number_not_supported' => 'We cannot text this number. Use a Libyana or Almadar number (091, 092, 093 or 094).',
+        'unavailable' => 'We could not send the verification code right now. Try again shortly or contact customer service.',
     ],
 
     'auth' => [

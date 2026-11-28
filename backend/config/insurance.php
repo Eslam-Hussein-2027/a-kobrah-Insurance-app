@@ -84,14 +84,29 @@ return [
     ],
 
     'sms' => [
+        // "log": codes are written to storage/logs (development). "resala": real SMS through resala.ly.
         'driver' => env('SMS_DRIVER', 'log'),
+
+        'resala' => [
+            'base_url' => env('RESALA_BASE_URL', 'https://dev.resala.ly/api/v1'),
+            // From the Resala dashboard → الربط البرمجي API (starts with "rsl_"). Never commit it.
+            'api_key' => env('RESALA_API_KEY'),
+            // A sender name registered under أسماء المرسل, exact case. Empty = the account default.
+            'sender' => env('RESALA_SENDER'),
+            // Added to the code text: "رمز التحقق: 482913 - <service name>".
+            'service_name' => env('RESALA_SERVICE_NAME', 'العربية الكبرى للتأمين'),
+            // Test mode: Resala sends nothing and charges nothing; the code is written to the log.
+            'test' => (bool) env('RESALA_TEST', false),
+            'timeout_seconds' => (int) env('RESALA_TIMEOUT_SECONDS', 15),
+        ],
     ],
 
     'validation' => [
-        // Libyan mobile numbers, local format: 091 / 092 / 093 / 094 / 095 + 7 digits.
+        // Libyan mobile numbers, local format: 091 / 093 (Libyana), 092 / 094 (Almadar) + 7 digits.
+        // These are the numbers the SMS provider can text, so sign-up codes always arrive.
         // +218 / 00218 prefixes are converted to the local format before validation.
         'phone_country_code' => env('PHONE_COUNTRY_CODE', '218'),
-        'phone_regex' => env('PHONE_REGEX', '/^09[1-5][0-9]{7}$/'),
+        'phone_regex' => env('PHONE_REGEX', '/^09[1-4][0-9]{7}$/'),
         // Libyan national number: 12 digits, first digit 1 (male) or 2 (female).
         'national_id_regex' => env('NATIONAL_ID_REGEX', '/^[12][0-9]{11}$/'),
         // ISO 3779 VIN: 17 chars, excludes I, O, Q.

@@ -165,7 +165,7 @@ Localized for **Libya** (all values in `config/insurance.php` / `.env`):
 
 | Input | Rule |
 |---|---|
-| Phone | `09[1-5]XXXXXXX` (10 digits); `+218…`, `00218…`, `9XXXXXXXX` (typed after the app's +218 box), spaces and dashes are converted to the local format |
+| Phone | `09[1-4]XXXXXXX` (10 digits, Libyana / Almadar); `+218…`, `00218…`, `9XXXXXXXX` (typed after the app's +218 box), spaces and dashes are converted to the local format |
 | National number | 12 digits, starts with 1 or 2 |
 | Plate | free format, e.g. `5-123456`; spaces/dashes ignored when comparing |
 | Currency | LYD (دينار ليبي) |
@@ -223,6 +223,33 @@ server   → fetchStatus() from the provider → PAID → policy ACTIVE → PDF 
   If the customer still pays on the provider page, the money is recorded and flagged `requires_refund` instead of being lost.
 - **`simulator`** is a built-in fake provider: a signed Arabic page with "دفع ناجح" / "رفض الدفع" buttons, used for development and demos.
   It is disabled when `APP_ENV=production` (`PAYMENT_SIMULATOR_ENABLED`).
+
+### SMS codes — Resala (resala.ly)
+
+Sign-up and forgotten-password codes go through an `OtpSender` chosen by `SMS_DRIVER`:
+
+| Driver | What happens |
+|---|---|
+| `log` (default) | The code is generated here and written to `storage/logs/laravel.log` (`OTP_FIXED_CODE` works locally) |
+| `resala` | `POST /pins` on Resala: Resala generates the code, texts it ("رمز التحقق: 482913 - العربية الكبرى للتأمين") and returns it; only its hash is stored |
+
+```
+SMS_DRIVER=resala
+RESALA_API_KEY=rsl_...            # dashboard → الربط البرمجي API; never commit it
+RESALA_SENDER=AKOBRAH             # a name approved under أسماء المرسل (exact case); empty = account default
+RESALA_TEST=false                 # true: nothing sent or charged, the code is written to the log
+```
+
+`App\Services\Sms\Resala\ResalaClient` has one typed method per call: `sendPin()` (`/pins`),
+`sendTemplate()` (`/messages/send-template`) and `sentMessages()` (`/sent-view`). Errors are a
+`ResalaException` whose `type` mirrors Resala's `type` field (`AccountExpired`, `InsufficientCredit`,
+`BadRequest`, `Unauthorized`, `TokenExpired`, `Forbidden`, `NotFound`, `InputValidation` with per-field
+`errors`, plus `Unknown` and `ConnectionFailed`). Sends are never retried, since the message may already
+have gone out.
+
+For customers: a number Resala cannot text is a form error on the phone; any other failure answers 503
+"try again later", and account problems (no credit, expired, bad key) are logged as **critical** so the
+company tops up or renews. Phone numbers are limited to 091–094 (Libyana, Almadar): the numbers Resala texts.
 
 ### DPAY (dpay.ly) — OTP flow
 
