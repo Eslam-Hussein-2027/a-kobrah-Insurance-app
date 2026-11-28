@@ -281,6 +281,20 @@ class ResalaSmsTest extends TestCase
         Http::assertNothingSent();
     }
 
+    public function test_a_sender_name_resala_did_not_use_is_logged(): void
+    {
+        config(['insurance.sms.resala.sender' => 'Alarabia']);
+        Http::fake([self::BASE.'/pins*' => Http::response(['sender_name' => 'Resala'] + self::PIN_RESPONSE, 201)]);
+        Log::spy();
+
+        $this->postJson('/api/v1/auth/register', $this->registration())->assertStatus(202);
+
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), 'sender=Alarabia'));
+        Log::shouldHaveReceived('warning')->once()->withArgs(
+            fn (string $message, array $context) => $context['requested'] === 'Alarabia' && $context['used'] === 'Resala',
+        );
+    }
+
     public function test_test_mode_logs_the_code_for_the_developer(): void
     {
         config(['insurance.sms.resala.test' => true]);

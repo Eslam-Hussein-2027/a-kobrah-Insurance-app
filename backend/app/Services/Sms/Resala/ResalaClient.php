@@ -32,6 +32,12 @@ class ResalaClient
         return $this->test;
     }
 
+    /** The sender name asked for on every send (null = the account default). */
+    public function sender(): ?string
+    {
+        return $this->sender;
+    }
+
     /**
      * POST /pins: Resala generates a code, texts it, and returns it.
      *

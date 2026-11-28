@@ -26,6 +26,17 @@ final class ResalaOtpSender implements OtpSender
             throw $this->userError($exception);
         }
 
+        // Resala silently falls back to the default name ("Resala") when ours is not active on the
+        // recipient's network yet, or is spelled differently. Worth knowing; the code was still sent.
+        $requested = $this->resala->sender();
+        if ($requested !== null && $pin->senderName !== null && $pin->senderName !== $requested) {
+            Log::warning('Resala: sender name not used, check أسماء المرسل', [
+                'requested' => $requested,
+                'used' => $pin->senderName,
+                'phone' => $phone,
+            ]);
+        }
+
         if ($this->resala->isTestMode()) {
             // Test mode sends nothing; the code is only here, for the developer.
             Log::info('Resala test mode: SMS not sent', ['phone' => $phone, 'pin' => $pin->pin]);
